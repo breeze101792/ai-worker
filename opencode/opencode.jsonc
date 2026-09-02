@@ -35,7 +35,6 @@
     },
     "agent": {
         "build": {
-            "prompt": "Only run git commit after the user has explicitly recognized the result of your work. Wait for the user to confirm the result before committing.",
             "permission": {
                 "task": {
                     "*": "allow",
@@ -44,7 +43,6 @@
             }
         },
         "plan": {
-            "prompt": "Only run git commit after the user has explicitly recognized the result of your work. Wait for the user to confirm the result before committing.",
             "permission": {
                 "edit": {
                     "docs/**": "allow",
