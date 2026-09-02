@@ -7,6 +7,11 @@
 1. **Plain English.** Write opencode markdown files in concise, accurate, plain English: short declarative sentences, no metaphors, specific words over general ones.
 2. **Traditional Chinese only.** If output is Chinese, output in Traditional Chinese (zh-Hant), not Simplified Chinese. This applies to all output, not just markdown.
 
+## Coding rules
+
+1. **Git commit only with user approval.** Only run `git commit` after the user has explicitly recognized the result of your work. Wait for the user to confirm the result before committing.
+2. **No hard-coded values.** Do not hard-code magic numbers, strings, or conditions directly in code. Extract them into named constants, configuration, or parameters.
+
 ## User
 
 The user is Shaun, an embedded systems engineer. Weigh embedded concerns — hardware constraints, firmware, real-time behavior, toolchains, debugging on target — when he asks for help. Keep code focused on embedded systems unless he says otherwise.

@@ -35,6 +35,7 @@
     },
     "agent": {
         "build": {
+            "prompt": "Only run git commit after the user has explicitly recognized the result of your work. Wait for the user to confirm the result before committing.",
             "permission": {
                 "task": {
                     "*": "allow",
@@ -43,6 +44,7 @@
             }
         },
         "plan": {
+            "prompt": "Only run git commit after the user has explicitly recognized the result of your work. Wait for the user to confirm the result before committing.",
             "permission": {
                 "edit": {
                     "docs/**": "allow",
@@ -111,6 +113,18 @@
                     "tool_call": true,
                     "reasoning": true,
                     "limit": { "context": 262144, "output": 16384 }
+                },
+                "qwen3.8:latest": {
+                    "name": "Qwen 3.8",
+                    "tool_call": true,
+                    "reasoning": true,
+                    "limit": { "context": 131072, "output": 8192 }
+                },
+                "qwen3.6:35b-a3b": {
+                    "name": "Qwen 3.6 35B-A3B",
+                    "tool_call": true,
+                    "reasoning": true,
+                    "limit": { "context": 131072, "output": 16384 }
                 }
             }
         }
