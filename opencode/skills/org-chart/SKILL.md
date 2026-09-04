@@ -18,9 +18,11 @@ org (user's agent company)
     └── recruiter  (subagent) — writes the hire file
 ```
 
-The org keeps no separate roster file. The existing team is whatever agent
-files exist — list the agents directories (glob) before hiring so you never
-duplicate a role or a name.
+Agent files are the source of truth for who is hired — list the agents
+directories (glob) before hiring so you never duplicate a role or a name. The
+`Subagents` table in AGENTS.md is not a second source of truth; it is the
+dispatch roster the main agent reads to decide who to call. Keep it in sync
+after every hire (see step 6 of the pipeline).
 
 ## Where hires live
 
@@ -96,7 +98,13 @@ into `options` — avoid it. Rules:
    subagent via the task tool. The `recruiter` writes one valid `<name>.md`
    per hire.
 5. **Validate.** Re-read every written file and run the checklist below.
-6. **Report + restart.** Show a summary and tell the user to quit and restart
+6. **Introduce the hire.** A hire no one can find is useless. `hr` adds one
+   row to the `Subagents` table of the owning AGENTS.md: the org repo's
+   `opencode/AGENTS.md` for global hires, the project's root `AGENTS.md` for
+   project hires. Row shape: name, what it does, purpose, use when — kept
+   consistent with the hire file's `description`. The recruiter only writes
+   hire files; `hr` writes the roster row.
+7. **Report + restart.** Show a summary and tell the user to quit and restart
    opencode — config loads once; hires activate only after restart.
 
 ## Discover the existing team

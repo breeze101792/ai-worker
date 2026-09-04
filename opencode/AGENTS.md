@@ -20,6 +20,7 @@ The user is Shaun, an embedded systems engineer. Weigh embedded concerns — har
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
+| `architect` | Designs and reviews system architecture: hunts duplicate code, designs robust event/IPC frameworks, draws high-level blueprints, and recommends structure that prevents common bugs. Rejects overengineering — every abstraction must trace to a real requirement. | Architecture design and review before implementation. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, or designing an event bus or IPC layer. |
 | `debugger` | Reproduces hard bugs, traces the code path, proves a root cause, applies a minimal fix, and verifies it. | Serious debugging that needs a powerful reasoning model. | A bug resists quick fixes, errors or crashes have no obvious cause, or a stack trace needs tracing to source. |
 | `recruiter` | Writes valid opencode agent files from an approved shortlist. Dispatched by `hr` after approval. | Hires new team members from a spec it receives. | New subagents or primary agents are approved and need files created. |
 | `tester` | Surveys the project, builds the test plan, writes tests with the project's framework, runs the suite, and reports coverage. | Test design, execution, and coverage reporting. | A test plan is needed, tests must be written or extended, or the suite must run and report coverage. |
