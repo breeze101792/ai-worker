@@ -11,6 +11,7 @@ one source stays in sync across Claude Code and opencode.
 | --- | --- | --- |
 | Claude Code | `claude/agents`, `claude/commands`, `claude/skills`, `claude/CLAUDE.md`, `claude/settings-ollama.json` | `~/.claude/...` |
 | opencode | `opencode/agents`, `opencode/commands`, `opencode/skills`, `opencode/AGENTS.md`, `opencode/opencode.jsonc` | `~/.config/opencode/...` |
+| Codex | `codex/agents` (TOML, converted from opencode), `codex/skills` (incl. commands converted to skills), `codex/AGENTS.md` | `~/.codex/agents`, `~/.agents/skills`, `~/.codex/AGENTS.md` |
 
 ### Sync command
 
@@ -20,16 +21,32 @@ Run from this repo:
 bash setup.sh link
 ```
 
-Link only one tool with `bash setup.sh link claude` or `bash setup.sh link opencode`.
+Link only one tool with `bash setup.sh link claude`, `bash setup.sh link opencode`, or `bash setup.sh link codex`.
 Add `--dry-run` to preview. `setup.sh all` also pulls the required ollama models
 before linking.
+
+Codex has no agent format matching the opencode/claude markdown, so `codex/` is a
+hand-adapted copy synced via setup.sh:
+
+- `codex/agents/*.toml` — one TOML per agent (`name`, `description`, `model`,
+  `developer_instructions`). Re-convert when you edit an opencode agent; Codex
+  reads only its own `.toml` agents, not opencode `.md`.
+- `codex/skills/` — Codex skills, format-compatible with opencode
+  (`<name>/SKILL.md` with `name`+`description`). Includes the two opencode
+  skills plus `docs`/`hire`/`testarch`, which are the opencode *commands*
+  converted to skills (Codex CLI has no custom slash-command format; skills
+  are its documented equivalent and appear in the `/` menu). Install target is
+  `~/.agents/skills`, Codex's USER skill dir (symlinks followed).
+- `codex/AGENTS.md` — adapted from opencode: `task` tool → Codex `spawn_agent`,
+  `explore`/`general` → built-in `explorer`; install to `~/.codex/AGENTS.md`.
 
 Edit an agent, command, skill, or `CLAUDE.md`/`AGENTS.md` file in the repo source,
 then re-run the link and **restart** the affected tool for changes to load —
 config is read once at startup.
 
-Keep the org-chart skill in `claude/skills/org-chart` and `opencode/skills/org-chart`
-in sync when hiring, since it defines the hire workflow for both tools.
+Keep the org-chart skill in `claude/skills/org-chart`, `opencode/skills/org-chart`,
+and `codex/skills/org-chart` in sync when hiring, since it defines the hire
+workflow for all three tools.
 
 ## Coding rules
 

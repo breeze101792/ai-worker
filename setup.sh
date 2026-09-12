@@ -27,6 +27,12 @@ TOOL_OPENCODE_SKILLS_SRC="$SCRIPT_DIR/opencode/skills"
 TOOL_OPENCODE_SKILLS_DST="$HOME/.config/opencode/skills"
 TOOL_OPENCODE_COMMANDS_SRC="$SCRIPT_DIR/opencode/commands"
 TOOL_OPENCODE_COMMANDS_DST="$HOME/.config/opencode/commands"
+TOOL_CODEX_AGENTS_DIR_SRC="$SCRIPT_DIR/codex/agents"
+TOOL_CODEX_AGENTS_DIR_DST="$HOME/.codex/agents"
+TOOL_CODEX_SKILLS_DIR_SRC="$SCRIPT_DIR/codex/skills"
+TOOL_CODEX_SKILLS_DIR_DST="$HOME/.agents/skills"
+TOOL_CODEX_AGENTSMD_SRC="$SCRIPT_DIR/codex/AGENTS.md"
+TOOL_CODEX_AGENTSMD_DST="$HOME/.codex/AGENTS.md"
 
 MODELS=(
   "deepseek-v4-flash:cloud"
@@ -44,7 +50,7 @@ Commands:
   pull              Pull all required ollama models (claude)
   link [TOOLS]      Symlink tool settings to the right paths.
                     TOOLS is a comma-separated list to link
-                    (default: opencode). Available: claude, opencode
+                    (default: opencode). Available: claude, opencode, codex
                     Example: link claude
   all [TOOLS]       Run pull + link (default if no command given)
   help              Show this help message
@@ -84,7 +90,12 @@ resolve_tool() {
       echo "$TOOL_OPENCODE_SKILLS_SRC|$TOOL_OPENCODE_SKILLS_DST|dir"
       echo "$TOOL_OPENCODE_COMMANDS_SRC|$TOOL_OPENCODE_COMMANDS_DST|dir"
       ;;
-    *) err "Unknown tool: $name (available: claude, opencode)"; return 1 ;;
+    codex)
+      echo "$TOOL_CODEX_AGENTS_DIR_SRC|$TOOL_CODEX_AGENTS_DIR_DST|dir"
+      echo "$TOOL_CODEX_SKILLS_DIR_SRC|$TOOL_CODEX_SKILLS_DIR_DST|dir"
+      echo "$TOOL_CODEX_AGENTSMD_SRC|$TOOL_CODEX_AGENTSMD_DST|file"
+      ;;
+    *) err "Unknown tool: $name (available: claude, opencode, codex)"; return 1 ;;
   esac
 }
 
