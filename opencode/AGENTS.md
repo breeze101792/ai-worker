@@ -5,12 +5,13 @@
 ## Rules
 
 1. **Plain English.** Write opencode markdown files in concise, accurate, plain English: short declarative sentences, no metaphors, specific words over general ones.
-2. **Traditional Chinese only.** If output is Chinese, output in Traditional Chinese (zh-Hant), not Simplified Chinese. This applies to all output, not just markdown.
+2. **English responses.** All communication with the user must be in English. Never respond in Chinese or any other language.
 
 ## Coding rules
 
 1. **Git commit only with user approval.** Only run `git commit` after the user has explicitly recognized the result of your work. Wait for the user to confirm the result before committing.
 2. **No hard-coded values.** Do not hard-code magic numbers, strings, or conditions directly in code. Extract them into named constants, configuration, or parameters.
+3. **Use git commit template.** Write commit messages with the git commit template, not a one-liner. Fetch the template path with `git config --get commit.template` (or `git var GIT_COMMITTER_IDENT` for identity), then read the file it points to.
 
 ## User
 

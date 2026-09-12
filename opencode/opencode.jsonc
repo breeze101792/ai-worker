@@ -73,6 +73,12 @@
                 "baseURL": "http://10.31.1.9:30068/v1"
             },
             "models": {
+                "deepseek-v4.1-flash:cloud": {
+                    "name": "DeepSeek V4.1 Flash",
+                    "tool_call": true,
+                    "reasoning": true,
+                    "limit": { "context": 1048576, "output": 32768 }
+                },
                 "deepseek-v4-flash:cloud": {
                     "name": "DeepSeek V4 Flash",
                     "tool_call": true,
@@ -120,6 +126,27 @@
                 },
                 "qwen3.6:35b-a3b": {
                     "name": "Qwen 3.6 35B-A3B",
+                    "tool_call": true,
+                    "reasoning": true,
+                    "limit": { "context": 131072, "output": 16384 }
+                }
+            }
+        },
+        "Macllama": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "Ollama (Mac)",
+            "options": {
+                "baseURL": "http://10.31.6.118:51434/v1"
+            },
+            "models": {
+                "qwen3.8:27b-mlx": {
+                    "name": "Qwen 3.8 27b",
+                    "tool_call": true,
+                    "reasoning": true,
+                    "limit": { "context": 131072, "output": 16384 }
+                },
+                "qwen3.6:35b-mlx": {
+                    "name": "Qwen 3.6 35B-MLX",
                     "tool_call": true,
                     "reasoning": true,
                     "limit": { "context": 131072, "output": 16384 }
