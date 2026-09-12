@@ -9,6 +9,14 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 #   type=dir:  symlink a directory (created in-repo if missing)
 TOOL_CLAUDE_SRC="$SCRIPT_DIR/claude/settings-ollama.json"
 TOOL_CLAUDE_DST="$HOME/.claude/settings.json"
+TOOL_CLAUDE_CLAUDE_MD_SRC="$SCRIPT_DIR/claude/CLAUDE.md"
+TOOL_CLAUDE_CLAUDE_MD_DST="$HOME/.claude/CLAUDE.md"
+TOOL_CLAUDE_AGENTS_DIR_SRC="$SCRIPT_DIR/claude/agents"
+TOOL_CLAUDE_AGENTS_DIR_DST="$HOME/.claude/agents"
+TOOL_CLAUDE_COMMANDS_DIR_SRC="$SCRIPT_DIR/claude/commands"
+TOOL_CLAUDE_COMMANDS_DIR_DST="$HOME/.claude/commands"
+TOOL_CLAUDE_SKILLS_DIR_SRC="$SCRIPT_DIR/claude/skills"
+TOOL_CLAUDE_SKILLS_DIR_DST="$HOME/.claude/skills"
 TOOL_OPENCODE_SRC="$SCRIPT_DIR/opencode/opencode.jsonc"
 TOOL_OPENCODE_DST="$HOME/.config/opencode/opencode.jsonc"
 TOOL_OPENCODE_AGENTSMD_SRC="$SCRIPT_DIR/opencode/AGENTS.md"
@@ -62,7 +70,13 @@ err()   { echo "[ERROR] $*" >&2; }
 resolve_tool() {
   local name="$1"
   case "$name" in
-    claude)   echo "$TOOL_CLAUDE_SRC|$TOOL_CLAUDE_DST|file" ;;
+    claude)
+      echo "$TOOL_CLAUDE_SRC|$TOOL_CLAUDE_DST|file"
+      echo "$TOOL_CLAUDE_CLAUDE_MD_SRC|$TOOL_CLAUDE_CLAUDE_MD_DST|file"
+      echo "$TOOL_CLAUDE_AGENTS_DIR_SRC|$TOOL_CLAUDE_AGENTS_DIR_DST|dir"
+      echo "$TOOL_CLAUDE_COMMANDS_DIR_SRC|$TOOL_CLAUDE_COMMANDS_DIR_DST|dir"
+      echo "$TOOL_CLAUDE_SKILLS_DIR_SRC|$TOOL_CLAUDE_SKILLS_DIR_DST|dir"
+      ;;
     opencode)
       echo "$TOOL_OPENCODE_SRC|$TOOL_OPENCODE_DST|file"
       echo "$TOOL_OPENCODE_AGENTSMD_SRC|$TOOL_OPENCODE_AGENTSMD_DST|file"
