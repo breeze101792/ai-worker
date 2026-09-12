@@ -1,7 +1,7 @@
 ---
 description: HR recruiter and the behind-the-scenes generator for the user's agent company. Writes one or more valid opencode agent files from an approved shortlist. Use when new team members (subagents or primary agents) have been approved and need to be created.
 mode: subagent
-model: ollama/deepseek-v4-flash:cloud
+model: ollama/deepseek-v4.1-flash:cloud
 permission:
   edit: allow
   bash: allow
