@@ -1,7 +1,7 @@
 ---
 description: "Reviews code changes — diffs, staged changes, commits — and reports ranked findings with file:line citations. Use when a change needs review before it lands, or to sanity-check a commit or PR."
 mode: subagent
-model: ollama/deepseek-v4-pro:cloud
+model: ollama/deepseek-v4.1-flash:cloud
 permission:
   edit: deny
   task:
