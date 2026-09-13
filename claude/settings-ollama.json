@@ -4,7 +4,7 @@
     "ANTHROPIC_API_KEY": "",
     "ANTHROPIC_BASE_URL": "http://127.0.0.1:11434",
     "ANTHROPIC_MODEL_BAKUP": "minimax-m3:cloud",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash:cloud",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4.1-flash:cloud",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro:cloud",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "minimax-m3:cloud",
     "ANTHROPIC_DEFAULT_FABLE_MODEL": "glm-5.2:cloud",
@@ -36,7 +36,7 @@
     "defaultMode": "acceptEdits",
     "_comment": "default mode could be default, acceptEdits, bypassPermissions"
   },
-  "model": "opus",
+  "model": "haiku",
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
