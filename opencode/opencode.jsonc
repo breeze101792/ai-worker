@@ -1,5 +1,6 @@
 {
     "$schema": "https://opencode.ai/config.json",
+    "autoupdate": false,
     "model": "ollama/deepseek-v4.1-flash:cloud",
     "permission": {
         "bash": {
