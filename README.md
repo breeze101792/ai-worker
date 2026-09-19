@@ -71,6 +71,62 @@ The HR department (`hr`, `recruiter`) sits outside the build department and runs
 hiring. See `Teams.md` for models and permissions, and the `org-chart` skill for
 the hiring pipeline.
 
+## How to use each tool
+
+The org is the same everywhere, but each tool exposes it differently.
+
+### opencode
+
+- **Primary agents** — press **Tab** to cycle between `build` (default,
+  department head), `plan` (co-leader, read-only), and `hr`.
+- **Subagents** — type `@` and the agent name to invoke one directly, e.g.
+  `@researcher find the errata for this part`. Primary agents also dispatch
+  subagents automatically via the `task` tool.
+- **Commands** — type `/` for `implement`, `review`, `docs`, `hire`, `testarch`.
+- **Watch a subagent** — each dispatch runs in a child session. Press
+  **Leader+Down** (`session_child_first`) to enter it, **Right**/**Left** to
+  cycle children, **Up** (`session_parent`) to return.
+
+### Claude Code
+
+- **Main agent is the department head.** Normal mode does the work; there is no
+  `build` agent because the main session plays that role.
+- **Planning mode is the co-leader.** Press **Shift+Tab** to toggle plan mode
+  (read-only). This is Claude's equivalent of the `plan` agent. Restart-free:
+  Claude Code watches `~/.claude/agents/` and picks up edits within seconds.
+- **Subagents** — type `@` and the name to invoke one, or let the main agent
+  delegate with the **Agent** tool (formerly Task).
+- **Built-in subagents** — **Explore** (read-only codebase search), **Plan**
+  (read-only research during plan mode), and **General-purpose**.
+- **Commands** — type `/` for `implement`, `review`, `docs`, `hire`, `testarch`.
+
+### Codex
+
+- **Main agent is the department head.** There are no `build`/`plan` agents;
+  the main thread leads and delegates. Built-in agents you can also use:
+  `default` (general), `worker` (implementation), `explorer` (read-heavy
+  codebase search).
+- **Delegation is request-driven.** Codex spawns subagents when you ask
+  directly or when `AGENTS.md` or a skill asks for it. Example prompts:
+  - `Spawn one agent per point, wait for all of them, and summarize each result.`
+  - `Delegate this in parallel: one agent for the firmware change, one for the
+    Python host tool.`
+- **Custom agents** live in `~/.codex/agents/*.toml` (personal) or
+  `.codex/agents/*.toml` (project). Each file needs `name`, `description`, and
+  `developer_instructions`. A custom agent named after a built-in overrides it.
+- **Inspect threads** — run `/agent` in the CLI to switch between running agent
+  threads. App and IDE show a subagents panel with Active and Done lists.
+- **Commands are skills** — Codex has no custom slash commands, so `implement`,
+  `review`, `docs`, `hire`, and `testarch` appear as skills in the `/` menu.
+- **Permissions inherit** — subagents inherit the parent turn's sandbox and
+  approval mode. Choose the permission mode under the composer before you
+  delegate. Approval requests can surface from a background thread; press `o`
+  to open that thread before approving.
+- **Global defaults** live under `[agents]` in Codex `config.toml` (`enabled`,
+  `max_concurrent_threads_per_session`, `default_subagent_model`,
+  `default_subagent_reasoning_effort`). This repo does not create one; add
+  `~/.codex/config.toml` only if you need to tune those defaults.
+
 ## Setup and sync
 
 ```bash
