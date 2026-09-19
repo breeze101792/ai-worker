@@ -30,15 +30,15 @@ agent still uses it; otherwise remove the row.
 
 `ollama/deepseek-v4.1-flash:cloud`
 
-Set by `model` in `opencode.jsonc`. Used by `build`, which does not declare its
-own model.
+Set by `model` in `opencode.jsonc`. Used by `build` and `plan`, which do not
+declare their own model.
 
 ## Agents by model
 
 | Agent | Model |
 | --- | --- |
 | `build` (default) | `ollama/deepseek-v4.1-flash:cloud` |
-| `plan` | `ollama/glm-5.3:cloud` |
+| `plan` | inherited (default) |
 | `architect` | `ollama/glm-5.3:cloud` |
 | `toolchain-engineer` | `ollama/glm-5.3:cloud` |
 | `code-reviewer` | `ollama/deepseek-v4.1-flash:cloud` |

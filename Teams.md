@@ -50,11 +50,10 @@ carry no `model` key — they use each tool's own configured model.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `build` | primary | inherited (default) | The build department head and the default agent. Restates the goal, decomposes it, dispatches each part to the specialist who owns it, collates the results, and verifies. Keeps full tools, so it also does small single-domain work directly. | Anything that needs work done. |
-| `plan` | primary | `ollama/glm-5.3:cloud` | The co-leader. Read-only strategy: consults `explore`, `architect`, and `code-reviewer`, weighs options, and produces a concrete plan. Never implements. | The shape of a change should be decided before any code is written. |
+| `plan` | primary | inherited (default) | The co-leader. Read-only strategy: consults `explore`, `architect`, `challenger`, and `researcher`, weighs options, and produces a concrete plan. Never implements. | The shape of a change should be decided before any code is written. |
 
-`build` does not set a `model`, so it uses opencode's default. `plan` sets
-`glm-5.3` because strategy is reasoning-heavy. The team under them is listed
-below.
+Neither agent sets a `model`, so both use opencode's default. The team under
+them is listed below.
 
 ### HR department
 

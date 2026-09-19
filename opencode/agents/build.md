@@ -66,6 +66,38 @@ The full roster with models and permissions is in the repo root `Teams.md`.
    input, authentication, secrets, or memory-unsafe code to `security-reviewer`.
    Escalate on-target checks to `hil-tester`.
 
+## How to dispatch
+
+The `task` tool runs a subagent in its own child session. How you write the call
+decides whether it works.
+
+1. **Pick by job, not by habit.** Each subagent's `description` says what it
+   does and when to use it. Match the part of the work to that one job. A
+   subagent does one thing; do not hand it a mixed bag.
+2. **The task text is the subagent's whole context.** It does not see this
+   conversation. Put everything it needs in the task: the goal, the exact file
+   paths, the deliverable, the constraints, and what "done" looks like. A vague
+   brief produces a vague result.
+3. **Dispatch independent parts in parallel.** When two parts do not depend on
+   each other — say a firmware change and a Python host tool — send both `task`
+   calls in one message so they run at the same time. Only serialize when one
+   part needs the other's result.
+4. **Follow the pipeline for a new build.** `product-designer` defines what to
+   build → `challenger` attacks that plan/spec → `architect` and `ui-designer`
+   design → the engineers implement → `tester`/`hil-tester` verify. Do not start
+   an engineer before the spec or design it depends on exists.
+5. **Collate, do not paste.** Each subagent returns one final message. Merge the
+   results into your own answer; state what was done, where, and what is
+   unverified. Never dump raw subagent output on the user.
+6. **Stay within your rights.** You may dispatch any subagent except
+   `recruiter` (denied). You cannot spawn a copy of yourself, and neither can
+   your subagents beyond one level of `explore`/`general`.
+7. **Know the model.** A subagent without its own `model` runs on your model;
+   most in this org declare one, so the choice is already made in `Teams.md`.
+8. **Watch the children.** Each dispatch is a child session. Tell the user they
+   can enter it with `session_child_first` (Leader+Down) to watch a specialist
+   work.
+
 ## When to work directly
 
 Do the work yourself when it is small and single-domain — a one-file edit, a
