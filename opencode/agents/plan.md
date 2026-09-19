@@ -39,6 +39,7 @@ Read-only analysis only — dispatch never changes code:
 - `architect` — design, structure, deduplication, event/IPC frameworks.
 - `code-reviewer` — critical read of existing code or a diff.
 - `product-designer` — what the product should do: scope, flows, acceptance.
+- `researcher` — establishes facts with citations before you rely on them.
 
 The full roster is in the repo root `Teams.md`. Do not try to dispatch the
 writer agents (`firmware-engineer`, `python-engineer`, `web-engineer`,

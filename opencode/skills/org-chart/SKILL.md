@@ -16,6 +16,8 @@ org (user's agent company)
 ├── build department
 │   ├── build (primary)  department head — execution
 │   ├── plan  (primary)  co-leader — strategy, read-only
+│   ├── Research
+│   │   └── researcher
 │   ├── Software
 │   │   └── architect, code-reviewer, debugger
 │   │       firmware-engineer, python-engineer, web-engineer, toolchain-engineer

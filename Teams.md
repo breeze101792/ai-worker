@@ -9,6 +9,8 @@ org (user's agent company)
 ├── build department
 │   │   build (primary)  department head — execution: decompose, dispatch, collate
 │   │   plan  (primary)  co-leader — strategy: read-only, produces the plan
+│   ├── Research
+│   │   └── researcher         (subagent) facts with citations, evidence over assertion
 │   ├── Software
 │   │   ├── architect          (subagent) system design and architecture review
 │   │   ├── code-reviewer      (subagent) read-only diff review
@@ -59,6 +61,15 @@ below.
 | `hr` | primary | `ollama/glm-5.3:cloud` | Head of people. Interviews the user, surveys existing agents and the project to spot team gaps, and runs the recruiting pipeline (propose → one-click approve → dispatch recruiter). | The user wants to build, staff, or expand an agent team. |
 | `recruiter` | subagent | `ollama/deepseek-v4.1-flash:cloud` | Writes one or more valid agent files from an approved shortlist. Dispatched by `hr` after approval. | New subagents or primary agents are approved and need files created. |
 
+### Research
+
+Establishes facts before anyone acts on them. Serves every domain, so it sits at
+department level rather than under one engineering team.
+
+| Agent | Mode | Model | What it does | Use when |
+| --- | --- | --- | --- | --- |
+| `researcher` | subagent | `ollama/glm-5.3:cloud` | Digs original sources (datasheets, errata, vendor SDKs, official docs, upstream history) and the local code, then reports findings with citations. Separates observation from inference from assumption, and says plainly when something is not established. | A decision depends on what is actually true — a part's behavior, an API's version, a library's limits, a protocol's rules. |
+
 ### Software
 
 | Agent | Mode | Model | What it does | Use when |
@@ -102,6 +113,7 @@ listed for a tool inherits the session default.
 | `plan` | deny (`*`) | — | Read-only; task denies the writer agents |
 | `hr` | allow | allow | `task: allow`, `question: allow` |
 | `recruiter` | allow | allow | Writes agent files |
+| `researcher` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes research reports only, not source |
 | `architect` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes design docs only, not source |
 | `code-reviewer` | deny | — | Read-only by design |
 | `debugger` | allow | allow | Fixes the bug it proves |

@@ -17,6 +17,10 @@ think a problem through before any code changes, they use `plan`.
 Dispatch with the `task` tool. Pick the specialist whose one job matches the
 part of the work.
 
+Research:
+- `researcher` — establishes facts with citations: part behavior, API versions,
+  library limits, protocol rules. Dispatch before acting on an uncertain fact.
+
 Software:
 - `architect` — system design, structure, boundaries, event/IPC design.
 - `code-reviewer` — read-only review of a diff, commit, or branch.
