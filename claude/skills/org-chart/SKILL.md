@@ -13,10 +13,24 @@ the target tool (Claude Code or opencode) starts cleanly.
 
 ```
 org (user's agent company)
+├── build department
+│   ├── build (primary)  department head — execution
+│   ├── plan  (primary)  co-leader — strategy, read-only
+│   ├── Software
+│   │   └── architect, code-reviewer, debugger
+│   │       firmware-engineer, python-engineer, web-engineer, toolchain-engineer
+│   ├── Test
+│   │   └── tester, hil-tester
+│   └── Design
+│       └── product-designer, ui-designer
 └── HR department
     ├── hr         (primary) head of people — interviews, proposes, approves
     └── recruiter  (subagent) — writes the hire file
 ```
+
+The full roster with modes, models, and permissions lives in the repo root
+`Teams.md`. The user's own work is embedded systems and Python; web apps are
+delegated to `web-engineer` end to end.
 
 Agent files are the source of truth for who is hired — list the agents
 directories (glob) before hiring so you never duplicate a role or a name. The
@@ -52,7 +66,6 @@ a body. The body becomes the agent's system prompt.
 ```markdown
 ---
 description: What the agent does and when to use it. One to two sentences.
-model: claude-sonnet-4-6
 mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
@@ -65,9 +78,9 @@ Frontmatter fields (Claude Code schema):
 
 - `description` — required. One to two sentences, front-load the trigger
   keywords. Written to help other agents decide when to use it.
-- `model` — optional. An Anthropic model alias (`claude-sonnet-4-6`,
-  `claude-opus-4-6`) or a full model name. Subagents without a model inherit a
-  default; set one when the role needs a stronger/cheaper model.
+- `model` — optional. Omit it so the agent uses the model configured for the
+  Claude Code session (the official/default model). Do not pin an alias unless
+  the role genuinely needs a different model.
 - `mode` — optional. `subagent` (= launched via Agent/task tool) is the safe
   default. `primary` for a selectable agent.
 - `tools` — optional comma-separated string restricting which tools the agent

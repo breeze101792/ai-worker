@@ -4,6 +4,17 @@ Models and providers are defined in `opencode.jsonc` under `provider`.
 Each agent sets its `model` in its frontmatter; agents that do not set one
 inherit the global default.
 
+## Model policy
+
+This org uses two tiers:
+
+- **`ollama/glm-5.3:cloud`** — hard and heavy work: design, debugging,
+  implementation, on-target testing, and any task that needs reasoning.
+- **`ollama/deepseek-v4.1-flash:cloud`** — light work: review, test planning,
+  UI design, recruiting, and the default agent.
+
+Do not use `ollama/deepseek-v4-pro:cloud` for any agent.
+
 ## Sync rule
 
 Change an agent's model in three places together, or the config drifts:
@@ -19,21 +30,28 @@ agent still uses it; otherwise remove the row.
 
 `ollama/deepseek-v4.1-flash:cloud`
 
-Set by `model` in `opencode.jsonc`. Used by `build` and `plan`, which do not
-declare their own model.
+Set by `model` in `opencode.jsonc`. Used by `build`, which does not declare its
+own model.
 
 ## Agents by model
 
 | Agent | Model |
 | --- | --- |
 | `build` (default) | `ollama/deepseek-v4.1-flash:cloud` |
-| `plan` (default) | `ollama/deepseek-v4.1-flash:cloud` |
+| `plan` | `ollama/glm-5.3:cloud` |
 | `architect` | `ollama/glm-5.3:cloud` |
+| `toolchain-engineer` | `ollama/glm-5.3:cloud` |
+| `code-reviewer` | `ollama/deepseek-v4.1-flash:cloud` |
 | `debugger` | `ollama/glm-5.3:cloud` |
+| `firmware-engineer` | `ollama/glm-5.3:cloud` |
+| `hil-tester` | `ollama/glm-5.3:cloud` |
 | `hr` | `ollama/glm-5.3:cloud` |
+| `python-engineer` | `ollama/glm-5.3:cloud` |
+| `product-designer` | `ollama/glm-5.3:cloud` |
 | `recruiter` | `ollama/deepseek-v4.1-flash:cloud` |
 | `tester` | `ollama/deepseek-v4.1-flash:cloud` |
 | `ui-designer` | `ollama/deepseek-v4.1-flash:cloud` |
+| `web-engineer` | `ollama/glm-5.3:cloud` |
 
 ## Available models
 

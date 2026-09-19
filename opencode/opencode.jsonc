@@ -55,6 +55,11 @@
                     "*": "allow",
                     "debugger": "deny",
                     "tester": "deny",
+                    "hil-tester": "deny",
+                    "firmware-engineer": "deny",
+                    "python-engineer": "deny",
+                    "web-engineer": "deny",
+                    "toolchain-engineer": "deny",
                     "recruiter": "deny"
                 }
             }

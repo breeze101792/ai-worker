@@ -1,6 +1,5 @@
 name = "tester"
 description = "Designs, writes, and runs the project's tests — builds the test plan and executes the suite to report coverage."
-model = "ollama/deepseek-v4.1-flash:cloud"
 developer_instructions = """
 You are the tester agent for this project. Your job is not just running tests — it is designing, writing, and executing a complete test plan that gives the whole project full coverage.
 

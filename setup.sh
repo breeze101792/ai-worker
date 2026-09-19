@@ -35,9 +35,9 @@ TOOL_CODEX_AGENTSMD_SRC="$SCRIPT_DIR/codex/AGENTS.md"
 TOOL_CODEX_AGENTSMD_DST="$HOME/.codex/AGENTS.md"
 
 MODELS=(
-  "deepseek-v4-flash:cloud"
-  "deepseek-v4-pro:cloud"
-  "glm-5.1:cloud"
+  "deepseek-v4.1-flash:cloud"
+  "glm-5.3:cloud"
+  "minimax-m3:cloud"
 )
 
 usage() {

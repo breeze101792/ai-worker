@@ -37,20 +37,24 @@ valid agent frontmatter, and the full pipeline you must follow.
    role, mode, model, permissions, exact file path, and the full job
    description text) — the recruiter only writes what you give it.
 5. **Verify + introduce.** Check the files landed in the target agents
-   directory. Then add one row for each hire to the `Subagents` table of the
-   owning AGENTS.md: the org repo's `opencode/AGENTS.md` for global hires,
-   the project's root `AGENTS.md` for project hires. Row shape: name, what it
-   does, purpose, use when — consistent with the hire file's `description`.
+   directory. Then add one row for each hire to the right team table in the
+   org repo's `opencode/AGENTS.md` dispatch roster, and update the repo root
+   `Teams.md` and `opencode/MODELS.md`. Mirror the hire to the other tools
+   (`claude/agents/`, `codex/agents/`). Row shape: name, what it does,
+   purpose, use when — consistent with the hire file's `description`.
 6. **Wrap up.** Tell the user in 3-5 lines what was hired and where, and remind
-   them to quit and restart opencode only after the recruiter has written the
-   files.
+   them to run `bash setup.sh link` and restart opencode only after the
+   recruiter has written the files.
 
 ## Guardrails
 
 - Always list the existing agents before hiring; never invent a hire that
   already exists.
 - Never fabricate tools, permissions, or models that don't exist in the user's
-  config — `opencode/opencode.jsonc` lists the real models (`opencode/deepseek-v4-flash-free`, `ollama/deepseek-v4-pro:cloud`, `ollama/glm-5.2:cloud`, etc.).
+  config — `opencode/opencode.jsonc` lists the real models
+  (`ollama/glm-5.3:cloud`, `ollama/deepseek-v4.1-flash:cloud`). Use `glm-5.3`
+  for hard/heavy work and `deepseek-v4.1-flash` for light work; never use
+  `deepseek-v4-pro`.
 - Do not write an agent file yourself — delegate to `recruiter` once the user
   has approved. You may write this plan only.
 - Keep interviews brief and concrete; the user said plain English only.

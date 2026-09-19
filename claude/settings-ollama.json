@@ -5,12 +5,12 @@
     "ANTHROPIC_BASE_URL": "http://127.0.0.1:11434",
     "ANTHROPIC_MODEL_BAKUP": "minimax-m3:cloud",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4.1-flash:cloud",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro:cloud",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "minimax-m3:cloud",
-    "ANTHROPIC_DEFAULT_FABLE_MODEL": "glm-5.2:cloud",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.3:cloud",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.3:cloud",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "glm-5.3:cloud",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "512000",
-    "_comment": "512000 for minimax-m3, 950000 for glm-5.2"
+    "_comment": "512000 for minimax-m3, 950000 for glm-5.3"
   },
   "attribution": {
     "commit": "",

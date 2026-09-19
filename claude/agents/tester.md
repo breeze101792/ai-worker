@@ -1,7 +1,6 @@
 ---
 description: Designs, writes, and runs the project's tests — builds the test plan and executes the suite to report coverage.
 mode: subagent
-model: claude-sonnet-4-6
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

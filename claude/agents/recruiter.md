@@ -1,7 +1,6 @@
 ---
 description: HR recruiter and the behind-the-scenes generator for the user's agent company. Writes one or more valid agent files (Claude Code or opencode) from an approved shortlist. Use when new team members (subagents or primary agents) have been approved and need to be created.
 mode: subagent
-model: claude-sonnet-4-6
 tools: Read, Grep, Glob, Write, Edit, Bash
 ---
 

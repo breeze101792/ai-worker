@@ -13,10 +13,24 @@ opencode starts cleanly.
 
 ```
 org (user's agent company)
+├── build department
+│   ├── build (primary)  department head — execution
+│   ├── plan  (primary)  co-leader — strategy, read-only
+│   ├── Software
+│   │   └── architect, code-reviewer, debugger
+│   │       firmware-engineer, python-engineer, web-engineer, toolchain-engineer
+│   ├── Test
+│   │   └── tester, hil-tester
+│   └── Design
+│       └── product-designer, ui-designer
 └── HR department
     ├── hr         (primary) head of people — interviews, proposes, approves
     └── recruiter  (subagent) — writes the hire file
 ```
+
+The full roster with modes, models, and permissions lives in the repo root
+`Teams.md`. The user's own work is embedded systems and Python; web apps are
+delegated to `web-engineer` end to end.
 
 Agent files are the source of truth for who is hired — list the agents
 directories (glob) before hiring so you never duplicate a role or a name. The
@@ -71,11 +85,13 @@ into `options` — avoid it. Rules:
 - `mode` — required. One of `primary`, `subagent`, `all`. `primary` = a
   selectable agent (needs a real model + tools). `subagent` = launched via the
   task tool; the main agent talks to the user.
-- `model` — always has a provider prefix: `provider/model`. For this org:
-  `opencode/deepseek-v4-flash-free` (default), `ollama/deepseek-v4-pro:cloud`
-  (more capable/reasoning), `ollama/glm-5.2:cloud`, etc. If unsure which a
-  role needs, default to `opencode/deepseek-v4-flash-free`. A primary agent
-  without `model` inherits the user's default.
+- `model` — always has a provider prefix: `provider/model`. This org uses two
+  tiers: `ollama/glm-5.3:cloud` for hard/heavy work (design, debugging,
+  implementation, on-target testing) and `ollama/deepseek-v4.1-flash:cloud` for
+  light work. Do not use `ollama/deepseek-v4-pro:cloud`. The real list is in
+  `opencode/opencode.jsonc` under `provider`. If unsure, default to
+  `ollama/deepseek-v4.1-flash:cloud`. A primary agent without `model` inherits
+  the user's default.
 - `permission` — flat action or `{tool: action}` map. Needed to lock down a
   hire: e.g. `edit: deny` for pure-readers, or allow for writers.
 - Do NOT put a `prompt` key in frontmatter — the body IS the prompt.

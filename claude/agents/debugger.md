@@ -1,7 +1,6 @@
 ---
 description: Deep debugging specialist — investigates hard bugs, crashes, stack traces, and mysterious failures; reproduces the problem, finds the root cause, fixes it, and verifies the fix. Use only for serious debugging that needs a powerful reasoning model.
 mode: subagent
-model: claude-opus-4-6
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

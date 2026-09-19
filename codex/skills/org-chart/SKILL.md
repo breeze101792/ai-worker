@@ -13,10 +13,25 @@ follow so Codex loads cleanly.
 
 ```
 org (user's agent company)
+├── build department
+│   ├── build (primary)  department head — execution
+│   ├── plan  (primary)  co-leader — strategy, read-only
+│   ├── Software
+│   │   └── architect, code-reviewer, debugger
+│   │       firmware-engineer, python-engineer, web-engineer, toolchain-engineer
+│   ├── Test
+│   │   └── tester, hil-tester
+│   └── Design
+│       └── product-designer, ui-designer
 └── HR department
     ├── hr         (primary) head of people — interviews, proposes, approves
     └── recruiter  (subagent) — writes the hire file
 ```
+
+The full roster with modes, models, and permissions lives in the repo root
+`Teams.md`. The user's own work is embedded systems and Python; web apps are
+delegated to `web-engineer` end to end. Codex has no `build`/`plan` primaries,
+so the main agent acts as the department head.
 
 Custom agent files are the source of truth for who is hired — list the agent
 directories before hiring so you never duplicate a role or a name. In Codex
@@ -53,7 +68,6 @@ instructions.
 ```toml
 name = "name"
 description = "What the agent does and when to use it. One to two sentences."
-model = "provider/model-id"
 developer_instructions = """
 You are <name>. Write the full role definition here: job, boundaries, workflow,
 guardrails.
@@ -75,9 +89,10 @@ Every custom agent file must define:
 
 You may add other supported config keys, including:
 
-- `model` — always has a provider prefix: `provider/model`. For this org:
-  Codex models (gpt-5.6 family). If unsure which a role needs, omit `model` so
-  the agent inherits the default.
+- `model` — omit it. This org's Codex agents carry no `model` key and use the
+  model configured for the Codex session (the official/default model). Set one
+  only if a role genuinely needs a different model, and then use a provider
+  prefix: `provider/model`.
 - `model_reasoning_effort` — one of `minimal`, `low`, `medium`, `high`, `xhigh`.
 - `sandbox_mode` — `read-only`, `workspace-write`, or `danger-full-access`.
 - `mcp_servers.<id>` — MCP server config for that agent.
