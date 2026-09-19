@@ -13,10 +13,12 @@ org (user's agent company)
 │   │   └── researcher         (subagent) facts with citations, evidence over assertion
 │   ├── Software
 │   │   ├── architect          (subagent) system design and architecture review
+│   │   ├── challenger         (subagent) adversarial pre-build critique of proposals
 │   │   ├── code-reviewer      (subagent) read-only diff review
 │   │   ├── debugger           (subagent) root-cause hunting
 │   │   ├── firmware-engineer  (subagent) C/C++ on embedded targets
 │   │   ├── python-engineer    (subagent) Python apps, tools, automation
+│   │   ├── security-reviewer  (subagent) security review of code and designs
 │   │   ├── web-engineer       (subagent) full-stack web, autonomous
 │   │   └── toolchain-engineer (subagent) build systems, toolchain, CI, flashing
 │   ├── Test
@@ -75,10 +77,12 @@ department level rather than under one engineering team.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `architect` | subagent | `ollama/glm-5.3:cloud` | Principal software architect. Designs and reviews system architecture, hunts duplicate code, designs event/IPC frameworks, and recommends structure that prevents bugs. Rejects overengineering. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, or designing an event bus or IPC layer. |
+| `challenger` | subagent | `ollama/glm-5.3:cloud` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design; proposes no design of its own. | Before implementation, when changing course is still cheap, and the proposal must be stress-tested. |
 | `code-reviewer` | subagent | `ollama/deepseek-v4.1-flash:cloud` | Reviews code changes — diffs, staged changes, commits, and local branches — and reports ranked findings with file:line citations. Read-only. | A change needs review before it lands, or a commit or PR needs a sanity check. |
 | `debugger` | subagent | `ollama/glm-5.3:cloud` | Reproduces hard bugs, traces the code path, proves a root cause, applies a minimal fix, and verifies it. | A bug resists quick fixes, errors or crashes have no obvious cause, or a stack trace needs tracing to source. |
 | `firmware-engineer` | subagent | `ollama/glm-5.3:cloud` | Writes bare-metal and RTOS firmware in C and C++ — drivers, ISRs, DMA, memory-mapped IO, power states. Follows kernel or Zephyr conventions. | Implementing or modifying firmware on microcontrollers, SoCs, and real-time targets. |
 | `python-engineer` | subagent | `ollama/glm-5.3:cloud` | Writes Python applications, tools, and automation. Follows PEP 8, the project's packaging and test conventions. | Implementing Python code, CLI tools, scripts, or library work. |
+| `security-reviewer` | subagent | `ollama/glm-5.3:cloud` | Reviews code and designs for security — injection, memory safety, secrets, auth, crypto, unsafe deserialization, and supply chain — and reports ranked findings with file:line citations. Read-only. | A change touches untrusted input, authentication, secrets, network or serial interfaces, or anything memory-unsafe. |
 | `web-engineer` | subagent | `ollama/glm-5.3:cloud` | Builds full-stack web apps autonomously — frontend markup, styles, and TypeScript plus the backend API. Implements `ui-designer` specs. | A web app or web feature must be implemented end to end without a human in the loop. |
 | `toolchain-engineer` | subagent | `ollama/glm-5.3:cloud` | Owns build systems and toolchains — Make, CMake, Zephyr west, cross-compilers, linker scripts, CI, flashing. Diagnoses build and link failures. | A build breaks, a toolchain must be configured, or CI and flashing need work. |
 
@@ -115,10 +119,12 @@ listed for a tool inherits the session default.
 | `recruiter` | allow | allow | Writes agent files |
 | `researcher` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes research reports only, not source |
 | `architect` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes design docs only, not source |
+| `challenger` | deny | — | Read-only by design; attacks proposals, never edits |
 | `code-reviewer` | deny | — | Read-only by design |
 | `debugger` | allow | allow | Fixes the bug it proves |
 | `firmware-engineer` | allow | allow | Builds for the real target |
 | `python-engineer` | allow | allow | Runs code and tests |
+| `security-reviewer` | deny | — | Read-only by design; finds security defects, never edits |
 | `web-engineer` | allow | allow | Verifies its own output end to end |
 | `toolchain-engineer` | allow | allow | Changes the build and CI |
 | `tester` | inherited | — | Writes test code |

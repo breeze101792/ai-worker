@@ -63,7 +63,7 @@ Under the build department:
 | Team | Agents |
 |------|--------|
 | Research | `researcher` |
-| Software | `architect`, `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `web-engineer`, `toolchain-engineer` |
+| Software | `architect`, `challenger`, `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
 | Test | `tester`, `hil-tester` |
 | Design | `product-designer`, `ui-designer` |
 

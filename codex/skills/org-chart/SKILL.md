@@ -19,7 +19,7 @@ org (user's agent company)
 │   ├── Research
 │   │   └── researcher
 │   ├── Software
-│   │   └── architect, code-reviewer, debugger
+│   │   └── architect, challenger, code-reviewer, debugger, security-reviewer
 │   │       firmware-engineer, python-engineer, web-engineer, toolchain-engineer
 │   ├── Test
 │   │   └── tester, hil-tester

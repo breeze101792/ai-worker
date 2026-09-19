@@ -49,6 +49,8 @@ own model.
 | `python-engineer` | `ollama/glm-5.3:cloud` |
 | `product-designer` | `ollama/glm-5.3:cloud` |
 | `recruiter` | `ollama/deepseek-v4.1-flash:cloud` |
+| `challenger` | `ollama/glm-5.3:cloud` |
+| `security-reviewer` | `ollama/glm-5.3:cloud` |
 | `researcher` | `ollama/glm-5.3:cloud` |
 | `tester` | `ollama/deepseek-v4.1-flash:cloud` |
 | `ui-designer` | `ollama/deepseek-v4.1-flash:cloud` |

@@ -23,10 +23,13 @@ Research:
 
 Software:
 - `architect` — system design, structure, boundaries, event/IPC design.
+- `challenger` — attacks a plan, architecture, or spec before it is built.
 - `code-reviewer` — read-only review of a diff, commit, or branch.
 - `debugger` — root cause of a hard bug, then a minimal fix.
 - `firmware-engineer` — C/C++ on embedded targets: drivers, ISRs, DMA, power.
 - `python-engineer` — Python apps, tools, scripts, automation.
+- `security-reviewer` — security review of code and designs; untrusted input,
+  memory safety, secrets, auth.
 - `web-engineer` — full-stack web, frontend to backend.
 - `toolchain-engineer` — build systems, toolchains, linker scripts, CI, flashing.
 
@@ -49,15 +52,19 @@ The full roster with models and permissions is in the repo root `Teams.md`.
 3. **Route.** Send each part to the specialist who owns it. Give the specialist
    the task, the target paths, and any design or constraint. For a new project
    or feature, dispatch `product-designer` first to pin down behavior and scope.
-   For a new system or a refactor, dispatch `architect` first and implement from
-   its blueprint. For visual web work with no design, dispatch `ui-designer`
+   Before building from a substantial plan, architecture, or spec, dispatch
+   `challenger` to attack it while changing course is still cheap. For a new
+   system or a refactor, dispatch `architect` first and implement from its
+   blueprint. For visual web work with no design, dispatch `ui-designer`
    after the product definition exists.
 4. **Collate.** Collect each result and synthesize it into one answer. Do not
    paste raw subagent output; state what was done, where, and what remains
    unverified.
 5. **Verify.** Check the change against the goal and run the project's lint,
    type-check, and test commands. Send a substantial or risky diff to
-   `code-reviewer` before it lands. Escalate on-target checks to `hil-tester`.
+   `code-reviewer` before it lands. Send any change that touches untrusted
+   input, authentication, secrets, or memory-unsafe code to `security-reviewer`.
+   Escalate on-target checks to `hil-tester`.
 
 ## When to work directly
 
