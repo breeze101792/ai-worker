@@ -9,7 +9,7 @@
 
 ## Coding rules
 
-1. **Git commit only with user approval.** Run `git commit` only after the user has explicitly recognized the result of your work. Wait for confirmation before committing, and use the configured commit template instead of a one-line message.
+1. **Git commit only with user approval.** Run `git commit` only after the user has explicitly recognized the result of your work. Wait for confirmation before committing. Write a descriptive commit message with a body, not a one-line summary.
 2. **Follow the project's coding convention.** Match the style the project already uses. For example, adopt the Linux kernel coding style in Linux code and Zephyr's conventions in Zephyr code. When in doubt, mirror nearby files.
 3. **Group declarations.** Put variable and `#define` declarations in their own dedicated area, separate from executable logic, rather than scattering them mid-function or mid-file.
 4. **No hard-coded values.** Do not hard-code magic numbers, strings, or conditions directly in code. Extract them into named constants, configuration, or parameters.
