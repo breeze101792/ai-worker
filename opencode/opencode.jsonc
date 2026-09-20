@@ -43,17 +43,18 @@
                     "harness-engineer": "deny",
                     "ai": "deny",
                     "plan": "deny",
-                    "hr": "deny"
+                    "hr": "deny",
+                    "build": "deny"
                 }
             }
         },
         "plan": {
             "permission": {
                 "edit": {
+                    "*": "deny",
                     "docs/**": "allow",
                     "README.md": "allow",
-                    "AGENTS.md": "allow",
-                    "*": "deny"
+                    "AGENTS.md": "allow"
                 },
                 "task": {
                     "*": "allow",
@@ -119,7 +120,8 @@
                     "recruiter": "deny",
                     "build": "deny",
                     "plan": "deny",
-                    "hr": "deny"
+                    "hr": "deny",
+                    "ai": "deny"
                 }
             }
         }

@@ -21,8 +21,8 @@ The user is Shaun, an embedded systems engineer. Weigh embedded concerns — har
 
 ## Leadership
 
-Codex has no `build`/`plan` primaries, so this main agent acts as the department
-head. Take the request, restate the goal, decompose it, and dispatch each part
+Codex has no department-head primaries, so this main agent acts as every
+department head at once — build and planning alike. Take the request, restate the goal, decompose it, and dispatch each part
 to the custom agent that owns it, then collate the results. Do small,
 single-domain work directly; delegate work that is large, spans domains, or
 would fill your context with detail.
@@ -32,10 +32,12 @@ change before any code is written: investigate, weigh options, and produce a
 concrete plan without editing. Hand execution back to the normal working mode
 once the plan is approved.
 
-The Research, Software, Test, and Design teams below sit under this department.
-Route work through the department head, or dispatch a specialist directly when
-the match is obvious. The AI and HR departments sit outside it, each headed by
-its own primary.
+The departments are headed by four primaries: `build` (execution; leads
+Software and Test), `plan` (strategy; leads Research, Architecture, and Design),
+`ai` (agent tools), and `hr` (hiring). Route work through the department head,
+or dispatch a specialist directly when the match is obvious.
+
+The teams below are grouped by department.
 
 Each primary draws a **virtual team**: the teams are capability pools, and who
 may dispatch whom follows the org's access matrix. Codex cannot enforce it —
@@ -48,18 +50,16 @@ Custom agents live in `~/.codex/agents/` as one TOML file per agent (name, descr
 
 The tables below are the dispatch roster the main agent reads, grouped by team.
 
-### Research
+### Research — Plan department
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
 | `researcher` | Establishes facts before anyone acts on them — digs original sources (datasheets, errata, vendor SDKs, official docs, upstream history) and the local code, then reports findings with citations. Separates observation from inference from assumption, and says plainly when something is not established. | Established facts with evidence. | A decision depends on what is actually true — a part's behavior, an API's version, a library's limits, a protocol's rules. |
 
-### Software
+### Software — build department
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
-| `architect` | Designs and reviews system architecture: hunts duplicate code, designs robust event/IPC frameworks, draws high-level blueprints, and recommends structure that prevents common bugs. Rejects overengineering — every abstraction must trace to a real requirement. | Architecture design and review before implementation. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, or designing an event bus or IPC layer. |
-| `challenger` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design. | Adversarial critique before implementation. | The shape of a change must be stress-tested while changing course is still cheap. |
 | `code-reviewer` | Reviews code changes — diffs, staged changes, commits, and local branches before merge — and reports ranked findings with file:line citations. Read-only: never edits code. | Last check before a change lands. | A change needs review before it lands, or a commit or PR needs a sanity check. |
 | `debugger` | Reproduces hard bugs, traces the code path, proves a root cause, applies a minimal fix, and verifies it. | Serious debugging that needs a powerful reasoning model. | A bug resists quick fixes, errors or crashes have no obvious cause, or a stack trace needs tracing to source. |
 | `firmware-engineer` | Writes bare-metal and RTOS firmware in C and C++ — drivers, ISRs, DMA, memory-mapped IO, power states — following kernel or Zephyr conventions. | Embedded implementation. | Firmware must be implemented or modified on a microcontroller, SoC, or real-time target. |
@@ -68,14 +68,21 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | `web-engineer` | Builds full-stack web apps autonomously — frontend markup, styles, and TypeScript plus the backend API — implementing `ui-designer` specs. | Delegated web implementation. | A web app or feature must be implemented end to end without a human in the loop. |
 | `toolchain-engineer` | Owns build systems and toolchains — Make, CMake, Zephyr west, cross-compilers, linker scripts, CI, flashing — and fixes build and link failures. | Build and toolchain ownership. | A build breaks, a toolchain must be configured, or CI and flashing need work. |
 
-### Test
+### Architecture — Plan department
+
+| Agent | What it does | Purpose | Use when |
+| --- | --- | --- | --- |
+| `architect` | Designs and reviews system architecture: hunts duplicate code, designs robust event/IPC frameworks, draws high-level blueprints, and recommends structure that prevents common bugs. Rejects overengineering — every abstraction must trace to a real requirement. | Architecture design and review before implementation. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, or designing an event bus or IPC layer. |
+| `challenger` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design. | Adversarial critique before implementation. | The shape of a change must be stress-tested while changing course is still cheap. |
+
+### Test — build department
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
 | `tester` | Surveys the project, builds the test plan, writes host tests, runs the suite, and reports coverage. | Host test design, execution, and coverage. | A test plan is needed, host tests must be written or extended, or the suite must run and report coverage. |
 | `hil-tester` | Runs tests on real hardware — flashes targets, captures serial output, drives rigs, and runs on-target timing and power checks. | On-target test execution. | Tests must run on the board rather than on the host. |
 
-### Design
+### Design — Plan department
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
@@ -89,7 +96,7 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | `ai` | Head of the AI department. The agent the user discusses agent tooling with — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Decides the shape of a tooling change and dispatches `harness-engineer` to implement it. | Agent-tooling owner. | A tool needs configuring, a skill or command must be written, or an MCP server must be set up. |
 | `harness-engineer` | Owns the agent-tool configuration for opencode, Claude Code, and Codex — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Validates every change against the opencode config schema. Dispatched by `ai`. | Agent-tool configuration. | An approved tooling change needs to be implemented and validated. |
 
-### HR
+### HR department
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |

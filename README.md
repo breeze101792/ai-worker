@@ -33,10 +33,11 @@ copies of the same content. Edit the source, then re-link and restart the tool.
 - **opencode** is the richest format and the source of truth for agent design.
   Its agents use YAML frontmatter with `mode`, `model`, `permission`, and a
   markdown body that becomes the prompt. It has real primary agents, so the
-  department head (`build`) and co-leader (`plan`) exist only here.
+  department-head primaries (`build`, `plan`, `ai`, `hr`) exist only here.
 - **Claude Code** agents are markdown with `description`, `mode`, and a `tools`
-  list. It has no `build`/`plan` primaries, so the main agent acts as the
-  department head. Agents carry no `model` key; they use the session's model.
+  list. It has no department-head primaries, so the main agent acts as the
+  department head for every department. Agents carry no `model` key; they use
+  the session's model.
 - **Codex** agents are TOML, one file per agent (`name`, `description`,
   `developer_instructions`). Codex has no custom slash commands, so commands are
   converted to skills. Agents carry no `model` key; they inherit Codex's model.
@@ -53,31 +54,26 @@ so we never pin another vendor's model in their files.
 ## The org
 
 The agent roster is in `Teams.md` — the single source of truth for who is hired.
-The org has a build department led by two primary agents:
+Four departments, each headed by a primary agent:
 
-- **`build`** — department head and default agent. Owns execution: restate the
-  goal, decompose it, dispatch each part to the right specialist, collate, and
-  verify.
-- **`plan`** — co-leader. Owns strategy: read-only, consults `explore`,
-  `architect`, and `code-reviewer`, and produces a concrete plan. Never
-  implements.
+- **`build`** — build department, and the default agent. Owns execution:
+  restate the goal, decompose it, dispatch each part to the right specialist,
+  collate, and verify. Leads Software and Test.
+- **`plan`** — Plan department. Owns strategy: read-only, consults `explore`,
+  `architect`, `challenger`, and `researcher`, and produces a concrete plan.
+  Never implements. Leads Research, Architecture, and Design.
+- **`ai`** — AI department. Owns the agent tools themselves.
+- **`hr`** — HR department. Owns hiring.
 
-Under the build department:
-
-| Team | Agents |
-|------|--------|
-| Research | `researcher` |
-| Software | `architect`, `challenger`, `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
-| Test | `tester`, `hil-tester` |
-| Design | `product-designer`, `ui-designer` |
-
-Two departments sit outside the build department, each headed by its own
-primary:
-
-| Department | Agents |
-|------|--------|
-| AI | `ai` (primary), `harness-engineer` |
-| HR | `hr` (primary), `recruiter` |
+| Department | Teams | Agents |
+|------|-------|--------|
+| build | Software | `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
+| build | Test | `tester`, `hil-tester` |
+| Plan | Research | `researcher` |
+| Plan | Architecture | `architect`, `challenger` |
+| Plan | Design | `product-designer`, `ui-designer` |
+| AI | — | `ai` (primary), `harness-engineer` |
+| HR | — | `hr` (primary), `recruiter` |
 
 The teams are capability **pools**, not fixed reporting lines. Each primary
 draws a virtual team from them. An access matrix in `Teams.md` decides which
@@ -94,8 +90,8 @@ The org is the same everywhere, but each tool exposes it differently.
 ### opencode
 
 - **Primary agents** — press **Tab** to cycle between `build` (default,
-  department head), `plan` (co-leader, read-only), `hr`, and `ai` (AI
-  department).
+  build department), `plan` (Plan department, read-only), `hr` (HR
+  department), and `ai` (AI department).
 - **Subagents** — type `@` and the agent name to invoke one directly, e.g.
   `@researcher find the errata for this part`. Primary agents also dispatch
   subagents automatically via the `task` tool.
@@ -108,7 +104,7 @@ The org is the same everywhere, but each tool exposes it differently.
 
 - **Main agent is the department head.** Normal mode does the work; there is no
   `build` agent because the main session plays that role.
-- **Planning mode is the co-leader.** Press **Shift+Tab** to toggle plan mode
+- **Planning mode is the Plan department's posture.** Press **Shift+Tab** to toggle plan mode
   (read-only). This is Claude's equivalent of the `plan` agent. Restart-free:
   Claude Code watches `~/.claude/agents/` and picks up edits within seconds.
 - **Subagents** — type `@` and the name to invoke one, or let the main agent

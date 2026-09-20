@@ -1,10 +1,10 @@
-# AGENTS.md
+# CLAUDE.md
 
-> Rules for every opencode agent when they touch this project's config and agent files.
+> Rules for every Claude Code agent when they touch this project's config and agent files.
 
 ## Rules
 
-1. **Plain English.** Write opencode markdown files in concise, accurate, plain English: short declarative sentences, no metaphors, specific words over general ones.
+1. **Plain English.** Write Claude markdown files in concise, accurate, plain English: short declarative sentences, no metaphors, specific words over general ones.
 2. **English responses.** All communication with the user must be in English. Never respond in Chinese or any other language.
 
 ## Coding rules
@@ -21,27 +21,34 @@ The user is Shaun, an embedded systems engineer. Weigh embedded concerns — har
 
 ## Leadership
 
-There are four primary agents, each heading a department:
+Claude Code has no department-head primaries, so this main agent acts as every
+department head at once — build and planning alike. Take the request, restate the goal, decompose it, and dispatch
+each part to the subagent that owns it, then collate the results. Do small,
+single-domain work directly; delegate work that is large, spans domains, or
+would fill your context with detail.
 
-- **`build`** — head of the build department and the default agent. Owns
-  execution: restates the goal, decomposes it, dispatches each part to the
-  specialist who owns it, collates the results, and verifies. Keeps full tools,
-  so it also does small single-domain work directly. Leads Software and Test.
-- **`plan`** — head of the Plan department. Owns strategy: read-only, consults
-  `explore`, `architect`, `challenger`, and `researcher`, and produces a
-  concrete plan. It never implements; it hands execution to `build`. Leads
-  Research, Architecture, and Design.
-- **`ai`** — head of the AI department. Owns the agent tools themselves.
-- **`hr`** — head of the HR department. Owns hiring.
+Adopt a read-only planning posture when the user wants to decide the shape of a
+change before any code is written: use plan mode (Shift+Tab), investigate with
+the built-in `Explore` subagent and `architect`, weigh options, and produce a
+concrete plan without editing. Hand execution back to the normal working mode
+once the plan is approved.
 
-Route work through the department head, or dispatch a specialist directly when
-the match is obvious.
+Subagents here dispatch with the **Agent** tool (formerly Task). Write the task
+as the subagent's whole context: it does not see this conversation. Dispatch
+independent parts in parallel, and delegate only independent subtasks.
+
+The departments are headed by four primaries: `build` (execution; leads
+Software and Test), `plan` (strategy; leads Research, Architecture, and Design),
+`ai` (agent tools), and `hr` (hiring). Route work through the department head,
+or dispatch a specialist directly when the match is obvious.
+
+The teams below are grouped by department.
 
 Each primary draws a **virtual team**: the teams are capability pools, and who
-may dispatch whom is governed by `permission.task`. If a dispatch is denied, the
-pool is not in that primary's virtual team; report the denial instead of working
-around it. Use `plan` when the shape of a change should be decided before
-any code is written.
+may dispatch whom follows the org's access matrix. Claude Code cannot enforce it
+for subagents — a per-target `Agent(a, b)` allowlist works only for an agent
+running as the main thread with `claude --agent` — so treat the matrix as
+binding on your judgment.
 
 ## Subagents
 
@@ -57,7 +64,7 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
-| `code-reviewer` | Reviews code changes — diffs, staged changes, commits — and reports ranked findings with file:line citations. Read-only: never edits code. | Last check before a change lands. | A change needs review before it lands, or a commit or PR needs a sanity check. |
+| `code-reviewer` | Reviews code changes — diffs, staged changes, commits, and local branches before merge — and reports ranked findings with file:line citations. Read-only: never edits code. | Last check before a change lands. | A change needs review before it lands, or a commit or PR needs a sanity check. |
 | `debugger` | Reproduces hard bugs, traces the code path, proves a root cause, applies a minimal fix, and verifies it. | Serious debugging that needs a powerful reasoning model. | A bug resists quick fixes, errors or crashes have no obvious cause, or a stack trace needs tracing to source. |
 | `firmware-engineer` | Writes bare-metal and RTOS firmware in C and C++ — drivers, ISRs, DMA, memory-mapped IO, power states — following kernel or Zephyr conventions. | Embedded implementation. | Firmware must be implemented or modified on a microcontroller, SoC, or real-time target. |
 | `python-engineer` | Writes Python applications, tools, and automation following PEP 8 and the project's packaging and test conventions. | Python implementation. | Python code, CLI tools, scripts, or library work must be written or changed. |
@@ -97,18 +104,18 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
-| `recruiter` | Writes valid opencode agent files from an approved shortlist. Dispatched by `hr` after approval. | Hires new team members from a spec it receives. | New subagents or primary agents are approved and need files created. |
+| `recruiter` | Writes valid agent files (Claude Code or opencode) from an approved shortlist. Dispatched by `hr` after approval. | Hires new team members from a spec it receives. | New subagents or primary agents are approved and need files created. |
 
 ## Fan-out
 
 When you run as a subagent, delegate independent subtasks to your own subagents. Fan-out keeps each subtask focused and lets them run in parallel.
 
 1. **Decompose first.** Split the task into independent chunks, each with a clear deliverable.
-2. **Delegate via the `task` tool.** Hand each chunk to the subagent best suited for it. You may only spawn `explore` (codebase exploration) or `general` (generic subtasks) — never a copy of yourself.
+2. **Delegate via the Agent tool.** Hand each chunk to the subagent best suited for it. You may only spawn `Explore` (read-only codebase search) or `General-purpose` (generic subtasks) — never a copy of yourself.
 3. **Never re-delegate your own task.** Do not spawn a subagent for the task you were given; do it yourself. Fan-out is only for independent subtasks.
 4. **Collate.** Collect each sub-subagent's result and synthesize it into your own report to the dispatcher.
 5. **Stop at one level.** You may spawn sub-subagents; they may not spawn their own. Depth is capped by permission, not by luck.
 
 ## Shared knowledge
 
-`~/projects/notebook` is our shared notebook. OpenCode and the user use it to read knowledge, write notes, and plan work together.
+`~/projects/notebook` is our shared notebook. Claude Code and the user use it to read knowledge, write notes, and plan work together.

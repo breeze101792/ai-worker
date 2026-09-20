@@ -4,10 +4,10 @@ mode: subagent
 model: ollama/deepseek-v4.1-flash:cloud
 permission:
   edit:
+    "*": deny
     docs/**: allow
     README.md: allow
     AGENTS.md: allow
-    "*": deny
   task:
     explore: allow
     general: allow

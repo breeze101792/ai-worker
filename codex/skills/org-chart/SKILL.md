@@ -14,15 +14,18 @@ follow so Codex loads cleanly.
 ```
 org (user's agent company)
 ├── build department
-│   ├── build (primary)  department head — execution
-│   ├── plan  (primary)  co-leader — strategy, read-only
+│   ├── build (primary)  head — execution
+│   ├── Software
+│   │   └── code-reviewer, debugger, security-reviewer, firmware-engineer
+│   │       python-engineer, web-engineer, toolchain-engineer
+│   └── Test
+│       └── tester, hil-tester
+├── Plan department
+│   ├── plan  (primary)  head — strategy, read-only
 │   ├── Research
 │   │   └── researcher
-│   ├── Software
-│   │   └── architect, challenger, code-reviewer, debugger, security-reviewer
-│   │       firmware-engineer, python-engineer, web-engineer, toolchain-engineer
-│   ├── Test
-│   │   └── tester, hil-tester
+│   ├── Architecture
+│   │   └── architect, challenger
 │   └── Design
 │       └── product-designer, ui-designer
 ├── AI department
@@ -40,8 +43,9 @@ whose matrix grants that pool.
 
 Each agent file carries its own settings; the dispatch tables in each tool's
 rules file list who to call. The user's own work is embedded systems and Python;
-web apps are delegated to `web-engineer` end to end. Codex has no
-`build`/`plan` primaries, so the main agent acts as the department head.
+web apps are delegated to `web-engineer` end to end. Codex has no department-head
+primaries, so the main agent acts as every department head at once — build and
+planning alike.
 
 The custom agent files show what is actually installed — list the agent
 directories before hiring so you never duplicate a role or a name. In Codex

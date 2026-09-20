@@ -14,15 +14,18 @@ opencode starts cleanly.
 ```
 org (user's agent company)
 ├── build department
-│   ├── build (primary)  department head — execution
-│   ├── plan  (primary)  co-leader — strategy, read-only
+│   ├── build (primary)  head — execution
+│   ├── Software
+│   │   └── code-reviewer, debugger, security-reviewer, firmware-engineer
+│   │       python-engineer, web-engineer, toolchain-engineer
+│   └── Test
+│       └── tester, hil-tester
+├── Plan department
+│   ├── plan  (primary)  head — strategy, read-only
 │   ├── Research
 │   │   └── researcher
-│   ├── Software
-│   │   └── architect, challenger, code-reviewer, debugger, security-reviewer
-│   │       firmware-engineer, python-engineer, web-engineer, toolchain-engineer
-│   ├── Test
-│   │   └── tester, hil-tester
+│   ├── Architecture
+│   │   └── architect, challenger
 │   └── Design
 │       └── product-designer, ui-designer
 ├── AI department
