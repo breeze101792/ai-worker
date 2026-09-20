@@ -30,8 +30,10 @@ TAG_MISSING="$(color_tag 2 "$SGR_ERROR" '[MISSING]')"
 
 # Tool registry: name -> one "source|destination|type" line per link target.
 # Add new tools here.
-#   type=file: symlink a single file
-#   type=dir:  symlink a directory (created in-repo if missing)
+#   type=file:    symlink a single file
+#   type=dir:     symlink a directory (created in-repo if missing)
+#   type=entries: make the destination a real directory and symlink each entry
+#                 of the source directory into it, one link per entry
 #
 # Claude Code ships two settings variants:
 #   ollama  claude/settings-ollama.json — the full `env` block, including
@@ -106,6 +108,9 @@ Commands:
                     TOOLS is a comma-separated list to link
                     (default: opencode). Available: claude, opencode, codex
                     Example: link claude
+                    Skills are linked per entry: each skill gets its own
+                    symlink in a real skills directory, so you can keep a
+                    local skill beside the shared ones.
   all [TOOLS]       Run pull + link (default if no command given)
   help              Show this help message
 
@@ -148,18 +153,18 @@ resolve_tool() {
       echo "$TOOL_CLAUDE_CLAUDE_MD_SRC|$TOOL_CLAUDE_CLAUDE_MD_DST|file"
       echo "$TOOL_CLAUDE_AGENTS_DIR_SRC|$TOOL_CLAUDE_AGENTS_DIR_DST|dir"
       echo "$TOOL_CLAUDE_COMMANDS_DIR_SRC|$TOOL_CLAUDE_COMMANDS_DIR_DST|dir"
-      echo "$TOOL_CLAUDE_SKILLS_DIR_SRC|$TOOL_CLAUDE_SKILLS_DIR_DST|dir"
+      echo "$TOOL_CLAUDE_SKILLS_DIR_SRC|$TOOL_CLAUDE_SKILLS_DIR_DST|entries"
       ;;
     opencode)
       echo "$TOOL_OPENCODE_SRC|$TOOL_OPENCODE_DST|file"
       echo "$TOOL_OPENCODE_AGENTSMD_SRC|$TOOL_OPENCODE_AGENTSMD_DST|file"
       echo "$TOOL_OPENCODE_AGENTS_SRC|$TOOL_OPENCODE_AGENTS_DST|dir"
-      echo "$TOOL_OPENCODE_SKILLS_SRC|$TOOL_OPENCODE_SKILLS_DST|dir"
+      echo "$TOOL_OPENCODE_SKILLS_SRC|$TOOL_OPENCODE_SKILLS_DST|entries"
       echo "$TOOL_OPENCODE_COMMANDS_SRC|$TOOL_OPENCODE_COMMANDS_DST|dir"
       ;;
     codex)
       echo "$TOOL_CODEX_AGENTS_DIR_SRC|$TOOL_CODEX_AGENTS_DIR_DST|dir"
-      echo "$TOOL_CODEX_SKILLS_DIR_SRC|$TOOL_CODEX_SKILLS_DIR_DST|dir"
+      echo "$TOOL_CODEX_SKILLS_DIR_SRC|$TOOL_CODEX_SKILLS_DIR_DST|entries"
       echo "$TOOL_CODEX_AGENTSMD_SRC|$TOOL_CODEX_AGENTSMD_DST|file"
       echo "$TOOL_CODEX_CONFIG_SRC|$TOOL_CODEX_CONFIG_DST|file"
       ;;
@@ -216,6 +221,88 @@ cmd_pull() {
   $dry_run || info "All models pulled."
 }
 
+# Link every entry of a source directory into a real destination directory,
+# one symlink per entry. Args: <tool_name> <src> <dst> [--dry-run]
+link_entries() {
+  local tool="$1"
+  local src="$2"
+  local dst="$3"
+  local dry_run="${4:-}"
+  local entry name target replace_symlink=false
+
+  if [[ -L "$dst" ]]; then
+    replace_symlink=true
+    warn "Replacing whole-directory symlink with a real directory: $dst"
+    if [[ "$dry_run" != "--dry-run" ]]; then
+      rm "$dst"
+    fi
+  elif [[ -e "$dst" && ! -d "$dst" ]]; then
+    warn "Existing file at $dst (not a directory). Backing up to ${dst}.bak"
+    if [[ "$dry_run" == "--dry-run" ]]; then
+      info "Would back up: $dst -> ${dst}.bak"
+    else
+      mv "$dst" "${dst}.bak"
+    fi
+  fi
+
+  if [[ ! -d "$dst" ]]; then
+    if [[ "$dry_run" == "--dry-run" ]]; then
+      info "Would create directory: $dst"
+    else
+      mkdir -p "$dst"
+    fi
+  fi
+
+  for entry in "$src"/*; do
+    [[ -e "$entry" || -L "$entry" ]] || continue
+    name="$(basename "$entry")"
+    target="$dst/$name"
+
+    if [[ -L "$target" && "$(readlink "$target")" == "$entry" ]]; then
+      info "Already linked ($tool): $target -> $entry"
+      continue
+    fi
+
+    # In a dry-run migration the old symlink is still in place, so entries seen
+    # through it are not real destination entries to back up.
+    if ! $replace_symlink && [[ -e "$target" || -L "$target" ]]; then
+      warn "Existing entry at $target (not our symlink). Backing up to ${target}.bak"
+      if [[ "$dry_run" == "--dry-run" ]]; then
+        info "Would back up: $target -> ${target}.bak"
+      else
+        mv "$target" "${target}.bak"
+      fi
+    fi
+
+    if [[ "$dry_run" == "--dry-run" ]]; then
+      info "Would link ($tool): $target -> $entry"
+    else
+      ln -sfn "$entry" "$target"
+      info "Linked ($tool): $target -> $entry"
+    fi
+  done
+
+  if $replace_symlink && [[ "$dry_run" == "--dry-run" ]]; then
+    return 0
+  fi
+
+  # A link into this source whose skill was deleted or renamed upstream.
+  for target in "$dst"/*; do
+    [[ -L "$target" ]] || continue
+    case "$(readlink "$target")" in
+      "$src"/*) ;;
+      *) continue ;;
+    esac
+    [[ -e "$target" ]] && continue
+    warn "Removing stale link (target gone): $target"
+    if [[ "$dry_run" == "--dry-run" ]]; then
+      info "Would remove: $target"
+    else
+      rm "$target"
+    fi
+  done
+}
+
 # Link one src|dst|type entry. Args: <tool_name> <src> <dst> <type> [--dry-run]
 link_one() {
   local tool="$1"
@@ -223,6 +310,18 @@ link_one() {
   local dst="$3"
   local type="$4"
   local dry_run="${5:-}"
+
+  if [[ "$type" == "entries" ]]; then
+    if [[ ! -e "$src" && ! -L "$src" ]]; then
+      if [[ "$dry_run" == "--dry-run" ]]; then
+        info "Would create source dir: $src"
+        return 0
+      fi
+      mkdir -p "$src"
+    fi
+    link_entries "$tool" "$src" "$dst" "$dry_run"
+    return 0
+  fi
 
   local is_dir=false
   [[ "$type" == "dir" ]] && is_dir=true
