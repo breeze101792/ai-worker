@@ -115,6 +115,7 @@ Commands:
   help              Show this help message
 
 Options:
+  -h, --help        Show this help message
   --dry-run         Show what would be done without executing
 
 Environment:
@@ -450,7 +451,8 @@ while [[ $i -lt ${#ARGS[@]} ]]; do
   arg="${ARGS[$i]}"
   case "$arg" in
     --dry-run) DRY_RUN=true ;;
-    help|pull|link|all) COMMAND="$arg" ;;
+    -h|--help) COMMAND="help" ;;
+    pull|link|all) COMMAND="$arg" ;;
     *)
       # First non-command, non-flag arg is the optional tool list for link/all
       if [[ -z "$COMMAND" ]]; then
