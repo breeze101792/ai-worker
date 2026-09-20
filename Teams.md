@@ -202,12 +202,12 @@ listed for a tool inherits the session default.
 | Agent | edit | bash | Notable |
 | --- | --- | --- | --- |
 | `build` | allow | allow | Head of the build department; task access per the Virtual teams matrix |
-| `plan` | `PLAN.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Head of the Plan department; read-only, writes docs only; task access per the Virtual teams matrix |
+| `plan` | `PLAN.md`, `WORKFLOW.md`, `WORKLOG.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Head of the Plan department; read-only, writes docs only; task access per the Virtual teams matrix |
 | `hr` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `ai` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `recruiter` | allow | allow | Writes agent files |
 | `researcher` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes research reports only, not source |
-| `architect` | ARCH.md, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes the architecture blueprint and design docs only, not source |
+| `architect` | `ARCH.md`, `WORKFLOW.md`, `WORKLOG.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes the architecture blueprint and design docs only, not source |
 | `challenger` | deny | — | Read-only by design; attacks proposals, never edits |
 | `code-reviewer` | deny | — | Read-only by design |
 | `debugger` | deny | allow | Diagnoses only; proves the root cause, never edits |

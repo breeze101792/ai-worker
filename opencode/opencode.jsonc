@@ -56,7 +56,9 @@
                     "README.md": "allow",
                     "AGENTS.md": "allow",
                     "CLAUDE.md": "allow",
-                    "PLAN.md": "allow"
+                    "PLAN.md": "allow",
+                    "WORKFLOW.md": "allow",
+                    "WORKLOG.md": "allow"
                 },
                 "task": {
                     "*": "allow",
