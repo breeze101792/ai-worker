@@ -42,10 +42,6 @@ an agent today, so a wrong Tab order costs little.
 
 ## Verify
 
-- `grep -nE '\bhr\b' -r README.md Teams.md Models.md opencode/ claude/ codex/`
-  returns nothing — the four-primary list is gone and the merge left no stray
-  `hr` in any installed file. (This file is excluded on purpose: it quotes `hr`
-  to describe the removed department.)
 - `grep -n "Three departments" README.md` matches the new three-primary list.
 - Restart opencode, press Tab three times, confirm `build → ai → plan`.
 - `grep -rn "order:" opencode/agents/*.md` returns nothing until #19127 lands.
