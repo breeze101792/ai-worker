@@ -1,10 +1,7 @@
-# Codex configuration — base variant.
+# Codex configuration.
 #
-# Global defaults with no local-endpoint routing: Codex uses its own default
-# provider, and no `model_providers` table appears here. The routed variant that
-# points Codex at the local Ollama gateway lives in codex/config-ollama.toml.
-#
-# Codex reads this once at startup; restart Codex after changing it.
+# Global defaults plus the Ollama gateway that replaces OpenAI's API. Codex reads
+# this once at startup; restart Codex after changing it.
 #
 # TOML attaches every key to the table header above it, so all scalars are
 # grouped here at the top, after which come the tables.
@@ -18,8 +15,14 @@ approval_policy = "on-request"
 # Commands may write inside the workspace. Anything outside prompts.
 sandbox_mode = "workspace-write"
 
-# No `model_provider` key, so this stays on Codex's default provider.
-model = "gpt-5.4"
+# Route every session to the local Ollama gateway, like claude/settings-ollama.json
+# does for Claude Code. Subagents inherit this, so orchestrator work runs on the
+# same model.
+model = "deepseek-v4.1-flash:cloud"
+model_provider = "ollama-gw"
+
+# The gateway reports a 1048576-token window for this model via ollama's
+# /api/show, so a 1000000 window with compaction at 900000 fits.
 model_context_window = 1000000
 model_auto_compact_token_limit = 900000
 
@@ -27,6 +30,14 @@ model_auto_compact_token_limit = 900000
 notify = ["node", "/usr/lib/node_modules/oh-my-codex/dist/scripts/notify-hook.js"]
 model_reasoning_effort = "high"
 developer_instructions = "You have oh-my-codex installed. AGENTS.md is your orchestration brain and the main orchestration surface. Use skill/keyword routing like $name plus spawned role-specialized subagents for specialized work. Codex native subagents are available via .codex/agents and may be used for independent parallel subtasks within a single session or team pane. Skills are loaded from installed SKILL.md files under .codex/skills, not from native agent TOMLs. Use workflow skills via $name when explicitly invoked or clearly routed by AGENTS.md. Treat installed prompts as narrower internal execution surfaces under AGENTS.md authority, even when user-facing docs prefer $name keywords."
+
+# The provider needs no Authorization header, so there is no `env_key` here. It
+# answers the OpenAI Responses API at /v1/responses, which is the only wire_api
+# Codex 0.118.0 accepts.
+[model_providers.ollama-gw]
+name = "Ollama gateway"
+base_url = "http://10.31.1.9:30068/v1"
+wire_api = "responses"
 
 [sandbox_workspace_write]
 # No outbound network from sandboxed commands. The agent can still use its own

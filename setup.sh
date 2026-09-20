@@ -9,10 +9,10 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 #   type=dir:  symlink a directory (created in-repo if missing)
 #
 # Claude Code ships two settings variants:
-#   ollama  claude/settings-ollama.json — reroutes Claude Code to the local
-#           ollama endpoint via an `env` block. This is the default.
-#   base    claude/settings.json — the same file without the `env` block, for
-#           using Claude Code against Anthropic's own API.
+#   ollama  claude/settings-ollama.json — the full `env` block, including
+#           CLAUDE_CODE_AUTO_COMPACT_WINDOW. This is the default.
+#   base    claude/settings.json — the same `env` block without
+#           CLAUDE_CODE_AUTO_COMPACT_WINDOW, so the model supplies the window.
 # Select with CLAUDE_SETTINGS:
 #   CLAUDE_SETTINGS=base bash setup.sh link claude
 CLAUDE_SETTINGS="${CLAUDE_SETTINGS:-ollama}"
@@ -22,6 +22,21 @@ case "$CLAUDE_SETTINGS" in
   *) echo "[ERROR] Unknown CLAUDE_SETTINGS: $CLAUDE_SETTINGS (base|ollama)" >&2; exit 1 ;;
 esac
 TOOL_CLAUDE_DST="$HOME/.claude/settings.json"
+
+# Codex ships two config variants:
+#   ollama  codex/config-ollama.toml — routes Codex to the local ollama gateway
+#           through model_provider and a [model_providers.*] table. This is the
+#           default.
+#   base    codex/config.toml — no routing keys, so Codex uses its own default
+#           provider.
+# Select with CODEX_SETTINGS:
+#   CODEX_SETTINGS=base bash setup.sh link codex
+CODEX_SETTINGS="${CODEX_SETTINGS:-ollama}"
+case "$CODEX_SETTINGS" in
+  base)   TOOL_CODEX_CONFIG_SRC="$SCRIPT_DIR/codex/config.toml" ;;
+  ollama) TOOL_CODEX_CONFIG_SRC="$SCRIPT_DIR/codex/config-ollama.toml" ;;
+  *) echo "[ERROR] Unknown CODEX_SETTINGS: $CODEX_SETTINGS (base|ollama)" >&2; exit 1 ;;
+esac
 TOOL_CLAUDE_CLAUDE_MD_SRC="$SCRIPT_DIR/claude/CLAUDE.md"
 TOOL_CLAUDE_CLAUDE_MD_DST="$HOME/.claude/CLAUDE.md"
 TOOL_CLAUDE_AGENTS_DIR_SRC="$SCRIPT_DIR/claude/agents"
@@ -46,7 +61,6 @@ TOOL_CODEX_SKILLS_DIR_SRC="$SCRIPT_DIR/codex/skills"
 TOOL_CODEX_SKILLS_DIR_DST="$HOME/.agents/skills"
 TOOL_CODEX_AGENTSMD_SRC="$SCRIPT_DIR/codex/AGENTS.md"
 TOOL_CODEX_AGENTSMD_DST="$HOME/.codex/AGENTS.md"
-TOOL_CODEX_CONFIG_SRC="$SCRIPT_DIR/codex/config.toml"
 TOOL_CODEX_CONFIG_DST="$HOME/.codex/config.toml"
 
 MODELS=(
@@ -75,8 +89,11 @@ Options:
 
 Environment:
   CLAUDE_SETTINGS   Which Claude Code settings variant to link (default: ollama)
-                    ollama  reroute Claude Code to the local ollama endpoint
-                    base    use Anthropic's own API
+                    ollama  the full env block, with the compact-window override
+                    base    the same env block without the compact-window override
+  CODEX_SETTINGS    Which Codex config variant to link (default: ollama)
+                    ollama  route Codex to the local ollama gateway
+                    base    Codex uses its own default provider
 
 Examples:
   $(basename "$0") link
@@ -84,7 +101,11 @@ Examples:
   $(basename "$0") link claude,opencode
   $(basename "$0") all claude,opencode
   $(basename "$0") all claude --dry-run
+  CLAUDE_SETTINGS=ollama $(basename "$0") link claude
+  CODEX_SETTINGS=ollama $(basename "$0") link codex
+  CLAUDE_SETTINGS=ollama CODEX_SETTINGS=ollama $(basename "$0") link claude,codex
   CLAUDE_SETTINGS=base $(basename "$0") link claude
+  CODEX_SETTINGS=base $(basename "$0") link codex
 EOF
 }
 
