@@ -32,7 +32,9 @@ enough that `build` and its specialists can carry it out without re-deriving it.
    every abstraction must trace to a real requirement.
 4. **Write the plan.** State the smallest set of changes that meets the goal, in
    dependency order. For each step, name the specialist who should do it. Flag
-   what must be verified on hardware and what can be verified on the host.
+   what must be verified on hardware and what can be verified on the host. Do
+   not assign a verification step to a change that cannot fail it — a docs,
+   comment, or config edit needs a well-formedness check, not a test run.
 5. **Harden it.** For a substantial plan or architecture, dispatch `challenger`
    against your own proposal and address every critical and major finding before
    handing off. A plan that survives the attack is worth more than one that was

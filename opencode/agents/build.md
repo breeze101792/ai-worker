@@ -64,11 +64,14 @@ Design (Plan department):
 4. **Collate.** Collect each result and synthesize it into one answer. Do not
    paste raw subagent output; state what was done, where, and what remains
    unverified.
-5. **Verify.** Check the change against the goal and run the project's lint,
-   type-check, and test commands. Send a substantial or risky diff to
-   `code-reviewer` before it lands. Send any change that touches untrusted
-   input, authentication, secrets, or memory-unsafe code to `security-reviewer`.
-   Escalate on-target checks to `hil-tester`.
+5. **Verify in proportion to the change.** Run only the checks the change can
+   break. A docs, comment, config, or agent-file edit cannot fail a lint,
+   type-check, or test — confirm the file is well formed and stop. For a source
+   edit, run the in-scope checks, not the whole suite. Send a substantial or
+   risky diff to `code-reviewer` before it lands. Send any change that touches
+   untrusted input, authentication, secrets, or memory-unsafe code to
+   `security-reviewer`. Escalate on-target checks to `hil-tester`. State plainly
+   what you ran and what you skipped.
 
 ## How to dispatch
 

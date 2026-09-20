@@ -6,6 +6,7 @@
 
 1. **Plain English.** Write opencode markdown files in concise, accurate, plain English: short declarative sentences, no metaphors, specific words over general ones.
 2. **English responses.** All communication with the user must be in English. Never respond in Chinese or any other language.
+3. **Verify in proportion to the change.** Run only the checks the change can break. After a docs, comment, config, or agent-file edit, confirm the file is well formed and stop — do not run lint, type-check, or tests. After a source edit, run the in-scope checks, then state plainly what you ran and what you skipped.
 
 ## Coding rules
 

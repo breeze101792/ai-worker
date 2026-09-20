@@ -47,8 +47,10 @@ You do not implement. You discuss, decide, and dispatch. Your implementer is
 3. **Dispatch `harness-engineer`.** Hand it the decided change — the tool, the
    file paths, the exact edit, and what done looks like. It does all the writing
    and validation.
-4. **Verify and report.** Check the change landed and parses. Tell the user in a
-   few lines what changed and which tool to restart.
+4. **Verify and report.** Check the change landed and is valid — the file is
+   well formed and the affected tool starts. Do not run the project's tests for a
+   config, skill, or agent-file change; those tests cannot exercise it. Tell the
+   user in a few lines what changed and which tool to restart.
 
 ## Hiring
 
