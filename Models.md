@@ -30,6 +30,23 @@ opencode, Claude Code, and Codex, whose models and settings differ.
 
 Do not use `ollama/deepseek-v4-pro:cloud` for any agent.
 
+### `deep` is expensive — spend it carefully
+
+`glm-5.3` is the slowest and most expensive model in the org. Only two agents
+carry it, and both must earn it:
+
+- Give a `deep` agent the hard problem: the reasoning, the root cause, the
+  architecture decision. That is what the cost buys.
+- Do not give it mechanical work. Reproducing by hand, running the build,
+  formatting, copying files, or repeating a command until something happens are
+  not `deep` jobs. Route those to a `fast` or `inherit` agent, or do them in the
+  main session.
+- Do not add a third `deep` agent without a concrete reason. Every other role
+  runs on `fast` or `inherit`, and that is deliberate.
+- `debugger` diagnoses only. It names the failing file and line and the
+  suggested fix; the owning engineer applies the change. Do not let the
+  expensive model do the repair work.
+
 ## Per-tool resolution
 
 | Profile | opencode | Claude Code | Codex |

@@ -10,7 +10,7 @@ org (user's agent company)
 │   │   build (primary)  head — execution: decompose, dispatch, collate
 │   ├── Software
 │   │   ├── code-reviewer      (subagent) read-only diff review
-│   │   ├── debugger           (subagent) root-cause hunting
+│   │   ├── debugger           (subagent) root-cause diagnosis only, no fix
 │   │   ├── firmware-engineer  (subagent) C/C++ on embedded targets
 │   │   ├── python-engineer    (subagent) Python apps, tools, automation
 │   │   ├── security-reviewer  (subagent) security review of code and designs
@@ -128,7 +128,7 @@ session model. The teams under them are listed below.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `code-reviewer` | subagent | `fast` | Reviews code changes — diffs, staged changes, commits, and local branches — and reports ranked findings with file:line citations. Read-only. | A change needs review before it lands, or a commit or PR needs a sanity check. |
-| `debugger` | subagent | `deep` | Reproduces hard bugs, traces the code path, proves a root cause, applies a minimal fix, and verifies it. | A bug resists quick fixes, errors or crashes have no obvious cause, or a stack trace needs tracing to source. |
+| `debugger` | subagent | `deep` | Reproduces hard bugs, traces the code path, and proves the root cause with evidence. Diagnoses only — it names the failing file and line and the suggested fix, but never edits; the owning engineer applies the change. | A bug resists quick fixes, errors or crashes have no obvious cause, or a stack trace needs tracing to source. |
 | `firmware-engineer` | subagent | `inherit` | Writes bare-metal and RTOS firmware in C and C++ — drivers, ISRs, DMA, memory-mapped IO, power states. Follows kernel or Zephyr conventions. | Implementing or modifying firmware on microcontrollers, SoCs, and real-time targets. |
 | `python-engineer` | subagent | `inherit` | Writes Python applications, tools, and automation. Follows PEP 8, the project's packaging and test conventions. | Implementing Python code, CLI tools, scripts, or library work. |
 | `security-reviewer` | subagent | `inherit` | Reviews code and designs for security — injection, memory safety, secrets, auth, crypto, unsafe deserialization, and supply chain — and reports ranked findings with file:line citations. Read-only. | A change touches untrusted input, authentication, secrets, network or serial interfaces, or anything memory-unsafe. |
@@ -209,7 +209,7 @@ listed for a tool inherits the session default.
 | `architect` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes design docs only, not source |
 | `challenger` | deny | — | Read-only by design; attacks proposals, never edits |
 | `code-reviewer` | deny | — | Read-only by design |
-| `debugger` | allow | allow | Fixes the bug it proves |
+| `debugger` | deny | allow | Diagnoses only; proves the root cause, never edits |
 | `firmware-engineer` | allow | allow | Builds for the real target |
 | `python-engineer` | allow | allow | Runs code and tests |
 | `security-reviewer` | deny | — | Read-only by design; finds security defects, never edits |

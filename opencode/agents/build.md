@@ -30,7 +30,8 @@ Architecture (Plan department):
 
 Software (build department):
 - `code-reviewer` — read-only review of a diff, commit, or branch.
-- `debugger` — root cause of a hard bug, then a minimal fix.
+- `debugger` — root cause of a hard bug. Diagnoses and reports; it never edits,
+  so route the fix it names to the owning engineer.
 - `firmware-engineer` — C/C++ on embedded targets: drivers, ISRs, DMA, power.
 - `python-engineer` — Python apps, tools, scripts, automation.
 - `security-reviewer` — security review of code and designs; untrusted input,
