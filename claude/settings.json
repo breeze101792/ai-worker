@@ -1,4 +1,15 @@
 {
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "ollama",
+    "ANTHROPIC_API_KEY": "",
+    "ANTHROPIC_BASE_URL": "http://10.31.1.9:30068",
+    "ANTHROPIC_MODEL_BAKUP": "minimax-m3:cloud",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4.1-flash:cloud",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4.1-flash:cloud",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4.1-flash:cloud",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "glm-5.3:cloud",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
   "attribution": {
     "commit": "",
     "pr": ""
