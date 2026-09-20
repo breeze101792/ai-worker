@@ -3,6 +3,31 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# Output styling. The level tags are colored only when writing to a terminal,
+# so redirected output and log files stay plain. Each stream is checked on its
+# own. Disable color with NO_COLOR (https://no-color.org) or TERM=dumb.
+SGR_INFO='1;34'   # bold blue
+SGR_WARN='1;33'   # bold yellow
+SGR_ERROR='1;31'  # bold red
+SGR_OK='1;32'     # bold green
+
+color_tag() {
+  # Args: <fd> <sgr-code> <tag>. Returns the tag wrapped in color when that fd
+  # is a terminal and color is enabled, otherwise the plain tag.
+  local fd="$1" sgr="$2" tag="$3"
+  if [[ -t "$fd" && -z "${NO_COLOR:-}" && "${TERM:-}" != "dumb" ]]; then
+    printf '\033[%sm%s\033[0m' "$sgr" "$tag"
+  else
+    printf '%s' "$tag"
+  fi
+}
+
+TAG_INFO="$(color_tag 1 "$SGR_INFO" '[INFO]')"
+TAG_WARN="$(color_tag 2 "$SGR_WARN" '[WARN]')"
+TAG_ERROR="$(color_tag 2 "$SGR_ERROR" '[ERROR]')"
+TAG_OK="$(color_tag 1 "$SGR_OK" '[OK]')"
+TAG_MISSING="$(color_tag 2 "$SGR_ERROR" '[MISSING]')"
+
 # Tool registry: name -> one "source|destination|type" line per link target.
 # Add new tools here.
 #   type=file: symlink a single file
@@ -19,7 +44,7 @@ CLAUDE_SETTINGS="${CLAUDE_SETTINGS:-ollama}"
 case "$CLAUDE_SETTINGS" in
   base)   TOOL_CLAUDE_SRC="$SCRIPT_DIR/claude/settings.json" ;;
   ollama) TOOL_CLAUDE_SRC="$SCRIPT_DIR/claude/settings-ollama.json" ;;
-  *) echo "[ERROR] Unknown CLAUDE_SETTINGS: $CLAUDE_SETTINGS (base|ollama)" >&2; exit 1 ;;
+  *) echo "$TAG_ERROR Unknown CLAUDE_SETTINGS: $CLAUDE_SETTINGS (base|ollama)" >&2; exit 1 ;;
 esac
 TOOL_CLAUDE_DST="$HOME/.claude/settings.json"
 
@@ -35,7 +60,7 @@ CODEX_SETTINGS="${CODEX_SETTINGS:-ollama}"
 case "$CODEX_SETTINGS" in
   base)   TOOL_CODEX_CONFIG_SRC="$SCRIPT_DIR/codex/config.toml" ;;
   ollama) TOOL_CODEX_CONFIG_SRC="$SCRIPT_DIR/codex/config-ollama.toml" ;;
-  *) echo "[ERROR] Unknown CODEX_SETTINGS: $CODEX_SETTINGS (base|ollama)" >&2; exit 1 ;;
+  *) echo "$TAG_ERROR Unknown CODEX_SETTINGS: $CODEX_SETTINGS (base|ollama)" >&2; exit 1 ;;
 esac
 TOOL_CLAUDE_CLAUDE_MD_SRC="$SCRIPT_DIR/claude/CLAUDE.md"
 TOOL_CLAUDE_CLAUDE_MD_DST="$HOME/.claude/CLAUDE.md"
@@ -109,9 +134,9 @@ Examples:
 EOF
 }
 
-info()  { echo "[INFO]  $*"; }
-warn()  { echo "[WARN]  $*" >&2; }
-err()   { echo "[ERROR] $*" >&2; }
+info()  { echo "$TAG_INFO  $*"; }
+warn()  { echo "$TAG_WARN  $*" >&2; }
+err()   { echo "$TAG_ERROR $*" >&2; }
 
 # Resolve a tool name to "src|dst|type" lines (one per link target).
 # Returns 1 if unknown.
@@ -158,9 +183,9 @@ check_lsp_deps() {
   for entry in "${LSP_DEPS[@]}"; do
     IFS='|' read -r bin label hint <<< "$entry"
     if command -v "$bin" >/dev/null 2>&1; then
-      info "  [OK]      $bin (opencode server: $label)"
+      info "  $TAG_OK      $bin (opencode server: $label)"
     else
-      warn "  [MISSING] $bin (opencode server: $label)"
+      warn "  $TAG_MISSING $bin (opencode server: $label)"
       warn "            -> $hint"
       missing=$((missing+1))
     fi
