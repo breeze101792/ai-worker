@@ -1,6 +1,6 @@
 ---
+name: ui-designer
 description: Senior UI/UX designer — designs tasteful, modern, and accessible interfaces and writes handoff-ready design documentation (design tokens, layout, component specs, HTML/CSS mockup) for coding agents to implement. Use when a website or UI needs clean design work before code.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

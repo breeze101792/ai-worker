@@ -1,6 +1,6 @@
 ---
+name: security-reviewer
 description: Reviews code and designs for security — injection, memory safety, secrets, auth, crypto, unsafe deserialization, and supply chain — and reports ranked findings with file:line citations. Read-only. Use when a change touches untrusted input, authentication, secrets, network or serial interfaces, or anything memory-unsafe.
-mode: subagent
 tools: Read, Grep, Glob, Bash, Agent
 ---
 

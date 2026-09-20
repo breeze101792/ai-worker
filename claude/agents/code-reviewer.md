@@ -1,6 +1,6 @@
 ---
+name: code-reviewer
 description: "Reviews code changes — diffs, staged changes, commits, and local branches before merge — and reports ranked findings with file:line citations. Use when a change needs review before it lands, or to sanity-check a commit or PR."
-mode: subagent
 tools: Read, Grep, Glob, Bash, Agent
 ---
 

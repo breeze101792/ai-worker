@@ -1,6 +1,6 @@
 ---
+name: debugger
 description: Deep debugging specialist — investigates hard bugs, crashes, stack traces, and mysterious failures; reproduces the problem and proves the root cause with evidence. Diagnoses only, never edits; hands the fix to the owning engineer. Use only for serious debugging that needs a powerful reasoning model.
-mode: subagent
 tools: Read, Grep, Glob, Bash, Agent
 ---
 

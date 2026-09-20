@@ -1,6 +1,6 @@
 ---
+name: toolchain-engineer
 description: Owns build systems and toolchains — Make, CMake, Zephyr west, cross-compilers, linker scripts, CI, and flashing. Diagnoses and fixes build, link, and toolchain failures. Use when a build breaks, a toolchain must be configured, or CI and flashing need work.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

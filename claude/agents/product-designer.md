@@ -1,6 +1,6 @@
 ---
+name: product-designer
 description: Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria — as handoff-ready specs for architect, ui-designer, and the engineers. Use at the start of a new project or feature, before any technical or visual design.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

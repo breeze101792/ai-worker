@@ -1,6 +1,6 @@
 ---
+name: architect
 description: Principal software architect — designs and reviews system architecture, hunts duplicate code, designs robust event/IPC frameworks, draws high-level blueprints, and recommends structure that prevents common bugs. Use when planning a new system, reviewing an architecture, deduplicating logic, or designing an event bus or IPC layer.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

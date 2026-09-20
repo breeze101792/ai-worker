@@ -1,6 +1,6 @@
 ---
+name: tester
 description: Designs, writes, and runs the project's tests — builds the test plan and executes the suite to report coverage.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

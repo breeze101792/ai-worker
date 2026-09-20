@@ -1,6 +1,6 @@
 ---
+name: python-engineer
 description: Writes and modifies Python applications, tools, and automation — follows PEP 8, the project's packaging and test conventions, and keeps changes minimal. Use for implementing Python code, CLI tools, scripts, or library work.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

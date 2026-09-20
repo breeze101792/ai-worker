@@ -1,6 +1,6 @@
 ---
+name: harness-engineer
 description: Owns the agent-tool configuration for opencode, Claude Code, and Codex — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Validates every change against the opencode config schema. Use when a tool needs configuring, a skill or command must be written, or an MCP server must be set up or debugged.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

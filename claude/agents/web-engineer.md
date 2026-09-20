@@ -1,6 +1,6 @@
 ---
+name: web-engineer
 description: Builds full-stack web applications autonomously — frontend markup, styles, and TypeScript plus the backend API, following existing framework conventions and implementing ui-designer specs. Use when a web app or web feature must be implemented end to end without a human in the loop.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

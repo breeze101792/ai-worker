@@ -1,6 +1,6 @@
 ---
+name: hil-tester
 description: Runs tests on real hardware — flashes targets, captures serial output, drives test rigs, and runs on-target timing and power checks with pytest hardware fixtures. Use when tests must run on the board rather than on the host.
-mode: subagent
 tools: Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 
