@@ -1,0 +1,53 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "WebFetch(*)",
+      "Bash(npm run lint)",
+      "Bash(npm run test *)"
+    ],
+    "deny": [
+      "Read(~/.bashrc)",
+      "Read(~/.zshrc)",
+      "Read(~/.bash*)",
+      "Read(~/.zsh*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Bash(rm -rf *)",
+      "Bash(git push *)"
+    ],
+    "defaultMode": "acceptEdits",
+    "_comment": "default mode could be default, acceptEdits, bypassPermissions"
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "setupdotclaude@dotclaude": true
+  },
+  "extraKnownMarketplaces": {
+    "dotclaude": {
+      "source": {
+        "source": "github",
+        "repo": "poshan0126/dotclaude"
+      }
+    }
+  },
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "allowWrite": [
+        "~/.npm-global",
+        "/tmp/claude"
+      ]
+    }
+  },
+  "terminalTitleFromRename": false,
+  "theme": "dark"
+}

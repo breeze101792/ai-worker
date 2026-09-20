@@ -7,7 +7,20 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Add new tools here.
 #   type=file: symlink a single file
 #   type=dir:  symlink a directory (created in-repo if missing)
-TOOL_CLAUDE_SRC="$SCRIPT_DIR/claude/settings-ollama.json"
+#
+# Claude Code ships two settings variants:
+#   ollama  claude/settings-ollama.json — reroutes Claude Code to the local
+#           ollama endpoint via an `env` block. This is the default.
+#   base    claude/settings.json — the same file without the `env` block, for
+#           using Claude Code against Anthropic's own API.
+# Select with CLAUDE_SETTINGS:
+#   CLAUDE_SETTINGS=base bash setup.sh link claude
+CLAUDE_SETTINGS="${CLAUDE_SETTINGS:-ollama}"
+case "$CLAUDE_SETTINGS" in
+  base)   TOOL_CLAUDE_SRC="$SCRIPT_DIR/claude/settings.json" ;;
+  ollama) TOOL_CLAUDE_SRC="$SCRIPT_DIR/claude/settings-ollama.json" ;;
+  *) echo "[ERROR] Unknown CLAUDE_SETTINGS: $CLAUDE_SETTINGS (base|ollama)" >&2; exit 1 ;;
+esac
 TOOL_CLAUDE_DST="$HOME/.claude/settings.json"
 TOOL_CLAUDE_CLAUDE_MD_SRC="$SCRIPT_DIR/claude/CLAUDE.md"
 TOOL_CLAUDE_CLAUDE_MD_DST="$HOME/.claude/CLAUDE.md"
@@ -58,12 +71,18 @@ Commands:
 Options:
   --dry-run         Show what would be done without executing
 
+Environment:
+  CLAUDE_SETTINGS   Which Claude Code settings variant to link (default: ollama)
+                    ollama  reroute Claude Code to the local ollama endpoint
+                    base    use Anthropic's own API
+
 Examples:
   $(basename "$0") link
   $(basename "$0") link claude
   $(basename "$0") link claude,opencode
   $(basename "$0") all claude,opencode
   $(basename "$0") all claude --dry-run
+  CLAUDE_SETTINGS=base $(basename "$0") link claude
 EOF
 }
 

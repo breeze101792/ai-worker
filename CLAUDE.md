@@ -9,7 +9,7 @@ one source stays in sync across Claude Code and opencode.
 
 | Tool | Repo source | Installed to |
 | --- | --- | --- |
-| Claude Code | `claude/agents`, `claude/commands`, `claude/skills`, `claude/CLAUDE.md`, `claude/settings-ollama.json` | `~/.claude/...` |
+| Claude Code | `claude/agents`, `claude/commands`, `claude/skills`, `claude/CLAUDE.md`, `claude/settings.json` or `claude/settings-ollama.json` | `~/.claude/...` |
 | opencode | `opencode/agents`, `opencode/commands`, `opencode/skills`, `opencode/AGENTS.md`, `opencode/opencode.jsonc` | `~/.config/opencode/...` |
 | Codex | `codex/agents` (TOML, converted from opencode), `codex/skills` (incl. commands converted to skills), `codex/AGENTS.md` | `~/.codex/agents`, `~/.agents/skills`, `~/.codex/AGENTS.md` |
 

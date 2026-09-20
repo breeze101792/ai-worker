@@ -23,7 +23,7 @@ What each directory contains:
 | `commands/*.md` | `commands/*.md` | `skills/*/SKILL.md` | Slash commands (Codex uses skills) |
 | `skills/` | `skills/` | `skills/` | Skills |
 | `AGENTS.md` | `CLAUDE.md` | `AGENTS.md` | Tool-wide rules and dispatch roster |
-| `opencode.jsonc` | `settings-ollama.json` | — | Tool configuration |
+| `opencode.jsonc` | `settings.json` / `settings-ollama.json` | — | Tool configuration |
 
 ## How the tools differ
 
@@ -117,6 +117,11 @@ The org is the same everywhere, but each tool exposes it differently.
 - **Built-in subagents** — **Explore** (read-only codebase search), **Plan**
   (read-only research during plan mode), and **General-purpose**.
 - **Commands** — type `/` for `implement`, `review`, `docs`, `hire`, `testarch`.
+- **Settings variants** — `claude/settings.json` uses Anthropic's own API;
+  `claude/settings-ollama.json` adds an `env` block that reroutes Claude Code to
+  the local ollama endpoint. `bash setup.sh link claude` installs the ollama
+  variant by default; override with `CLAUDE_SETTINGS=base bash setup.sh link
+  claude`.
 
 ### Codex
 
