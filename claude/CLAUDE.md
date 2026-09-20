@@ -91,7 +91,7 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
 | `product-designer` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria. Domain-agnostic: embedded, Python, and web alike. | Product and functional definition before any technical or visual design. | Starting a new project or feature and the behavior, scope, or acceptance criteria must be pinned down first. |
-| `ui-designer` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus an HTML/CSS mockup for `web-engineer` to implement. | Clean UI design before web code. | A web interface needs design tokens, layout, and component specs first. |
+| `ui-designer` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/`. Design only — it edits documentation, not source; `web-engineer` implements the design in code. | Clean UI design before web code. | A web interface needs design tokens, layout, and component specs first. |
 
 ### AI department
 

@@ -67,7 +67,6 @@
                     "ai": "deny",
                     "tester": "deny",
                     "hil-tester": "deny",
-                    "ui-designer": "deny",
                     "recruiter": "deny",
                     "build": "deny",
                     "plan": "deny",

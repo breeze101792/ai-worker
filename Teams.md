@@ -75,7 +75,8 @@ Legend:
 
 - **full** — may dispatch any agent in the pool.
 - **analysis** — may dispatch only the pool's non-writing agents:
-  Software = `code-reviewer`, `security-reviewer`; Design = `product-designer`.
+  Software = `code-reviewer`, `security-reviewer`; Design = `product-designer`,
+  `ui-designer`.
 - **none** — may not dispatch the pool.
 
 Primaries never dispatch other primaries, and none may dispatch itself. The
@@ -169,7 +170,7 @@ why; `ui-designer` defines how it looks.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `product-designer` | subagent | `fast` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria — as handoff-ready specs for `architect`, `ui-designer`, and the engineers. Domain-agnostic: embedded, Python, and web alike. | Starting a new project or feature, before any technical or visual design. |
-| `ui-designer` | subagent | `vision` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus an HTML/CSS mockup for `web-engineer` to implement. | A web interface needs design tokens, layout, and component specs before implementation. |
+| `ui-designer` | subagent | `vision` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/` for `web-engineer` to implement. Design only — it never edits source. | A web interface needs design tokens, layout, and component specs before implementation. |
 
 ### AI department
 
@@ -219,7 +220,7 @@ listed for a tool inherits the session default.
 | `tester` | inherited | — | Writes test code |
 | `hil-tester` | allow | allow | Flashes targets; confirms board and image first |
 | `product-designer` | allow (docs only) | — | Writes product and functional specs, no source |
-| `ui-designer` | allow | — | Writes design docs and mockups |
+| `ui-designer` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes design docs and the mockup under `docs/` only, not source |
 
 All subagents are limited to fan-out through `explore` and `general`; none may
 spawn a copy of themselves.
