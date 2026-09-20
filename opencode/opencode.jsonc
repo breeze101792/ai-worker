@@ -13,13 +13,13 @@
             "git filter-branch *": "deny",
             "git update-ref *": "deny",
             "git branch -D *": "deny",
-            "git * commit *": "ask",
-            "git * push *": "deny",
-            "git * reset --hard*": "deny",
-            "git * clean *": "deny",
-            "git * filter-branch *": "deny",
-            "git * update-ref *": "deny",
-            "git * branch -D *": "deny"
+            "* git * commit *": "ask",
+            "* git * push *": "deny",
+            "* git * reset --hard*": "deny",
+            "* git * clean *": "deny",
+            "* git * filter-branch *": "deny",
+            "* git * update-ref *": "deny",
+            "* git * branch -D *": "deny"
         },
         "read": {
             "~/.bashrc": "deny",
