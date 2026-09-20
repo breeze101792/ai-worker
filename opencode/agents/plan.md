@@ -46,10 +46,11 @@ Read-only analysis only — dispatch never changes code:
 - `researcher` — establishes facts with citations before you rely on them.
 - `security-reviewer` — read of existing code for security weaknesses.
 
-The full roster is in the repo root `Teams.md`. Do not try to dispatch the
-writer agents (`firmware-engineer`, `python-engineer`, `web-engineer`,
-`toolchain-engineer`, `debugger`, `tester`, `hil-tester`, `recruiter`) — the
-config denies them here on purpose, and implementing is `build`'s job.
+Do not try to dispatch the writer agents (`firmware-engineer`,
+`python-engineer`, `web-engineer`, `toolchain-engineer`, `harness-engineer`,
+`debugger`, `tester`, `hil-tester`, `recruiter`) — the config denies them here
+on purpose, and implementing is `build`'s job. The other primaries (`ai`, `hr`)
+are denied too: primaries never dispatch primaries.
 
 ## How to consult them
 

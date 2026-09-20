@@ -1,7 +1,6 @@
 ---
 description: Builds full-stack web applications autonomously — frontend markup, styles, and TypeScript plus the backend API, following existing framework conventions and implementing ui-designer specs. Use when a web app or web feature must be implemented end to end without a human in the loop.
 mode: subagent
-model: ollama/glm-5.3:cloud
 permission:
   edit: allow
   bash: allow

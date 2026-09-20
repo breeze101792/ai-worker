@@ -33,10 +33,11 @@ valid agent frontmatter, and the full pipeline you must follow.
    description text) — the recruiter only writes what you give it.
 5. **Verify + introduce.** Check the files landed in the target agents
    directory. Then add one row for each hire to the right team table in the
-   owning `CLAUDE.md`/`AGENTS.md` dispatch roster, and update the repo root
-   `Teams.md`. Remove the roster row from every tool when a role is retired.
-   Row shape: name, what it does, purpose, use when — consistent with the
-   hire file's `description`.
+   owning `CLAUDE.md`/`AGENTS.md` dispatch roster. Give the hire a profile and
+   apply its model line: `deep` for hard reasoning, `fast` for light work,
+   `vision` when it must read images, `inherit` for no model line. Remove the
+   roster row from every tool when a role is retired. Row shape: name, what it
+   does, purpose, use when — consistent with the hire file's `description`.
 6. **Wrap up.** Tell the user in 3-5 lines what was hired and where, and remind
    them to run `bash setup.sh link` and restart the target tool only after the
    recruiter has written the files.

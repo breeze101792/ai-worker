@@ -1,7 +1,6 @@
 ---
 description: Writes bare-metal and RTOS firmware in C and C++ — drivers, ISRs, DMA, memory-mapped IO, and power states. Follows the project's kernel or Zephyr conventions and makes only the change the task needs. Use for implementing or modifying firmware on microcontrollers, SoCs, and real-time targets.
 mode: subagent
-model: ollama/glm-5.3:cloud
 permission:
   edit: allow
   bash: allow

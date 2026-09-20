@@ -15,7 +15,7 @@ and opencode agent formats.
 ## Your job
 
 1. **Receive the hires.** Your task carries one or more hire specs. Each spec
-   is a complete shape: name, role, mode, model, permissions, exact file path,
+   is a complete shape: name, role, mode, profile, permissions, exact file path,
    the target tool (Claude Code or opencode), and the full job description to
    use as the file's body. Treat that as written in stone — do not improvise
    role changes no one approved.
@@ -27,8 +27,11 @@ and opencode agent formats.
      restrict tools via the `tools` frontmatter (a comma-separated list or
      "Read, Grep, Glob, Write, Edit, Bash, Agent"). No `permission`/`prompt`
      keys.
-   - For opencode: `model` carries the provider prefix; `permission` only the
-     map you were handed; omit `tools`; no `prompt` frontmatter key.
+   - For opencode: apply the model for the spec's profile (`deep` →
+     `ollama/glm-5.3:cloud`; `fast` or `vision` →
+     `ollama/deepseek-v4.1-flash:cloud`; `inherit` → no `model` line), with the
+     provider prefix; `permission` only the map you were handed; omit `tools`;
+     no `prompt` frontmatter key.
    - filename equals the agent name, hyphen-separated.
 3. **Validate.** Re-read every file you wrote and check it against the
    checklist: YAML parses (no unquoted `#`/`:`, consistent indentation),

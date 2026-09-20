@@ -1,7 +1,6 @@
 ---
 description: Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design. Use before implementation, when changing course is still cheap, and never to rewrite the design itself.
 mode: subagent
-model: ollama/glm-5.3:cloud
 permission:
   edit: deny
   task:

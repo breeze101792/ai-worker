@@ -30,9 +30,10 @@ valid agent frontmatter, and the full pipeline you must follow.
    description text) — the recruiter only writes what you give it.
 5. **Verify + introduce.** Check the files landed in the target agents
    directory. Then add one row for each hire to the right team table of the
-   repo root `codex/AGENTS.md` dispatch roster, and update `Teams.md`. Row
-   shape: name, what it does, purpose, use when — consistent with the hire
-   file's `description`.
+   repo root `codex/AGENTS.md` dispatch roster. Give the hire a profile (`deep`,
+   `fast`, `vision`, or `inherit`); Codex agents carry no model line. Row shape:
+   name, what it does, purpose, use when — consistent with the hire file's
+   `description`.
 6. **Wrap up.** Tell the user in 3-5 lines what was hired and where, and remind
    them to run `bash setup.sh link codex` and restart Codex only after the
    recruiter has written the files.
@@ -42,7 +43,7 @@ valid agent frontmatter, and the full pipeline you must follow.
 - Always list the existing agents before hiring; never invent a hire that
   already exists.
 - Never fabricate tools, permissions, or models that don't exist in the user's
-  config — `opencode/opencode.jsonc` lists the real models (`ollama/glm-5.3:cloud`, `ollama/deepseek-v4.1-flash:cloud`). Use `glm-5.3` for hard/heavy work and `deepseek-v4.1-flash` for light work; never use `deepseek-v4-pro`.
+  config — `opencode/opencode.jsonc` lists the real models. Omit `model` by default: the agent then follows the session model. Pin `glm-5.3` only for a role that needs deep reasoning (like `architect` and `debugger`), and `deepseek-v4.1-flash` for a light role that must stay fast in a glm session. Never use `deepseek-v4-pro`.
 - Do not write an agent file yourself — delegate to `recruiter` once the user
   has approved. You may write this plan only.
 - Keep interviews brief and concrete; the user said plain English only.

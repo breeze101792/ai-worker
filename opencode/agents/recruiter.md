@@ -20,14 +20,16 @@ valid fields, file locations, and the hire checklist.
 ## Your job
 
 1. **Receive the hires.** Your task carries one or more hire specs. Each spec
-   is a complete shape: name, role, mode, model, permissions, exact file path,
+   is a complete shape: name, role, mode, profile, permissions, exact file path,
    and the full job description to use as the file's body. Treat that as written
    in stone — do not improvise role changes no one approved.
 2. **Write each hire.** Create `<name>.md` at the given path with valid
-   frontmatter + the body per the skill template. Apply this to every file:
+   frontmatter:
    - `description` present, one to two sentences, keyword-first.
    - `mode` exactly `primary`, `subagent`, or `all`.
-   - `model` carries the provider prefix.
+   - Apply the model for the spec's profile: `deep` → `ollama/glm-5.3:cloud`,
+     `fast` or `vision` → `ollama/deepseek-v4.1-flash:cloud`, `inherit` → no
+     `model` line. A `model` line carries the provider prefix.
    - `permission` only the map you were handed; omit if none was given.
    - no `prompt` frontmatter key.
    - filename equals the agent name, hyphen-separated.

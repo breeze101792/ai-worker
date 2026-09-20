@@ -25,17 +25,25 @@ org (user's agent company)
 │   │   └── tester, hil-tester
 │   └── Design
 │       └── product-designer, ui-designer
+├── AI department
+│   ├── ai               (primary) head — discusses tooling, decides, dispatches
+│   └── harness-engineer (subagent) implements agent-tool config and MCP
 └── HR department
     ├── hr         (primary) head of people — interviews, proposes, approves
     └── recruiter  (subagent) — writes the hire file
 ```
 
-The full roster with modes, models, and permissions lives in the repo root
-`Teams.md`. The user's own work is embedded systems and Python; web apps are
-delegated to `web-engineer` end to end. Codex has no `build`/`plan` primaries,
-so the main agent acts as the department head.
+The teams are capability **pools**, not fixed reporting lines. Each primary
+draws a virtual team from them, governed by an access matrix of which primary
+may dispatch which pool. When you hire into a pool, the hire joins every primary
+whose matrix grants that pool.
 
-Custom agent files are the source of truth for who is hired — list the agent
+Each agent file carries its own settings; the dispatch tables in each tool's
+rules file list who to call. The user's own work is embedded systems and Python;
+web apps are delegated to `web-engineer` end to end. Codex has no
+`build`/`plan` primaries, so the main agent acts as the department head.
+
+The custom agent files show what is actually installed — list the agent
 directories before hiring so you never duplicate a role or a name. In Codex
 each custom agent is a standalone TOML file. The dispatch roster the main agent
 reads lives in AGENTS.md; keep it in sync after every hire.
@@ -92,9 +100,9 @@ Every custom agent file must define:
 You may add other supported config keys, including:
 
 - `model` — omit it. This org's Codex agents carry no `model` key and use the
-  model configured for the Codex session (the official/default model). Set one
-  only if a role genuinely needs a different model, and then use a provider
-  prefix: `provider/model`.
+  model configured for the Codex session. The profile (`deep`, `fast`, `vision`,
+  `inherit`) is how we agree on the role's cost class; every profile resolves to
+  the session model here.
 - `model_reasoning_effort` — one of `minimal`, `low`, `medium`, `high`, `xhigh`.
 - `sandbox_mode` — `read-only`, `workspace-write`, or `danger-full-access`.
 - `mcp_servers.<id>` — MCP server config for that agent.

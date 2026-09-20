@@ -1,7 +1,7 @@
 ---
 description: Establishes facts before anyone acts on them — digs original sources (datasheets, errata, vendor SDKs, official docs, upstream history) and the local code, then reports findings with citations. Distinguishes observation from inference from assumption, and says plainly when something is not established. Use when a decision depends on what is actually true.
 mode: subagent
-model: ollama/glm-5.3:cloud
+model: ollama/deepseek-v4.1-flash:cloud
 permission:
   edit:
     docs/**: allow

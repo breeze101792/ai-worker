@@ -25,20 +25,28 @@ org (user's agent company)
 │   │   └── tester, hil-tester
 │   └── Design
 │       └── product-designer, ui-designer
+├── AI department
+│   ├── ai               (primary) head — discusses tooling, decides, dispatches
+│   └── harness-engineer (subagent) implements agent-tool config and MCP
 └── HR department
     ├── hr         (primary) head of people — interviews, proposes, approves
     └── recruiter  (subagent) — writes the hire file
 ```
 
-The full roster with modes, models, and permissions lives in the repo root
-`Teams.md`. The user's own work is embedded systems and Python; web apps are
-delegated to `web-engineer` end to end.
+The teams are capability **pools**, not fixed reporting lines. Each primary
+draws a virtual team from them, governed by an access matrix of which primary
+may dispatch which pool. When you hire into a pool, the hire joins every primary
+whose matrix grants that pool.
 
-Agent files are the source of truth for who is hired — list the agents
+Each agent file carries its own mode, permissions, and model choice. The
+dispatch tables in each tool's rules file list who to call. The user's own work
+is embedded systems and Python; web apps are delegated to `web-engineer` end to
+end.
+
+The agent files show what is actually installed in this tool — list the agents
 directories (glob) before hiring so you never duplicate a role or a name. The
-`Subagents` table in AGENTS.md is not a second source of truth; it is the
-dispatch roster the main agent reads to decide who to call. Keep it in sync
-after every hire.
+`Subagents` table in AGENTS.md is not a second roster; it is the dispatch roster
+the main agent reads to decide who to call. Keep it in sync after every hire.
 
 ## Where hires live
 
@@ -81,8 +89,10 @@ Frontmatter fields (Claude Code schema):
 - `description` — required. One to two sentences, front-load the trigger
   keywords. Written to help other agents decide when to use it.
 - `model` — optional. Omit it so the agent uses the model configured for the
-  Claude Code session (the official/default model). Do not pin an alias unless
-  the role genuinely needs a different model.
+  Claude Code session (the official/default model). Pick the role's profile
+  (`deep`, `fast`, `vision`, `inherit`) to agree on its cost class; every
+  profile resolves to the session model here. Pin an alias only when the role
+  genuinely needs a different model.
 - `mode` — optional. `subagent` (= launched via Agent/task tool) is the safe
   default. `primary` for a selectable agent.
 - `tools` — optional comma-separated string restricting which tools the agent
@@ -107,8 +117,10 @@ You are <name>. Write the full role definition here.
 Frontmatter fields (opencode schema): `name, model, variant, description,
 mode, hidden, color, steps, options, disable, temperature, top_p, permission`.
 `permission` is a flat action or `{tool: action}` map, e.g. `edit: deny` for
-pure readers. Do NOT put a `prompt` key — the body is the prompt. `model` must
-carry a provider prefix (`ollama/glm-5.3:cloud`).
+pure readers. Do NOT put a `prompt` key — the body is the prompt. Pick a
+profile for the role (`deep`, `fast`, `vision`, `inherit`) and apply its model;
+an `inherit` role has no `model` line. A pinned model carries a provider prefix
+(`ollama/glm-5.3:cloud`).
 
 ## Hire workflow (the recruiting pipeline)
 

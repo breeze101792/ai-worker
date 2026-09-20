@@ -32,16 +32,20 @@ The build department is led by two primary agents, both defined in
   `architect`, and `code-reviewer`, and produces a concrete plan. It never
   implements; it hands execution to `build`.
 
-The Software, Test, and Design teams below sit under the build department. Route
-work through the department head, or dispatch a specialist directly when the
-match is obvious. Use `plan` when the shape of a change should be decided before
+The Research, Software, Test, and Design teams below sit under this department.
+Route work through the department head, or dispatch a specialist directly when
+the match is obvious. The AI and HR departments sit outside it, each headed by
+its own primary.
+
+Each primary draws a **virtual team**: the teams are capability pools, and who
+may dispatch whom is governed by `permission.task`. If a dispatch is denied, the
+pool is not in that primary's virtual team; report the denial instead of working
+around it. Use `plan` when the shape of a change should be decided before
 any code is written.
 
 ## Subagents
 
-The full company roster — modes, models, and permissions — lives in the repo
-root `Teams.md`. The tables below are the dispatch roster the main agent reads,
-grouped by team.
+The tables below are the dispatch roster the main agent reads, grouped by team.
 
 ### Research
 
@@ -76,6 +80,13 @@ grouped by team.
 | --- | --- | --- | --- |
 | `product-designer` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria. Domain-agnostic: embedded, Python, and web alike. | Product and functional definition before any technical or visual design. | Starting a new project or feature and the behavior, scope, or acceptance criteria must be pinned down first. |
 | `ui-designer` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus an HTML/CSS mockup for `web-engineer` to implement. | Clean UI design before web code. | A web interface needs design tokens, layout, and component specs first. |
+
+### AI department
+
+| Agent | What it does | Purpose | Use when |
+| --- | --- | --- | --- |
+| `ai` | Head of the AI department. The agent the user discusses agent tooling with — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Decides the shape of a tooling change and dispatches `harness-engineer` to implement it. | Agent-tooling owner. | A tool needs configuring, a skill or command must be written, or an MCP server must be set up. |
+| `harness-engineer` | Owns the agent-tool configuration for opencode, Claude Code, and Codex — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Validates every change against the opencode config schema. Dispatched by `ai`. | Agent-tool configuration. | An approved tooling change needs to be implemented and validated. |
 
 ### HR
 

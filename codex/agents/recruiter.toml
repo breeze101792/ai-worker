@@ -18,7 +18,9 @@ valid fields, file locations, and the hire checklist.
    frontmatter + the body per the skill template. Apply this to every file:
    - `description` present, one to two sentences, keyword-first.
    - `mode` exactly `primary`, `subagent`, or `all`.
-   - `model` carries the provider prefix.
+   - Apply the model for the spec's profile: `deep` → `ollama/glm-5.3:cloud`,
+     `fast` or `vision` → `ollama/deepseek-v4.1-flash:cloud`, `inherit` → no
+     `model` line. A `model` line carries the provider prefix.
    - `permission` only the map you were handed; omit if none was given.
    - no `prompt` frontmatter key.
    - filename equals the agent name, hyphen-separated.

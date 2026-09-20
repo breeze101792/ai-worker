@@ -1,7 +1,6 @@
 ---
 description: Owns build systems and toolchains — Make, CMake, Zephyr west, cross-compilers, linker scripts, CI, and flashing. Diagnoses and fixes build, link, and toolchain failures. Use when a build breaks, a toolchain must be configured, or CI and flashing need work.
 mode: subagent
-model: ollama/glm-5.3:cloud
 permission:
   edit: allow
   bash: allow

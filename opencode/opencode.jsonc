@@ -39,7 +39,11 @@
             "permission": {
                 "task": {
                     "*": "allow",
-                    "recruiter": "deny"
+                    "recruiter": "deny",
+                    "harness-engineer": "deny",
+                    "ai": "deny",
+                    "plan": "deny",
+                    "hr": "deny"
                 }
             }
         },
@@ -54,13 +58,68 @@
                 "task": {
                     "*": "allow",
                     "debugger": "deny",
-                    "tester": "deny",
-                    "hil-tester": "deny",
                     "firmware-engineer": "deny",
                     "python-engineer": "deny",
                     "web-engineer": "deny",
                     "toolchain-engineer": "deny",
-                    "recruiter": "deny"
+                    "harness-engineer": "deny",
+                    "ai": "deny",
+                    "tester": "deny",
+                    "hil-tester": "deny",
+                    "ui-designer": "deny",
+                    "recruiter": "deny",
+                    "build": "deny",
+                    "plan": "deny",
+                    "hr": "deny"
+                }
+            }
+        },
+        "hr": {
+            "permission": {
+                "task": {
+                    "*": "allow",
+                    "architect": "deny",
+                    "challenger": "deny",
+                    "code-reviewer": "deny",
+                    "debugger": "deny",
+                    "firmware-engineer": "deny",
+                    "python-engineer": "deny",
+                    "security-reviewer": "deny",
+                    "web-engineer": "deny",
+                    "toolchain-engineer": "deny",
+                    "harness-engineer": "deny",
+                    "ai": "deny",
+                    "tester": "deny",
+                    "hil-tester": "deny",
+                    "product-designer": "deny",
+                    "ui-designer": "deny",
+                    "build": "deny",
+                    "plan": "deny",
+                    "hr": "deny"
+                }
+            }
+        },
+        "ai": {
+            "permission": {
+                "task": {
+                    "*": "allow",
+                    "architect": "deny",
+                    "challenger": "deny",
+                    "code-reviewer": "deny",
+                    "debugger": "deny",
+                    "firmware-engineer": "deny",
+                    "python-engineer": "deny",
+                    "security-reviewer": "deny",
+                    "web-engineer": "deny",
+                    "toolchain-engineer": "deny",
+                    "tester": "deny",
+                    "hil-tester": "deny",
+                    "product-designer": "deny",
+                    "ui-designer": "deny",
+                    "recruiter": "deny",
+                    "build": "deny",
+                    "plan": "deny",
+                    "hr": "deny"
                 }
             }
         }
@@ -81,6 +140,7 @@
             "models": {
                 "deepseek-v4.1-flash:cloud": {
                     "name": "DeepSeek V4.1 Flash",
+                    "attachment": true,
                     "tool_call": true,
                     "reasoning": true,
                     "limit": { "context": 1048576, "output": 32768 }

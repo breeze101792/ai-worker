@@ -41,10 +41,14 @@ copies of the same content. Edit the source, then re-link and restart the tool.
   `developer_instructions`). Codex has no custom slash commands, so commands are
   converted to skills. Agents carry no `model` key; they inherit Codex's model.
 
-opencode agents set `model` explicitly, using two tiers: `glm-5.3` for hard or
-heavy work and `deepseek-v4.1-flash` for light work. Claude Code and Codex agents
-omit `model` and use each tool's own configured model, so we never pin another
-vendor's model in their files.
+An agent runs a **model profile**, not a named model. The profile states what
+the role needs and `Models.md` maps it to a concrete model per tool, so one org
+definition works across tools whose models differ. The profiles are `deep`
+(strongest reasoning), `fast` (low latency, cheap), `vision` (`fast` plus a hard
+requirement for image input), and `inherit` (no model pinned; follow the session
+model). opencode agents pin a `model` line except `inherit` roles; Claude Code
+and Codex agents carry no `model` key and use each tool's own configured model,
+so we never pin another vendor's model in their files.
 
 ## The org
 
@@ -67,9 +71,21 @@ Under the build department:
 | Test | `tester`, `hil-tester` |
 | Design | `product-designer`, `ui-designer` |
 
-The HR department (`hr`, `recruiter`) sits outside the build department and runs
-hiring. See `Teams.md` for models and permissions, and the `org-chart` skill for
-the hiring pipeline.
+Two departments sit outside the build department, each headed by its own
+primary:
+
+| Department | Agents |
+|------|--------|
+| AI | `ai` (primary), `harness-engineer` |
+| HR | `hr` (primary), `recruiter` |
+
+The teams are capability **pools**, not fixed reporting lines. Each primary
+draws a virtual team from them. An access matrix in `Teams.md` decides which
+primary may dispatch which pool; opencode enforces it through `permission.task`,
+while Claude Code and Codex treat it as binding on judgment.
+
+See `Teams.md` for the roster, access matrix, and profiles; `Models.md` for the
+model mapping; and the `org-chart` skill for the hiring pipeline.
 
 ## How to use each tool
 
@@ -78,7 +94,8 @@ The org is the same everywhere, but each tool exposes it differently.
 ### opencode
 
 - **Primary agents** — press **Tab** to cycle between `build` (default,
-  department head), `plan` (co-leader, read-only), and `hr`.
+  department head), `plan` (co-leader, read-only), `hr`, and `ai` (AI
+  department).
 - **Subagents** — type `@` and the agent name to invoke one directly, e.g.
   `@researcher find the errata for this part`. Primary agents also dispatch
   subagents automatically via the `task` tool.
@@ -96,6 +113,11 @@ The org is the same everywhere, but each tool exposes it differently.
   Claude Code watches `~/.claude/agents/` and picks up edits within seconds.
 - **Subagents** — type `@` and the name to invoke one, or let the main agent
   delegate with the **Agent** tool (formerly Task).
+- **Running as a department head** — `ai` and `hr` are `mode: primary`, which
+  Claude Code ignores, so they stay spawnable there. To address one directly,
+  run `claude --agent ai` or `claude --agent hr`, or set the `agent` key in
+  settings. A per-target `Agent(a, b)` allowlist in `tools` applies only when
+  the agent runs as the main thread.
 - **Built-in subagents** — **Explore** (read-only codebase search), **Plan**
   (read-only research during plan mode), and **General-purpose**.
 - **Commands** — type `/` for `implement`, `review`, `docs`, `hire`, `testarch`.
@@ -154,10 +176,14 @@ new agents and rules only appear after a restart.
 
 ## Editing workflow
 
-1. Edit the file in the repo — for agents, start with `opencode/agents/*.md`.
-2. Mirror the change to `claude/agents/` and `codex/agents/` in their formats.
-3. Update `Teams.md` and the dispatch tables in each tool's rules file.
-4. Run `bash setup.sh link` and restart the affected tools.
+`Teams.md` and `Models.md` are repo documents for the user; no tool reads them.
+The files installed into each tool are what agents read at runtime.
+
+1. Edit the roster in `Teams.md` if the change affects who is hired.
+2. Edit the file in the repo — for agents, start with `opencode/agents/*.md`.
+3. Mirror the change to `claude/agents/` and `codex/agents/` in their formats.
+4. Update the dispatch tables in each tool's rules file.
+5. Run `bash setup.sh link` and restart the affected tools.
 
 `CLAUDE.md` (repo root) has the detailed sync rules per tool.
 

@@ -25,20 +25,29 @@ org (user's agent company)
 │   │   └── tester, hil-tester
 │   └── Design
 │       └── product-designer, ui-designer
+├── AI department
+│   ├── ai               (primary) head — discusses tooling, decides, dispatches
+│   └── harness-engineer (subagent) implements agent-tool config and MCP
 └── HR department
     ├── hr         (primary) head of people — interviews, proposes, approves
     └── recruiter  (subagent) — writes the hire file
 ```
 
-The full roster with modes, models, and permissions lives in the repo root
-`Teams.md`. The user's own work is embedded systems and Python; web apps are
-delegated to `web-engineer` end to end.
+The teams are capability **pools**, not fixed reporting lines. Each primary
+draws a virtual team from them, governed by an access matrix of which primary
+may dispatch which pool. When you hire into a pool, the hire joins every primary
+whose matrix grants that pool.
 
-Agent files are the source of truth for who is hired — list the agents
+Each agent file carries its own mode, permissions, and model line. The dispatch
+tables in each tool's rules file list who to call. The user's own work is
+embedded systems and Python; web apps are delegated to `web-engineer` end to
+end.
+
+The agent files show what is actually installed in this tool — list the agents
 directories (glob) before hiring so you never duplicate a role or a name. The
-`Subagents` table in AGENTS.md is not a second source of truth; it is the
-dispatch roster the main agent reads to decide who to call. Keep it in sync
-after every hire (see step 6 of the pipeline).
+`Subagents` table in AGENTS.md is not a second roster; it is the dispatch roster
+the main agent reads to decide who to call. Keep it in sync after every hire
+(see step 6 of the pipeline).
 
 ## Where hires live
 
@@ -87,13 +96,11 @@ into `options` — avoid it. Rules:
 - `mode` — required. One of `primary`, `subagent`, `all`. `primary` = a
   selectable agent (needs a real model + tools). `subagent` = launched via the
   task tool; the main agent talks to the user.
-- `model` — always has a provider prefix: `provider/model`. This org uses two
-  tiers: `ollama/glm-5.3:cloud` for hard/heavy work (design, debugging,
-  implementation, on-target testing) and `ollama/deepseek-v4.1-flash:cloud` for
-  light work. Do not use `ollama/deepseek-v4-pro:cloud`. The real list is in
-  `opencode/opencode.jsonc` under `provider`. If unsure, default to
-  `ollama/deepseek-v4.1-flash:cloud`. A primary agent without `model` inherits
-  the user's default.
+- `model` — pick the profile that matches the role's cost profile, then apply
+  its model. Profiles: `deep` (strongest reasoning, slow ok), `fast` (low
+  latency), `vision` (`fast` plus image input), `inherit` (no model line; follow
+  the session model). A pinned model carries a provider prefix:
+  `provider/model`. Never use `ollama/deepseek-v4-pro:cloud`.
 - `permission` — flat action or `{tool: action}` map. Needed to lock down a
   hire: e.g. `edit: deny` for pure-readers, or allow for writers.
 - Do NOT put a `prompt` key in frontmatter — the body IS the prompt.
