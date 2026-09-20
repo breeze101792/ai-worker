@@ -16,7 +16,7 @@ opencode, Claude Code, and Codex, whose models and settings differ.
 | `deep` | deep | tool_call | `ollama/glm-5.3:cloud` | `architect`, `debugger` |
 | `fast` | fast | tool_call | `ollama/deepseek-v4.1-flash:cloud` | `code-reviewer`, `harness-engineer`, `tester`, `recruiter`, `researcher`, `product-designer` |
 | `vision` | fast | tool_call, vision | `ollama/deepseek-v4.1-flash:cloud` | `ui-designer` |
-| `inherit` | — | — | no model line | `ai`, `build`, `plan`, `hr`, `challenger`, `security-reviewer`, `firmware-engineer`, `python-engineer`, `web-engineer`, `toolchain-engineer`, `hil-tester` |
+| `inherit` | — | — | no model line | `ai`, `build`, `plan`, `challenger`, `security-reviewer`, `firmware-engineer`, `python-engineer`, `web-engineer`, `toolchain-engineer`, `hil-tester` |
 
 - **`deep`** — strongest reasoning; slow is acceptable.
 - **`fast`** — low latency and cheap.

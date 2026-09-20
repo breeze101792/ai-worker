@@ -1,6 +1,6 @@
 ---
 name: org-chart
-description: The HR department playbook. Use when interviewing the user about hiring agents, recruiting new team members, generating a new Codex custom agent, or validating agent files. Load this skill before creating, editing, or reviewing any agent definition.
+description: The AI department's hiring playbook. Use when interviewing the user about hiring agents, recruiting new team members, generating a new Codex custom agent, or validating agent files. Load this skill before creating, editing, or reviewing any agent definition.
 ---
 
 # Org Chart — The Agent Company
@@ -28,12 +28,10 @@ org (user's agent company)
 │   │   └── architect, challenger
 │   └── Design
 │       └── product-designer, ui-designer
-├── AI department
-│   ├── ai               (primary) head — discusses tooling, decides, dispatches
-│   └── harness-engineer (subagent) implements agent-tool config and MCP
-└── HR department
-    ├── hr         (primary) head of people — interviews, proposes, approves
-    └── recruiter  (subagent) — writes the hire file
+└── AI department
+    ├── ai               (primary) head — tooling and hiring: discusses, decides, dispatches
+    ├── harness-engineer (subagent) implements agent-tool config and MCP
+    └── recruiter        (subagent) writes the hire file
 ```
 
 The teams are capability **pools**, not fixed reporting lines. Each primary
@@ -117,7 +115,7 @@ IS the instructions.
 
 ## Hire workflow (the recruiting pipeline)
 
-1. **Interview.** `hr` talks to the user: what are they building, what's
+1. **Interview.** `ai` talks to the user: what are they building, what's
    stuck, which team member is missing. From the current project (manifests,
    source), `foundation/USER.md`, and the existing agents, propose a list of
    role(s). Never invent a tool or permission the user didn't mention.
@@ -125,15 +123,15 @@ IS the instructions.
    mode, permissions, location (project or global), and the job description
    (the `developer_instructions`). Check against the existing agents — no
    duplicate names or duplicated roles.
-3. **One-click approval.** Put the final shortlist in a `question` tool call
-   with a single "Approve hires" option — the user clicks once and then it
-   generates. Do not write a file before that click. If the user rejects with
-   edits, adjust and re-confirm exactly once, then proceed.
-4. **Generate.** `hr` passes the approved shortlist to the `recruiter`
+3. **One-click approval.** Show the final shortlist plainly, then ask once with a
+   single "Approve hires" option — the user clicks once and then it generates.
+   Do not write a file before that click. If the user rejects with edits, adjust
+   and re-confirm exactly once, then proceed.
+4. **Generate.** `ai` passes the approved shortlist to the `recruiter`
    subagent via spawn_agent. The `recruiter` writes one valid `<name>.toml`
    per hire.
 5. **Validate.** Re-read every written file and run the checklist below.
-6. **Introduce the hire.** A hire no one can find is useless. `hr` adds one
+6. **Introduce the hire.** A hire no one can find is useless. `ai` adds one
    row to the agent roster table of the owning AGENTS.md. Row shape: name,
    what it does, purpose, use when — kept consistent with the hire file's
    `description`.
@@ -149,7 +147,7 @@ proposing or writing:
 - Glob for agent files: `**/.codex/agents/**/*.toml` and the org repo's
   `codex/agents/*.toml`.
 - Read the `name`, `description`, and `model` of the members you find (e.g.
-  `tester`, `hr`, `recruiter` already exist — never rehire them).
+  `tester`, `ai`, `recruiter` already exist — never rehire them).
 
 Hires awaiting a restart exist only as files too — there is no separate state.
 

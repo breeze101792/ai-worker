@@ -5,7 +5,19 @@ allowed-tools: Read, Grep, Glob, Bash, Agent
 
 Implement the following by delegating to the domain engineer that fits: $ARGUMENTS — if empty, ask what to implement and where.
 
-## 1. Determine the domain
+## 1. Size the request
+
+Size the request before you route it, and state the size in one line.
+
+- **Small** — a one-file edit, a clear bug fix, a typo, a config change. One engineer, no design stage.
+- **Medium** — a bounded change inside one domain. One engineer, no design stage.
+- **Large** — a new system, a public interface change, or work that spans domains. Do the design stages in step 3.
+
+A bug fix is never a "feature". "Substantial" means a public interface change or
+more than about three files — not "it felt big". When two sizes both seem to fit,
+pick the smaller one and say which you picked.
+
+## 2. Determine the domain
 
 Inspect the target and the project before routing. Do not assume the language.
 
@@ -15,7 +27,9 @@ Inspect the target and the project before routing. Do not assume the language.
 
 Read the manifests (`package.json`, `pyproject.toml`, `CMakeLists.txt`, `Kconfig`, `prj.conf`) and the nearby source to confirm the domain. If the task spans domains, split it and dispatch each part to its engineer.
 
-## 2. Build the change
+## 3. Build the change
+
+For a large request only:
 
 - **Define the product first when it is a new project or feature.** If the behavior, scope, or acceptance criteria are not yet pinned down, dispatch to `product-designer` first, then build from its spec.
 - **Design first when it is a new system or a refactor.** If the work changes architecture, boundaries, or contracts, dispatch to `architect` first, then implement from its blueprint.
@@ -24,9 +38,9 @@ Read the manifests (`package.json`, `pyproject.toml`, `CMakeLists.txt`, `Kconfig
 
 Hand the chosen engineer the task, the target paths, and any design or constraints. The engineer reads the project's own conventions and makes the smallest correct change.
 
-## 3. Verify
+## 4. Verify
 
-After the engineer reports, check the change against the task and run the project's lint, type-check, and test commands. If the change is substantial or risky, send it to `code-reviewer` for a review of the diff before it lands.
+After the engineer reports, check the change against the task and run the project's lint, type-check, and test commands. Send it to `code-reviewer` when the request is large, or when the change touches untrusted input, authentication, secrets, or memory-unsafe code.
 
 ## Guardrails
 

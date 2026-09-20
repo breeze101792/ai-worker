@@ -53,7 +53,7 @@ Config loads once at startup. Always tell the user to restart the affected tool.
 
 ## Guardrails
 
-- Do not create or edit agent definitions. That belongs to `hr` and `recruiter`
+- Do not create or edit agent definitions. That belongs to `ai` and `recruiter`
   via the `org-chart` skill.
 - Do not edit the user's application source code. Hand it to the domain engineer.
 - This repo is plain Markdown and TOML with no build step. Do not add a generator.

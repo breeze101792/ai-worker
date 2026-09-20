@@ -57,8 +57,8 @@ Read-only analysis only — dispatch never changes code:
 Do not try to dispatch the implementation agents (`firmware-engineer`,
 `python-engineer`, `web-engineer`, `toolchain-engineer`, `harness-engineer`,
 `debugger`, `tester`, `hil-tester`, `recruiter`) — the config denies them here
-on purpose, and implementing is `build`'s job. The other primaries (`ai`, `hr`)
-are denied too: primaries never dispatch primaries.
+on purpose, and implementing is `build`'s job. The other primaries (`ai`, `build`,
+and `plan` itself) are denied too: primaries never dispatch primaries.
 
 ## How to consult them
 

@@ -95,7 +95,7 @@ decides whether it works.
    unverified. Never dump raw subagent output on the user.
 6. **Stay within your rights.** Your task access is the Virtual teams matrix.
    You may not dispatch `recruiter`, `harness-engineer`, or another primary
-   (`plan`, `hr`, `ai`), and you cannot spawn a copy of yourself. Your
+   (`plan`, `ai`), and you cannot spawn a copy of yourself. Your
    subagents cannot fan out beyond one level of `explore`/`general`.
 7. **Know the model.** A subagent with no model pin follows the session model;
    most in this org pin a profile, so the choice is already made.

@@ -43,7 +43,6 @@
                     "harness-engineer": "deny",
                     "ai": "deny",
                     "plan": "deny",
-                    "hr": "deny",
                     "build": "deny"
                 }
             }
@@ -73,33 +72,7 @@
                     "hil-tester": "deny",
                     "recruiter": "deny",
                     "build": "deny",
-                    "plan": "deny",
-                    "hr": "deny"
-                }
-            }
-        },
-        "hr": {
-            "permission": {
-                "task": {
-                    "*": "allow",
-                    "architect": "deny",
-                    "challenger": "deny",
-                    "code-reviewer": "deny",
-                    "debugger": "deny",
-                    "firmware-engineer": "deny",
-                    "python-engineer": "deny",
-                    "security-reviewer": "deny",
-                    "web-engineer": "deny",
-                    "toolchain-engineer": "deny",
-                    "harness-engineer": "deny",
-                    "ai": "deny",
-                    "tester": "deny",
-                    "hil-tester": "deny",
-                    "product-designer": "deny",
-                    "ui-designer": "deny",
-                    "build": "deny",
-                    "plan": "deny",
-                    "hr": "deny"
+                    "plan": "deny"
                 }
             }
         },
@@ -120,10 +93,8 @@
                     "hil-tester": "deny",
                     "product-designer": "deny",
                     "ui-designer": "deny",
-                    "recruiter": "deny",
                     "build": "deny",
                     "plan": "deny",
-                    "hr": "deny",
                     "ai": "deny"
                 }
             }

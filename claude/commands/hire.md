@@ -1,5 +1,5 @@
 ---
-description: Start the HR department — tell the agent company what you need and it interviews you, proposes new team members, and hires them with one click.
+description: Start the AI department — tell the agent company what you need and it interviews you, proposes new team members, and hires them with one click.
 allowed-tools: AskUserQuestion, Read, Grep, Glob, Write, Edit, Bash, Agent
 ---
 

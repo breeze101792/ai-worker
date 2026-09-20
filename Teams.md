@@ -29,19 +29,17 @@ org (user's agent company)
 │   └── Design
 │       ├── product-designer   (subagent) product & functional design
 │       └── ui-designer        (subagent) visual design specs & mockups
-├── AI department
-│   ├── ai                     (primary)  head — discusses tooling, decides, dispatches
-│   └── harness-engineer       (subagent) implements agent-tool config and MCP
-└── HR department
-    ├── hr                     (primary)  head of people — interviews, proposes, approves
+└── AI department
+    ├── ai                     (primary)  head — tooling and hiring: discusses, decides, dispatches
+    ├── harness-engineer       (subagent) implements agent-tool config and MCP
     └── recruiter              (subagent) writes the hire file
 ```
 
 `build` heads the build department and is the default agent. It owns execution
 and leads the Software and Test teams. `plan` heads the Plan department: it is
 read-only, works through strategy with the user, records the plan in docs, and
-hands execution to `build`. The AI and HR departments sit apart, each headed by
-its own primary.
+hands execution to `build`. The AI department sits apart, headed by its own
+primary, and owns both the agent tools and hiring.
 
 The user's own work is embedded systems and Python; web apps are delegated to
 `web-engineer` end to end, so that agent must verify its own output.
@@ -59,17 +57,15 @@ Pool membership:
 | Research | `researcher` |
 | Software | `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
 | Architecture | `architect`, `challenger` |
-| AI | `harness-engineer` |
+| AI | `harness-engineer`, `recruiter` |
 | Test | `tester`, `hil-tester` |
 | Design | `product-designer`, `ui-designer` |
-| HR | `recruiter` |
 
-| Primary | Research | Software | Architecture | AI | Test | Design | HR |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `build` | full | full | full | none | full | full | none |
-| `plan` | full | analysis | full | none | none | analysis | none |
-| `hr` | full | none | none | none | none | none | full |
-| `ai` | full | none | none | full | none | none | none |
+| Primary | Research | Software | Architecture | AI | Test | Design |
+| --- | --- | --- | --- | --- | --- | --- |
+| `build` | full | full | full | none | full | full |
+| `plan` | full | analysis | full | none | none | analysis |
+| `ai` | full | none | none | full | none | none |
 
 Legend:
 
@@ -175,21 +171,16 @@ why; `ui-designer` defines how it looks.
 ### AI department
 
 The tools we build with, rather than the things we build. `ai` is the primary
-you discuss tooling with; it decides and dispatches `harness-engineer`.
+you discuss tooling and hiring with; it decides and dispatches `harness-engineer`
+to implement tooling changes and `recruiter` to write approved hires.
 `toolchain-engineer`, which owns the build toolchain for target code, sits in
 the build department's Software team.
 
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
-| `ai` | primary | `inherit` | Head of the AI department. Discusses agent tooling with the user — what MCP servers, skills, commands, and plugins the tools need — weighs options, and dispatches `harness-engineer` to implement. Does not edit config itself. | A tool needs configuring, a skill or command must be written, or an MCP server must be set up. |
+| `ai` | primary | `inherit` | Head of the AI department. Discusses agent tooling and hiring with the user — what MCP servers, skills, commands, and plugins the tools need, and what new roles the team needs — weighs options, and dispatches `harness-engineer` and `recruiter` to implement. Does not edit config itself. | A tool needs configuring, a skill or command must be written, an MCP server must be set up, or the team must be staffed or expanded. |
 | `harness-engineer` | subagent | `fast` | Owns the agent-tool configuration for opencode, Claude Code, and Codex — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Validates every change against the opencode config schema. Dispatched by `ai`. | An approved tooling change needs to be implemented and validated. |
-
-### HR department
-
-| Agent | Mode | Model | What it does | Use when |
-| --- | --- | --- | --- | --- |
-| `hr` | primary | `inherit` | Head of people. Interviews the user, surveys existing agents and the project to spot team gaps, and runs the recruiting pipeline (propose → one-click approve → dispatch recruiter). | The user wants to build, staff, or expand an agent team. |
-| `recruiter` | subagent | `fast` | Writes one or more valid agent files from an approved shortlist. Dispatched by `hr` after approval. | New subagents or primary agents are approved and need files created. |
+| `recruiter` | subagent | `fast` | Writes one or more valid agent files from an approved shortlist. Dispatched by `ai` after approval. | New subagents or primary agents are approved and need files created. |
 
 Built-in agents are not listed here: opencode provides `explore` and `general`;
 Codex provides `default`, `worker`, and `explorer`.
@@ -203,7 +194,6 @@ listed for a tool inherits the session default.
 | --- | --- | --- | --- |
 | `build` | allow | allow | Head of the build department; task access per the Virtual teams matrix |
 | `plan` | `PLAN.md`, `WORKFLOW.md`, `WORKLOG.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Head of the Plan department; read-only, writes docs only; task access per the Virtual teams matrix |
-| `hr` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `ai` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `recruiter` | allow | allow | Writes agent files |
 | `researcher` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes research reports only, not source |
@@ -227,11 +217,11 @@ spawn a copy of themselves.
 
 ## How a hire changes the org
 
-1. `hr` interviews the user and proposes a shortlist.
+1. `ai` interviews the user and proposes a shortlist.
 2. The user approves in one click.
 3. `recruiter` writes `opencode/agents/<name>.md` (and the mirrored
    `claude/` and `codex/` file).
-4. `hr` adds a row to the owning `AGENTS.md` dispatch table and mirrors the
+4. `ai` adds a row to the owning `AGENTS.md` dispatch table and mirrors the
    hire to the other tools' agent directories.
 5. The user adds the row here, to keep this roster current.
 6. Restart the affected tool — config loads once at startup.

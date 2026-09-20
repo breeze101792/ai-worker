@@ -33,7 +33,7 @@ copies of the same content. Edit the source, then re-link and restart the tool.
 - **opencode** is the richest format and the source of truth for agent design.
   Its agents use YAML frontmatter with `mode`, `model`, `permission`, and a
   markdown body that becomes the prompt. It has real primary agents, so the
-  department-head primaries (`build`, `plan`, `ai`, `hr`) exist only here.
+  department-head primaries (`build`, `plan`, `ai`) exist only here.
 - **Claude Code** agents are markdown with `description`, `mode`, and a `tools`
   list. It has no department-head primaries, so the main agent acts as the
   department head for every department. Agents carry no `model` key; they use
@@ -54,7 +54,7 @@ so we never pin another vendor's model in their files.
 ## The org
 
 The agent roster is in `Teams.md` — the single source of truth for who is hired.
-Four departments, each headed by a primary agent:
+Three departments, each headed by a primary agent:
 
 - **`build`** — build department, and the default agent. Owns execution:
   restate the goal, decompose it, dispatch each part to the right specialist,
@@ -62,8 +62,7 @@ Four departments, each headed by a primary agent:
 - **`plan`** — Plan department. Owns strategy: read-only, consults `explore`,
   `architect`, `challenger`, and `researcher`, and produces a concrete plan.
   Never implements. Leads Research, Architecture, and Design.
-- **`ai`** — AI department. Owns the agent tools themselves.
-- **`hr`** — HR department. Owns hiring.
+- **`ai`** — AI department. Owns the agent tools themselves and who works there.
 
 | Department | Teams | Agents |
 |------|-------|--------|
@@ -72,8 +71,7 @@ Four departments, each headed by a primary agent:
 | Plan | Research | `researcher` |
 | Plan | Architecture | `architect`, `challenger` |
 | Plan | Design | `product-designer`, `ui-designer` |
-| AI | — | `ai` (primary), `harness-engineer` |
-| HR | — | `hr` (primary), `recruiter` |
+| AI | — | `ai` (primary), `harness-engineer`, `recruiter` |
 
 The teams are capability **pools**, not fixed reporting lines. Each primary
 draws a virtual team from them. An access matrix in `Teams.md` decides which
@@ -89,9 +87,8 @@ The org is the same everywhere, but each tool exposes it differently.
 
 ### opencode
 
-- **Primary agents** — press **Tab** to cycle between `build` (default,
-  build department), `plan` (Plan department, read-only), `hr` (HR
-  department), and `ai` (AI department).
+- **Primary agents** — press **Tab** to cycle between `build` (default, build
+  department), `ai` (AI department), and `plan` (Plan department, read-only).
 - **Subagents** — type `@` and the agent name to invoke one directly, e.g.
   `@researcher find the errata for this part`. Primary agents also dispatch
   subagents automatically via the `task` tool.
@@ -109,9 +106,9 @@ The org is the same everywhere, but each tool exposes it differently.
   Claude Code watches `~/.claude/agents/` and picks up edits within seconds.
 - **Subagents** — type `@` and the name to invoke one, or let the main agent
   delegate with the **Agent** tool (formerly Task).
-- **Running as a department head** — `ai` and `hr` are `mode: primary`, which
-  Claude Code ignores, so they stay spawnable there. To address one directly,
-  run `claude --agent ai` or `claude --agent hr`, or set the `agent` key in
+- **Running as a department head** — `ai` is `mode: primary`, which
+  Claude Code ignores, so it stays spawnable there. To address it directly,
+  run `claude --agent ai`, or set the `agent` key in
   settings. A per-target `Agent(a, b)` allowlist in `tools` applies only when
   the agent runs as the main thread.
 - **Built-in subagents** — **Explore** (read-only codebase search), **Plan**

@@ -9,11 +9,10 @@
 
 ## Coding rules
 
-1. **Git commit only with user approval.** Only run `git commit` after the user has explicitly recognized the result of your work. Wait for the user to confirm the result before committing.
-2. **Use git commit template.** Write commit messages with the git commit template, not a one-liner. Fetch the template path with `git config --get commit.template` (or `git var GIT_COMMITTER_IDENT` for identity), then read the file it points to.
-3. **Follow the project's coding convention.** Match the style the project already uses. For example, adopt the Linux kernel coding style in Linux code and Zephyr's conventions in Zephyr code. When in doubt, mirror nearby files.
-4. **Group declarations.** Put variable and `#define` declarations in their own dedicated area, separate from executable logic, rather than scattering them mid-function or mid-file.
-5. **No hard-coded values.** Do not hard-code magic numbers, strings, or conditions directly in code. Extract them into named constants, configuration, or parameters.
+1. **Git commit only with user approval.** Run `git commit` only after the user has explicitly recognized the result of your work. Wait for confirmation before committing, and use the configured commit template instead of a one-line message.
+2. **Follow the project's coding convention.** Match the style the project already uses. For example, adopt the Linux kernel coding style in Linux code and Zephyr's conventions in Zephyr code. When in doubt, mirror nearby files.
+3. **Group declarations.** Put variable and `#define` declarations in their own dedicated area, separate from executable logic, rather than scattering them mid-function or mid-file.
+4. **No hard-coded values.** Do not hard-code magic numbers, strings, or conditions directly in code. Extract them into named constants, configuration, or parameters.
 
 ## User
 
@@ -21,7 +20,7 @@ The user is Shaun, an embedded systems engineer. Weigh embedded concerns — har
 
 ## Leadership
 
-There are four primary agents, each heading a department:
+There are three primary agents, each heading a department:
 
 - **`build`** — head of the build department and the default agent. Owns
   execution: restates the goal, decomposes it, dispatches each part to the
@@ -31,8 +30,8 @@ There are four primary agents, each heading a department:
   `explore`, `architect`, `challenger`, and `researcher`, and produces a
   concrete plan. It never implements; it hands execution to `build`. Leads
   Research, Architecture, and Design.
-- **`ai`** — head of the AI department. Owns the agent tools themselves.
-- **`hr`** — head of the HR department. Owns hiring.
+- **`ai`** — head of the AI department. Owns the agent tools themselves and
+  hiring.
 
 Route work through the department head, or dispatch a specialist directly when
 the match is obvious.
@@ -90,14 +89,9 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
-| `ai` | Head of the AI department. The agent the user discusses agent tooling with — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Decides the shape of a tooling change and dispatches `harness-engineer` to implement it. | Agent-tooling owner. | A tool needs configuring, a skill or command must be written, or an MCP server must be set up. |
+| `ai` | Head of the AI department. The agent the user discusses agent tooling and hiring with — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations, plus the org's roster. Decides the shape of a tooling change or a hire and dispatches `harness-engineer` and `recruiter` to implement. | Agent-tooling owner. | A tool needs configuring, a skill or command must be written, an MCP server must be set up, or the team must be staffed or expanded. |
 | `harness-engineer` | Owns the agent-tool configuration for opencode, Claude Code, and Codex — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Validates every change against the opencode config schema. Dispatched by `ai`. | Agent-tool configuration. | An approved tooling change needs to be implemented and validated. |
-
-### HR department
-
-| Agent | What it does | Purpose | Use when |
-| --- | --- | --- | --- |
-| `recruiter` | Writes valid opencode agent files from an approved shortlist. Dispatched by `hr` after approval. | Hires new team members from a spec it receives. | New subagents or primary agents are approved and need files created. |
+| `recruiter` | Writes valid opencode agent files from an approved shortlist. Dispatched by `ai` after approval. | Hires new team members from a spec it receives. | New subagents or primary agents are approved and need files created. |
 
 ## Fan-out
 

@@ -1,6 +1,6 @@
 ---
-description: Start the HR department — tell the agent company what you need and it interviews you, proposes new team members, and hires them with one click.
-agent: hr
+description: Start the AI department — tell the agent company what you need and it interviews you, proposes new team members, and hires them with one click.
+agent: ai
 ---
 
 Hire new team members for the agent company. Goal: $ARGUMENTS — if empty, ask me what I'm working on and figure out the gaps yourself.
