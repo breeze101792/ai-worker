@@ -54,7 +54,9 @@
                     "*": "deny",
                     "docs/**": "allow",
                     "README.md": "allow",
-                    "AGENTS.md": "allow"
+                    "AGENTS.md": "allow",
+                    "CLAUDE.md": "allow",
+                    "PLAN.md": "allow"
                 },
                 "task": {
                     "*": "allow",

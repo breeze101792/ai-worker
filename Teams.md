@@ -118,7 +118,7 @@ session model there. See `Models.md` for the per-tool mapping.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `build` | primary | `inherit` | The build department head and the default agent. Restates the goal, decomposes it, dispatches each part to the specialist who owns it, collates the results, and verifies. Keeps full tools, so it also does small single-domain work directly. | Anything that needs work done. |
-| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `architect`, `challenger`, and `researcher`, weighs options, and produces a concrete plan. Never implements. | The shape of a change should be decided before any code is written. |
+| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `architect`, `challenger`, and `researcher`, weighs options, and produces a concrete plan — recorded as `PLAN.md` or under `docs/`. Never implements. | The shape of a change should be decided before any code is written. |
 
 `plan` leads the Plan department's Research, Architecture, and Design teams;
 `build` leads Software and Test. Neither agent pins a model, so both follow the
@@ -159,7 +159,7 @@ Technical design and adversarial review. `architect` produces the blueprint;
 
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
-| `architect` | subagent | `deep` | Principal software architect. Designs and reviews system architecture, hunts duplicate code, designs event/IPC frameworks, and recommends structure that prevents bugs. Rejects overengineering. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, or designing an event bus or IPC layer. |
+| `architect` | subagent | `deep` | Principal software architect. Designs and reviews system architecture, hunts duplicate code, designs event/IPC frameworks, and recommends structure that prevents bugs. Writes the blueprint to `ARCH.md` or under `docs/`. Rejects overengineering. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, or designing an event bus or IPC layer. |
 | `challenger` | subagent | `inherit` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design; proposes no design of its own. | Before implementation, when changing course is still cheap, and the proposal must be stress-tested. |
 
 ### Design — Plan department
@@ -202,12 +202,12 @@ listed for a tool inherits the session default.
 | Agent | edit | bash | Notable |
 | --- | --- | --- | --- |
 | `build` | allow | allow | Head of the build department; task access per the Virtual teams matrix |
-| `plan` | deny (`*`) | — | Head of the Plan department; read-only, writes docs only; task access per the Virtual teams matrix |
+| `plan` | `PLAN.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Head of the Plan department; read-only, writes docs only; task access per the Virtual teams matrix |
 | `hr` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `ai` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `recruiter` | allow | allow | Writes agent files |
-| `researcher` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes research reports only, not source |
-| `architect` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes design docs only, not source |
+| `researcher` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes research reports only, not source |
+| `architect` | ARCH.md, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes the architecture blueprint and design docs only, not source |
 | `challenger` | deny | — | Read-only by design; attacks proposals, never edits |
 | `code-reviewer` | deny | — | Read-only by design |
 | `debugger` | deny | allow | Diagnoses only; proves the root cause, never edits |
@@ -219,8 +219,8 @@ listed for a tool inherits the session default.
 | `harness-engineer` | allow | allow | Changes tool config, skills, commands, and MCP; dispatched by `ai` |
 | `tester` | inherited | — | Writes test code |
 | `hil-tester` | allow | allow | Flashes targets; confirms board and image first |
-| `product-designer` | allow (docs only) | — | Writes product and functional specs, no source |
-| `ui-designer` | docs/**, README.md, AGENTS.md allow; `*` deny | — | Writes design docs and the mockup under `docs/` only, not source |
+| `product-designer` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes product and functional specs, no source |
+| `ui-designer` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes design docs and the mockup under `docs/` only, not source |
 
 All subagents are limited to fan-out through `explore` and `general`; none may
 spawn a copy of themselves.

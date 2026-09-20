@@ -8,6 +8,7 @@ permission:
     docs/**: allow
     README.md: allow
     AGENTS.md: allow
+    CLAUDE.md: allow
   task:
     explore: allow
     general: allow
