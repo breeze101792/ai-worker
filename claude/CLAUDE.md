@@ -15,6 +15,7 @@
 3. **Follow the project's coding convention.** Match the style the project already uses. For example, adopt the Linux kernel coding style in Linux code and Zephyr's conventions in Zephyr code. When in doubt, mirror nearby files.
 4. **Group declarations.** Put variable and `#define` declarations in their own dedicated area, separate from executable logic, rather than scattering them mid-function or mid-file.
 5. **No hard-coded values.** Do not hard-code magic numbers, strings, or conditions directly in code. Extract them into named constants, configuration, or parameters.
+6. **Comment only when needed.** Add a code comment only when the code cannot explain itself — a non-obvious reason, a constraint, or a workaround. Keep it to one or two lines. Never restate what the code does.
 
 ## User
 
