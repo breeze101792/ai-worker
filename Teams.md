@@ -248,7 +248,7 @@ The full pipeline and the valid agent frontmatter are defined in the
 | --- | --- | --- |
 | opencode | `opencode/agents`, `opencode/commands`, `opencode/skills`, `opencode/AGENTS.md`, `opencode/opencode.jsonc` | `~/.config/opencode/...` |
 | Claude Code | `claude/agents`, `claude/commands`, `claude/skills`, `claude/CLAUDE.md`, `claude/settings.json` or `claude/settings-ollama.json` | `~/.claude/...` |
-| Codex | `codex/agents`, `codex/skills`, `codex/AGENTS.md` | `~/.codex/agents`, `~/.agents/skills`, `~/.codex/AGENTS.md` |
+| Codex | `codex/agents`, `codex/skills`, `codex/AGENTS.md`, `codex/config.toml` | `~/.codex/agents`, `~/.agents/skills`, `~/.codex/AGENTS.md`, `~/.codex/config.toml` |
 
 Run `bash setup.sh link` from this repo to sync all three, or
 `bash setup.sh link <tool>` for one. See `CLAUDE.md` for details.

@@ -1,0 +1,35 @@
+# Codex configuration.
+#
+# Global defaults that mirror the opencode setup in this repo. Codex reads this
+# once at startup; restart Codex after changing it.
+#
+# Provider and model keys are deliberately absent. This file does not reroute
+# Codex to a local endpoint; it uses whatever provider you have authenticated.
+
+# Match opencode's `"autoupdate": false`.
+check_for_update_on_startup = false
+
+# Pause for approval before commands that leave the sandbox, like opencode's
+# "ask" rules. `on-request` is the interactive default; `never` is for
+# non-interactive runs.
+approval_policy = "on-request"
+
+# Commands may write inside the workspace. Anything outside prompts, matching
+# opencode's `external_directory` behaviour.
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+# No outbound network from sandboxed commands. The agent can still use its own
+# web tools.
+network_access = false
+# Keep /tmp writable, matching opencode's `external_directory: /tmp/** -> allow`.
+exclude_slash_tmp = false
+
+# Multi-agent tools, used for the delegating behaviour described in AGENTS.md.
+[agents]
+enabled = true
+# Bounded fan-out, so one request cannot open an unbounded number of threads.
+max_concurrent_threads_per_session = 4
+
+[history]
+persistence = "save-all"

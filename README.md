@@ -23,7 +23,7 @@ What each directory contains:
 | `commands/*.md` | `commands/*.md` | `skills/*/SKILL.md` | Slash commands (Codex uses skills) |
 | `skills/` | `skills/` | `skills/` | Skills |
 | `AGENTS.md` | `CLAUDE.md` | `AGENTS.md` | Tool-wide rules and dispatch roster |
-| `opencode.jsonc` | `settings.json` / `settings-ollama.json` | — | Tool configuration |
+| `opencode.jsonc` | `settings.json` / `settings-ollama.json` | `config.toml` | Tool configuration |
 
 ## How the tools differ
 
@@ -145,10 +145,12 @@ The org is the same everywhere, but each tool exposes it differently.
   approval mode. Choose the permission mode under the composer before you
   delegate. Approval requests can surface from a background thread; press `o`
   to open that thread before approving.
-- **Global defaults** live under `[agents]` in Codex `config.toml` (`enabled`,
-  `max_concurrent_threads_per_session`, `default_subagent_model`,
-  `default_subagent_reasoning_effort`). This repo does not create one; add
-  `~/.codex/config.toml` only if you need to tune those defaults.
+- **Global defaults** live in `codex/config.toml`, linked to
+  `~/.codex/config.toml`. It mirrors the opencode posture: no auto-update,
+  approval on request, `workspace-write` sandbox with no sandboxed network,
+  multi-agent fan-out enabled with a concurrency cap, and full history
+  persistence. It deliberately sets no provider or model key, so Codex uses
+  whatever provider you have authenticated.
 
 ## Setup and sync
 

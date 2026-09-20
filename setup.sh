@@ -46,6 +46,8 @@ TOOL_CODEX_SKILLS_DIR_SRC="$SCRIPT_DIR/codex/skills"
 TOOL_CODEX_SKILLS_DIR_DST="$HOME/.agents/skills"
 TOOL_CODEX_AGENTSMD_SRC="$SCRIPT_DIR/codex/AGENTS.md"
 TOOL_CODEX_AGENTSMD_DST="$HOME/.codex/AGENTS.md"
+TOOL_CODEX_CONFIG_SRC="$SCRIPT_DIR/codex/config.toml"
+TOOL_CODEX_CONFIG_DST="$HOME/.codex/config.toml"
 
 MODELS=(
   "deepseek-v4.1-flash:cloud"
@@ -113,6 +115,7 @@ resolve_tool() {
       echo "$TOOL_CODEX_AGENTS_DIR_SRC|$TOOL_CODEX_AGENTS_DIR_DST|dir"
       echo "$TOOL_CODEX_SKILLS_DIR_SRC|$TOOL_CODEX_SKILLS_DIR_DST|dir"
       echo "$TOOL_CODEX_AGENTSMD_SRC|$TOOL_CODEX_AGENTSMD_DST|file"
+      echo "$TOOL_CODEX_CONFIG_SRC|$TOOL_CODEX_CONFIG_DST|file"
       ;;
     *) err "Unknown tool: $name (available: claude, opencode, codex)"; return 1 ;;
   esac
