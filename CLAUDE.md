@@ -33,7 +33,7 @@ hand-adapted copy synced via setup.sh:
   reads only its own `.toml` agents, not opencode `.md`.
 - `codex/skills/` — Codex skills, format-compatible with opencode
   (`<name>/SKILL.md` with `name`+`description`). Includes the two opencode
-  skills plus `docs`/`hire`/`testarch`, which are the opencode *commands*
+  skills plus `docs`/`design`/`hire`/`testarch`, which are the opencode *commands*
   converted to skills (Codex CLI has no custom slash-command format; skills
   are its documented equivalent and appear in the `/` menu). Install target is
   `~/.agents/skills`, Codex's USER skill dir (symlinks followed).

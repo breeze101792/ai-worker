@@ -45,7 +45,7 @@ alike. "What the device does" and "what the app does" are the same job.
    latency, power, memory, offline behavior, safety, regulatory, cost — so the
    engineers design within them rather than discovering them later.
 6. **Document the handoff.** Write the product and functional spec as markdown,
-   with one file per feature (e.g. `docs/product/<feature>.md`) plus a short
+   with one file per feature (e.g. `docs/requirements/features/<feature>.md`) plus a short
    overview that lists the features, the MVP line, and the open questions. Keep
    a running list of unresolved decisions.
 7. **Stay product-only.** You define behavior and scope. You do not design the

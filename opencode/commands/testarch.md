@@ -21,12 +21,13 @@ Take this fast path when **both** are true: the project already has a test setup
 
 - Scan every module, entry point, manifest, config, and README in scope. Do not guess structure.
 - Identify components, public APIs, data flows, failure-prone paths, and the actual test framework/tooling already in use (package.json, pyproject.toml, go.mod, CMakeLists, etc.).
+- Read the design docs, not only the code: `docs/testing/` for an existing plan, and `docs/architecture/modules/` for each module's contract — its PROVIDES list is what must be tested. Every contract clause names how it is verified (host test, integration, on-target, analysis, or inspection); use those to drive the cases, and mark any clause with no verifier.
 - Determine what testing already exists (test dirs, suites, CI config) versus what is missing.
 
 ## 2. Plan
 
 - Design a proportional test architecture: unit tests for pure logic and helpers, integration tests for module boundaries and data flow, E2E for user-facing workflows. Cover edge cases, error paths, and boundary conditions — not just happy paths.
-- If no test plan document exists, create one (e.g. `tests/TEST_PLAN.md`) capturing the architecture, per-module coverage matrix, and framework choices. If one exists, refine it to close gaps instead of rewriting blindly.
+- Test documentation lives in `docs/testing/`, while test code lives in the project's own test directory (e.g. `tests/`). Under `docs/testing/` keep three documents: `docs/testing/TEST_PLAN.md` — strategy, framework, host vs on-target split, rigs, and directory layout; `docs/testing/cases.md` — the numbered `T-NNNN` test cases; and `docs/testing/trace.md` — the matrix proving each requirement maps to a test and back. Create them if absent; refine them to close gaps rather than rewriting blindly.
 
 ## 3. Build
 
@@ -41,6 +42,7 @@ Take this fast path when **both** are true: the project already has a test setup
 ## 5. Report
 
 - Summarize per-module coverage, pass/fail counts, regressions found, and remaining thin areas.
+- Update `docs/testing/trace.md` so every requirement points to a proving test and every test points back to a requirement. Flag any requirement with no test and any test with no requirement.
 - Flag any genuine bugs the tests surfaced and ask before changing production behavior.
 
 ## Guardrails
@@ -50,3 +52,4 @@ Take this fast path when **both** are true: the project already has a test setup
 - A failing test is either a real bug or a bad test — diagnose which before changing anything.
 - Keep the work proportional: prioritize critical paths and shared logic over trivial getters.
 - Stop and ask when a design decision (framework, directory layout, scope) is genuinely ambiguous.
+- Keep test documentation in `docs/testing/` and test code in the project's test directory — never mix the two.

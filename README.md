@@ -92,7 +92,7 @@ The org is the same everywhere, but each tool exposes it differently.
 - **Subagents** — type `@` and the agent name to invoke one directly, e.g.
   `@researcher find the errata for this part`. Primary agents also dispatch
   subagents automatically via the `task` tool.
-- **Commands** — type `/` for `implement`, `review`, `docs`, `hire`, `testarch`.
+- **Commands** — type `/` for `implement`, `design`, `review`, `docs`, `hire`, `testarch`.
 - **Watch a subagent** — each dispatch runs in a child session. Press
   **Leader+Down** (`session_child_first`) to enter it, **Right**/**Left** to
   cycle children, **Up** (`session_parent`) to return.
@@ -113,7 +113,7 @@ The org is the same everywhere, but each tool exposes it differently.
   the agent runs as the main thread.
 - **Built-in subagents** — **Explore** (read-only codebase search), **Plan**
   (read-only research during plan mode), and **General-purpose**.
-- **Commands** — type `/` for `implement`, `review`, `docs`, `hire`, `testarch`.
+- **Commands** — type `/` for `implement`, `design`, `review`, `docs`, `hire`, `testarch`.
 - **Settings variants** — `claude/settings.json` uses Anthropic's own API;
   `claude/settings-ollama.json` adds an `env` block that reroutes Claude Code to
   the local ollama endpoint. `bash setup.sh link claude` installs the ollama
@@ -137,7 +137,7 @@ The org is the same everywhere, but each tool exposes it differently.
 - **Inspect threads** — run `/agent` in the CLI to switch between running agent
   threads. App and IDE show a subagents panel with Active and Done lists.
 - **Commands are skills** — Codex has no custom slash commands, so `implement`,
-  `review`, `docs`, `hire`, and `testarch` appear as skills in the `/` menu.
+  `design`, `review`, `docs`, `hire`, and `testarch` appear as skills in the `/` menu.
 - **Permissions inherit** — subagents inherit the parent turn's sandbox and
   approval mode. Choose the permission mode under the composer before you
   delegate. Approval requests can surface from a background thread; press `o`
