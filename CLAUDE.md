@@ -25,12 +25,35 @@ Link only one tool with `bash setup.sh link claude`, `bash setup.sh link opencod
 Add `--dry-run` to preview. `setup.sh all` also pulls the required ollama models
 before linking.
 
+### Agent mirror sync
+
+`opencode/agents/` is the source of truth; `claude/agents/` and
+`codex/agents/` are hand-adapted copies. `setup.sh sync` reports where a copy
+has drifted from its opencode agent, and propagates the body and description
+when asked:
+
+```bash
+bash setup.sh sync                            # drift report, exit 1 if any
+bash setup.sh sync apply <agent> --dry-run    # show what would change
+bash setup.sh sync apply <agent>              # copy body + description
+bash setup.sh sync list                       # per-agent mirror state
+```
+
+It copies only the body and the `description`; `mode`/`model`/`permission`
+stay as each format needs them, and it never creates a mirror file or renames
+one. `build` and `plan` are opencode-only, so they have no mirror by design.
+
+Copying is not always correct. Some mirrors differ on purpose — `recruiter`
+names the target tool, `ai` names `codex/agents`, `ui-designer` words one
+guardrail differently — so run the check and read the diff before you apply.
+
 Codex has no agent format matching the opencode/claude markdown, so `codex/` is a
 hand-adapted copy synced via setup.sh:
 
 - `codex/agents/*.toml` — one TOML per agent (`name`, `description`, `model`,
-  `developer_instructions`). Re-convert when you edit an opencode agent; Codex
-  reads only its own `.toml` agents, not opencode `.md`.
+  `developer_instructions`). Use `bash setup.sh sync` to propagate an opencode
+  agent's body and description; Codex reads only its own `.toml` agents, not
+  opencode `.md`.
 - `codex/skills/` — Codex skills, format-compatible with opencode
   (`<name>/SKILL.md` with `name`+`description`). Includes the two opencode
   skills plus `docs`/`design`/`hire`/`testarch`, which are the opencode *commands*

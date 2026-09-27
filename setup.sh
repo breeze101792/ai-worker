@@ -111,6 +111,16 @@ Commands:
                     Skills are linked per entry: each skill gets its own
                     symlink in a real skills directory, so you can keep a
                     local skill beside the shared ones.
+  sync [ARGS]       Check or propagate opencode agent changes into the Claude
+                    Code and Codex mirrors. Defaults to a drift report.
+                    ARGS pass straight to scripts/sync-agents.py:
+                      sync                          report drift (exit 1 if any)
+                      sync apply <agent>            copy body + description
+                      sync apply <agent> --dry-run  show the diff only
+                      sync apply --all              every agent (review first)
+                      sync list                     per-agent mirror state
+                    --tool claude|codex|both must come after the action word,
+                    e.g. `sync apply <agent> --tool codex`.
   all [TOOLS]       Run pull + link (default if no command given)
   help              Show this help message
 
@@ -440,19 +450,68 @@ cmd_all() {
   cmd_link "$dry_run"
 }
 
+# Sync opencode agent changes into the Claude Code and Codex mirrors.
+# All arguments pass through to scripts/sync-agents.py. With no arguments it
+# runs a drift report, which exits 1 when a mirror has drifted. A global
+# --dry-run before the `sync` token is honored by forwarding it to the helper.
+cmd_sync() {
+  local helper="$SCRIPT_DIR/scripts/sync-agents.py"
+  if [[ ! -f "$helper" ]]; then
+    err "Sync helper not found: $helper"
+    return 1
+  fi
+  if ! command -v python3 >/dev/null 2>&1; then
+    err "python3 is required for sync (needs the tomllib module, Python 3.11+)"
+    return 1
+  fi
+  if [[ $# -eq 0 ]]; then
+    set -- check --all
+  fi
+  # Accept `sync --dry-run apply ...` as sugar for `sync apply ... --dry-run`;
+  # the helper only reads the flag after the subcommand.
+  if [[ "$1" == "--dry-run" ]]; then
+    set -- "${@:2}" --dry-run
+  fi
+  # `setup.sh --dry-run sync apply ...` must not write. Inject the flag the
+  # helper expects, after the subcommand, if the user did not already.
+  if $DRY_RUN && [[ "$1" == "apply" ]]; then
+    local has_flag=false
+    for arg in "$@"; do
+      [[ "$arg" == "--dry-run" ]] && has_flag=true
+    done
+    if ! $has_flag; then
+      set -- apply --dry-run "${@:2}"
+    fi
+  fi
+  python3 "$helper" "$@"
+}
+
 # --- arg parsing ---
 DRY_RUN=false
 COMMAND=""
 LINK_TOOLS=""
+SYNC_ARGS=()
 
 ARGS=("$@")
 i=0
 while [[ $i -lt ${#ARGS[@]} ]]; do
   arg="${ARGS[$i]}"
+  # Once `help` is seen, ignore the rest: `help sync` still prints help.
+  if [[ "$COMMAND" == "help" ]]; then
+    i=$((i+1))
+    continue
+  fi
+  # Everything after the `sync` token belongs to the helper, including flags
+  # like --dry-run that setup.sh would otherwise interpret for itself.
+  if [[ "$COMMAND" == "sync" ]]; then
+    SYNC_ARGS+=("$arg")
+    i=$((i+1))
+    continue
+  fi
   case "$arg" in
     --dry-run) DRY_RUN=true ;;
     -h|--help) COMMAND="help" ;;
-    pull|link|all) COMMAND="$arg" ;;
+    pull|link|all|sync|help) COMMAND="$arg" ;;
     *)
       # First non-command, non-flag arg is the optional tool list for link/all
       if [[ -z "$COMMAND" ]]; then
@@ -483,5 +542,6 @@ case "$COMMAND" in
   help)  usage ;;
   pull)  cmd_pull "$DRY_FLAG" ;;
   link)  cmd_link "$DRY_FLAG" ;;
+  sync)  cmd_sync "${SYNC_ARGS[@]+"${SYNC_ARGS[@]}"}" ;;
   all)   cmd_all "$DRY_FLAG" ;;
 esac
