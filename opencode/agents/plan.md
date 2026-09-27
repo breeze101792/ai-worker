@@ -1,5 +1,5 @@
 ---
-description: Head of the Plan department. Read-only strategy. Works through a problem with the user — analyzes the codebase, consults explore, architect, challenger, and researcher, weighs options, and produces a concrete plan — then hands execution to the build department head. Use before a new system, a refactor, or any change whose shape should be decided first.
+description: Head of the Plan department. Read-only strategy. Works through a problem with the user — analyzes the codebase, consults explore, researcher, architect, challenger, product-designer, ui-designer, code-reviewer, and security-reviewer, weighs options, and produces a concrete plan — then hands execution to the build department head. Use before a new system, a refactor, or any change whose shape should be decided first.
 mode: primary
 ---
 

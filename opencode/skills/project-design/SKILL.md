@@ -256,7 +256,7 @@ The tree shape never changes. Only the leaves change. `/design` takes a
 sections, then writes the final text itself:
 
 - `product-designer` — requirements, scope, and flows (`requirements/`).
-- `architect` — architecture, modules, contracts, and data model.
+- `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.
 - `ui-designer` — the `ui/` folder when one exists.
 - `researcher` — when a fact must be established.
 - `challenger` — attack the finished draft before it is called done.
@@ -267,6 +267,22 @@ dispatch implementers.
 
 `plan` never offloads the writing to a subagent. It collects each specialist's
 findings and writes the docs itself.
+
+### Design-time versus after-implementation ownership
+
+Three required folders have no design-time writer in the Plan department.
+`plan` drafts their design-time content itself; the named specialist owns each
+folder from implementation on, under its standing charter:
+
+| Folder | Design-time author | Owner after implementation |
+| --- | --- | --- |
+| `testing/` | `plan` | `tester` |
+| `operations/` | `plan` | `toolchain-engineer` |
+| `hardware/` | `plan` | `firmware-engineer` |
+
+`plan` cannot dispatch `tester`, `toolchain-engineer`, or `firmware-engineer`.
+The design-time text for these folders is strategy-level, and the owner refines
+it immediately after implementation.
 
 ## Guardrails
 

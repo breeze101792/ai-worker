@@ -256,13 +256,28 @@ assembles the docs. It consults the specialists for the deep sections, then
 writes the final text itself:
 
 - `product-designer` — requirements, scope, and flows (`requirements/`).
-- `architect` — architecture, modules, contracts, and data model.
+- `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.
 - `ui-designer` — the `ui/` folder when one exists.
 - `researcher` — when a fact must be established.
 - `challenger` — attack the finished draft before it is called done.
 
 The main agent never offloads the writing to a subagent. It collects each
 specialist's findings and writes the `docs/` tree itself.
+
+### Design-time versus after-implementation ownership
+
+Three required folders have no design-time specialist. The main agent drafts
+their design-time content itself; the named agent owns each folder from
+implementation on, under its standing charter:
+
+| Folder | Design-time author | Owner after implementation |
+| --- | --- | --- |
+| `testing/` | main agent | `tester` |
+| `operations/` | main agent | `toolchain-engineer` |
+| `hardware/` | main agent | `firmware-engineer` |
+
+The design-time text for these folders is strategy-level, and the owner refines
+it immediately after implementation.
 
 ## Guardrails
 

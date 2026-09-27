@@ -114,7 +114,7 @@ session model there. See `Models.md` for the per-tool mapping.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `build` | primary | `inherit` | The build department head and the default agent. Restates the goal, decomposes it, dispatches each part to the specialist who owns it, collates the results, and verifies. Keeps full tools, so it also does small single-domain work directly. | Anything that needs work done. |
-| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `architect`, `challenger`, and `researcher`, weighs options, and produces a concrete plan — recorded as `PLAN.md` or under `docs/`. Never implements. | The shape of a change should be decided before any code is written. |
+| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `product-designer`, `ui-designer`, `code-reviewer`, and `security-reviewer`, weighs options, and produces a concrete plan — recorded as `PLAN.md` or under `docs/`. Never implements. | The shape of a change should be decided before any code is written. |
 
 `plan` leads the Plan department's Research, Architecture, and Design teams;
 `build` leads Software and Test. Neither agent pins a model, so both follow the
@@ -125,19 +125,19 @@ session model. The teams under them are listed below.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `code-reviewer` | subagent | `fast` | Reviews code changes — diffs, staged changes, commits, and local branches — and reports ranked findings with file:line citations. Read-only. | A change needs review before it lands, or a commit or PR needs a sanity check. |
-| `debugger` | subagent | `deep` | Reproduces hard bugs, traces the code path, and proves the root cause with evidence. Diagnoses only — it names the failing file and line and the suggested fix, but never edits; the owning engineer applies the change. | A bug resists quick fixes, errors or crashes have no obvious cause, or a stack trace needs tracing to source. |
-| `firmware-engineer` | subagent | `inherit` | Writes bare-metal and RTOS firmware in C and C++ — drivers, ISRs, DMA, memory-mapped IO, power states. Follows kernel or Zephyr conventions. | Implementing or modifying firmware on microcontrollers, SoCs, and real-time targets. |
+| `debugger` | subagent | `deep` | Reproduces hard bugs, traces the code path, and proves the root cause with evidence. Diagnoses only — it names the failing file and line and the suggested fix, but never edits; the owning engineer applies the change. Also diagnoses timing, power, and memory budget regressions that resist explanation. | A bug resists quick fixes, errors or crashes have no obvious cause, a stack trace needs tracing to source, or a budget regression has no obvious cause. |
+| `firmware-engineer` | subagent | `inherit` | Writes bare-metal and RTOS firmware in C and C++ — drivers, ISRs, DMA, memory-mapped IO, power states, and the bootloader/update path. Follows kernel or Zephyr conventions. | Implementing or modifying firmware on microcontrollers, SoCs, and real-time targets. |
 | `python-engineer` | subagent | `inherit` | Writes Python applications, tools, and automation. Follows PEP 8, the project's packaging and test conventions. | Implementing Python code, CLI tools, scripts, or library work. |
-| `security-reviewer` | subagent | `inherit` | Reviews code and designs for security — injection, memory safety, secrets, auth, crypto, unsafe deserialization, and supply chain — and reports ranked findings with file:line citations. Read-only. | A change touches untrusted input, authentication, secrets, network or serial interfaces, or anything memory-unsafe. |
+| `security-reviewer` | subagent | `inherit` | Reviews code and designs for security — injection, memory safety, secrets, auth, crypto, unsafe deserialization, and supply chain — and reports ranked findings with file:line citations. Also flags dependency licences and provenance; the licence decision stays the human's. Read-only. | A change touches untrusted input, authentication, secrets, network or serial interfaces, anything memory-unsafe, or the dependency supply chain. |
 | `web-engineer` | subagent | `inherit` | Builds full-stack web apps autonomously — frontend markup, styles, and TypeScript plus the backend API. Implements `ui-designer` specs. | A web app or web feature must be implemented end to end without a human in the loop. |
-| `toolchain-engineer` | subagent | `inherit` | Owns build systems and toolchains — Make, CMake, Zephyr west, cross-compilers, linker scripts, CI, flashing. Diagnoses build and link failures. | A build breaks, a toolchain must be configured, or CI and flashing need work. |
+| `toolchain-engineer` | subagent | `inherit` | Owns build systems and toolchains — Make, CMake, Zephyr west, cross-compilers, linker scripts, CI, flashing — and the release artifact chain: reproducible build outputs, SBOM/provenance, version bump, changelog, and signed tag on request. Diagnoses build and link failures. | A build breaks, a toolchain must be configured, CI and flashing need work, or a release artifact must be produced. |
 
 ### Test — build department
 
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
-| `tester` | subagent | `fast` | Surveys the project, builds the test plan, writes host tests, runs the suite, and reports coverage. | A test plan is needed, host tests must be written or extended, or the suite must run and report coverage. |
-| `hil-tester` | subagent | `inherit` | Runs tests on real hardware — flashes targets, captures serial output, drives rigs, and runs on-target timing and power checks. | Tests must run on the board rather than on the host. |
+| `tester` | subagent | `fast` | Surveys the project, builds the test plan, writes host tests, runs the suite, reports coverage, and runs the configured static analysis when the plan names it as a verifier. | A test plan is needed, host tests must be written or extended, the suite must run and report coverage, or the plan calls for static analysis. |
+| `hil-tester` | subagent | `inherit` | Runs tests on real hardware — flashes targets, captures serial output, drives rigs, and measures on-target timing and power against the requirement. Tracks budgets over time and hands an unexplained regression to `debugger`. | Tests must run on the board rather than on the host, or an on-target budget must be tracked. |
 
 ### Research — Plan department
 
@@ -155,7 +155,7 @@ Technical design and adversarial review. `architect` produces the blueprint;
 
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
-| `architect` | subagent | `deep` | Principal software architect. Designs and reviews system architecture, hunts duplicate code, designs event/IPC frameworks, and recommends structure that prevents bugs. Writes the blueprint to `ARCH.md` or under `docs/`. Rejects overengineering. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, or designing an event bus or IPC layer. |
+| `architect` | subagent | `deep` | Principal software architect. Designs and reviews system architecture, hunts duplicate code, designs event/IPC frameworks, and recommends structure that prevents bugs. Also designs the cross-cutting mechanisms — the update strategy (image layout, rollback, signing-key lifecycle) and fault handling (watchdog policy, crash capture, log discipline). Writes to `docs/architecture/`, `docs/contracts/`, and `docs/reference/`. Rejects overengineering. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, designing an event bus or IPC layer, or designing update and fault-handling strategy. |
 | `challenger` | subagent | `inherit` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design; proposes no design of its own. | Before implementation, when changing course is still cheap, and the proposal must be stress-tested. |
 
 ### Design — Plan department
@@ -165,7 +165,7 @@ why; `ui-designer` defines how it looks.
 
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
-| `product-designer` | subagent | `fast` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria — as handoff-ready specs for `architect`, `ui-designer`, and the engineers. Domain-agnostic: embedded, Python, and web alike. | Starting a new project or feature, before any technical or visual design. |
+| `product-designer` | subagent | `fast` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria — as handoff-ready specs for `architect`, `ui-designer`, and the engineers. For a fielded device, also pins the maintenance window, update mechanism, and end-of-life/disposal policy. Domain-agnostic: embedded, Python, and web alike. | Starting a new project or feature, before any technical or visual design. |
 | `ui-designer` | subagent | `vision` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/` for `web-engineer` to implement. Design only — it never edits source. | A web interface needs design tokens, layout, and component specs before implementation. |
 
 ### AI department
@@ -197,7 +197,7 @@ listed for a tool inherits the session default.
 | `ai` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `recruiter` | allow | allow | Writes agent files |
 | `researcher` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes research reports only, not source |
-| `architect` | `ARCH.md`, `WORKFLOW.md`, `WORKLOG.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes the architecture blueprint and design docs only, not source |
+| `architect` | `WORKFLOW.md`, `WORKLOG.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes the architecture blueprint and design docs only, not source |
 | `challenger` | deny | — | Read-only by design; attacks proposals, never edits |
 | `code-reviewer` | deny | — | Read-only by design |
 | `debugger` | deny | allow | Diagnoses only; proves the root cause, never edits |
@@ -205,15 +205,45 @@ listed for a tool inherits the session default.
 | `python-engineer` | allow | allow | Runs code and tests |
 | `security-reviewer` | deny | — | Read-only by design; finds security defects, never edits |
 | `web-engineer` | allow | allow | Verifies its own output end to end |
-| `toolchain-engineer` | allow | allow | Changes the build and CI |
+| `toolchain-engineer` | allow | allow | Changes the build and CI; owns the release artifact chain (SBOM, provenance, signed tag on request) |
 | `harness-engineer` | allow | allow | Changes tool config, skills, commands, and MCP; dispatched by `ai` |
-| `tester` | inherited | — | Writes test code |
+| `tester` | `docs/testing/**`, `tests/**`, `test/**`, `spec/**`, `__tests__/**` allow; `*` deny | allow | Writes test code in the project's test directories and test documentation under `docs/testing/`; runs the suite and the configured static analysis; never edits production source |
 | `hil-tester` | allow | allow | Flashes targets; confirms board and image first |
 | `product-designer` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes product and functional specs, no source |
 | `ui-designer` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes design docs and the mockup under `docs/` only, not source |
 
 All subagents are limited to fan-out through `explore` and `general`; none may
 spawn a copy of themselves.
+
+## Documentation system
+
+The design docs are a `docs/` folder tree written before implementation, with
+`plan` owning tree coherence and `docs/README.md`, the single entry point.
+
+| Folder | Owner |
+| --- | --- |
+| `requirements/` (required) | `product-designer` |
+| `architecture/` (required) | `architect` |
+| `contracts/` (required) | `architect` |
+| `testing/` (required) | `tester` |
+| `operations/` (required) | `toolchain-engineer` |
+| `ui/` (optional) | `ui-designer` |
+| `research/` (optional) | `researcher` |
+| `hardware/` (optional) | `firmware-engineer` |
+| `reference/` (optional) | `architect` |
+| `security/` (optional) | `architect` writes; `security-reviewer` reviews |
+
+An optional folder is created only when its trigger fires, never scaffolded
+empty. Ownership is advisory in Claude Code and Codex, where paths cannot be
+enforced in config; in opencode it is enforceable through permission globs.
+
+Three required folders have no design-time writer in the Plan department:
+`plan` drafts `testing/`, `operations/`, and `hardware/` itself at design time,
+and `tester`, `toolchain-engineer`, and `firmware-engineer` take each over from
+implementation on. Design-time text is strategy-level; the owner refines it
+after implementation.
+
+The folder tree and the full workflow are defined in the `project-design` skill.
 
 ## How a hire changes the org
 

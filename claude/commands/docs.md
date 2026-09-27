@@ -15,6 +15,7 @@ Follow the documentation workflow end to end:
 ## 2. Decide: update vs create
 
 - If documentation already exists (README, docs folder, etc.), **update it** to reflect the current state of the code — do not rewrite it blindly. Preserve the documented intent, style, tone, and conventions. Close gaps, fix stale facts, and add anything missing.
+- If `docs/` already follows the project-design tree — `docs/README.md` as the entry point, with `requirements/`, `architecture/`, `contracts/`, `testing/`, and `operations/` beneath it — **update that tree in place** and respect each folder's owner (`product-designer`, `architect`, `tester`, `toolchain-engineer`; `ui-designer` for `ui/`, `firmware-engineer` for `hardware/`). Do not create a parallel flat structure.
 - If there is no documentation at all, **create** a new `docs/` folder from scratch with the standard structure:
   - `docs/README.md` or `docs/INDEX.md` — entry point linking the modules below.
   - One focused file per major module/area (e.g. `docs/architecture.md`, `docs/api.md`, `docs/setup.md`) — keep it proportional; don't fragment a tiny project.

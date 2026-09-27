@@ -60,7 +60,8 @@ Three departments, each headed by a primary agent:
   restate the goal, decompose it, dispatch each part to the right specialist,
   collate, and verify. Leads Software and Test.
 - **`plan`** — Plan department. Owns strategy: read-only, consults `explore`,
-  `architect`, `challenger`, and `researcher`, and produces a concrete plan.
+  `researcher`, `architect`, `challenger`, `product-designer`, `ui-designer`,
+  `code-reviewer`, and `security-reviewer`, and produces a concrete plan.
   Never implements. Leads Research, Architecture, and Design.
 - **`ai`** — AI department. Owns the agent tools themselves and who works there.
 

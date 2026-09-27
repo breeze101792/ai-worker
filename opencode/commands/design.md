@@ -12,10 +12,12 @@ Load the `project-design` skill and follow it as the checklist. Survey the proje
 Dispatch the Plan-department specialists for the deep sections, then assemble and write the docs yourself:
 
 - `product-designer` — requirements, scope, and flows (`requirements/`).
-- `architect` — architecture, modules, contracts, and data model.
+- `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.
 - `ui-designer` — the `ui/` folder when one exists.
 - `researcher` — when a fact must be established.
 - `challenger` — attack the finished draft before it is called done.
+
+For `testing/`, `operations/`, and `hardware/` you draft the design-time content yourself — you cannot dispatch `tester`, `toolchain-engineer`, or `firmware-engineer`. They own those folders from implementation on, under their standing charters, and refine the text then.
 
 You assemble and write the docs yourself. Never offload the writing to a subagent.
 

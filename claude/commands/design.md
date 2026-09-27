@@ -12,10 +12,12 @@ Adopt the Plan-department posture: read-only planning, no source edits. Load the
 Dispatch the specialists for the deep sections, then assemble and write the docs yourself:
 
 - `product-designer` — requirements, scope, and flows (`requirements/`).
-- `architect` — architecture, modules, contracts, and data model.
+- `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.
 - `ui-designer` — the `ui/` folder when one exists.
 - `researcher` — when a fact must be established.
 - `challenger` — attack the finished draft before it is called done.
+
+For `testing/`, `operations/`, and `hardware/` you draft the design-time content yourself. Their owners — `tester`, `toolchain-engineer`, `firmware-engineer` — take over from implementation on, under their standing charters.
 
 You assemble and write the docs yourself. Never offload the writing to a subagent.
 
