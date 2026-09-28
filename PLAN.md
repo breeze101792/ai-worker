@@ -80,6 +80,25 @@ through `explore`/`general` only. The `plan` pool grant is by omission from its
 deny list; `opencode.jsonc` and the inline list in `opencode/agents/ai.md` deny
 it to `ai`.
 
+## The financial-researcher hire
+
+One agent was added: **`financial-researcher`** — a second member of the
+existing **Research** pool under the **Plan** department, with `researcher`. It
+applies the org's evidence discipline to finance: it establishes what is true
+from sources, then builds the financial model the decision needs. Its scope is
+securities, portfolios, and markets — not project budgeting. It runs the
+**`inherit`** profile, so it carries no `model` line in any tool; the claude and
+codex agents carry no `model` key either.
+
+Access: read-only on source. `edit: {"*": deny, "docs/**": allow}`, no `bash`,
+and fan-out through `explore`/`general` only. It writes `docs/research/`
+alongside `researcher`, which now owns that folder jointly. The Research pool is
+already `full` for `build`, `plan`, and `ai`, so no `permission.task` change was
+needed in `opencode.jsonc` or `opencode/agents/ai.md`.
+
+This adds a domain beyond embedded, Python, and web: personal stock and
+investment analysis.
+
 ## Deferred — future hires
 
 No further hire now. Candidates, each with its trigger:
@@ -103,9 +122,9 @@ No further hire now. Candidates, each with its trigger:
 Every change here is a config, docs, or agent-file edit. Per the rules files
 ("verify in proportion to the change"), the check is well-formedness only:
 
-- `codex/agents/*.toml` parse (18 files, verified with `tomllib`).
+- `codex/agents/*.toml` parse (19 files, verified with `tomllib`).
 - `opencode/agents/*.md` and `claude/agents/*.md` frontmatter is balanced
-  (38 files, verified).
+  (40 files, verified).
 - Restart the affected tool — config loads once at startup.
 - One runtime check: after the `tester` `bash: allow` change, confirm opencode
   starts and `tester` can run a command.

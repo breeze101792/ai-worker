@@ -59,6 +59,7 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
 | `researcher` | Establishes facts before anyone acts on them — digs original sources (datasheets, errata, vendor SDKs, official docs, upstream history) and the local code, then reports findings with citations. Separates observation from inference from assumption, and says plainly when something is not established. | Established facts with evidence. | A decision depends on what is actually true — a part's behavior, an API's version, a library's limits, a protocol's rules. |
+| `financial-researcher` | Financial analysis for stock and investment work — company and sector fundamentals, valuation, macro and rate context, portfolio and position risk, and scenario and sensitivity modelling, with every figure sourced and dated. Read-only analysis, not licensed investment advice. | Sourced financial models for securities, portfolios, and markets. | A security, portfolio, or market decision needs a sourced financial model. |
 
 ### Software — build department
 

@@ -260,6 +260,7 @@ writes the final text itself:
 - `ui-designer` — the `ui/` folder when one exists.
 - `hardware-engineer` — the `hardware/` folder when one exists.
 - `researcher` — when a fact must be established.
+- `financial-researcher` — the `research/` folder for financial research.
 - `challenger` — attack the finished draft before it is called done.
 
 The main agent never offloads the writing to a subagent. It collects each

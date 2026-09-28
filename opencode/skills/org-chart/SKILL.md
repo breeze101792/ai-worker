@@ -25,7 +25,7 @@ org (user's agent company)
 ├── Plan department
 │   ├── plan  (primary)  head — strategy, read-only
 │   ├── Research
-│   │   └── researcher
+│   │   └── researcher, financial-researcher
 │   ├── Architecture
 │   │   └── architect, challenger
 │   └── Design
@@ -49,8 +49,9 @@ reads and reviews hardware and writes `docs/hardware/`, never source.
 
 Each agent file carries its own mode, permissions, and model line. The dispatch
 tables in each tool's rules file list who to call. The user's own work is
-embedded systems and Python; web apps are delegated to `web-engineer` end to
-end.
+embedded systems and Python, with personal stock and investment analysis also
+in scope via `financial-researcher`; web apps are delegated to `web-engineer`
+end to end.
 
 The agent files show what is actually installed in this tool — list the agents
 directories (glob) before hiring so you never duplicate a role or a name. The

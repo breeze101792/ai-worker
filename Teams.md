@@ -24,7 +24,8 @@ org (user's agent company)
 ├── Plan department
 │   │   plan (primary)  head — strategy: read-only, produces the plan
 │   ├── Research
-│   │   └── researcher         (subagent) facts with citations, evidence over assertion
+│   │   ├── researcher         (subagent) facts with citations, evidence over assertion
+│   │   └── financial-researcher (subagent) sourced financial models for securities, portfolios, markets
 │   ├── Architecture
 │   │   ├── architect          (subagent) system design and architecture review
 │   │   └── challenger         (subagent) adversarial pre-build critique of proposals
@@ -43,8 +44,10 @@ department: it is read-only, works through strategy with the user, records the
 plan in docs, and hands execution to `build`. The AI department sits apart,
 headed by its own primary, and owns both the agent tools and hiring.
 
-The user's own work is embedded systems and Python; web apps are delegated to
-`web-engineer` end to end, so that agent must verify its own output.
+The user's own work is embedded systems and Python, with personal stock and
+investment analysis also in scope via `financial-researcher`; web apps are
+delegated to `web-engineer` end to end, so that agent must verify its own
+output.
 
 ## Virtual teams (access matrix)
 
@@ -56,7 +59,7 @@ Pool membership:
 
 | Pool | Agents |
 | --- | --- |
-| Research | `researcher` |
+| Research | `researcher`, `financial-researcher` |
 | Software | `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
 | Architecture | `architect`, `challenger` |
 | AI | `harness-engineer`, `recruiter` |
@@ -155,11 +158,14 @@ It writes `docs/hardware/` and never implements.
 ### Research — Plan department
 
 Establishes facts before anyone acts on them. Serves every domain, so it sits
-under the strategy department rather than under one engineering team.
+under the strategy department rather than under one engineering team. Two
+distinct jobs: `researcher` retrieves sourced facts; `financial-researcher`
+builds the financial model from sourced data.
 
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `researcher` | subagent | `fast` | Digs original sources (datasheets, errata, vendor SDKs, official docs, upstream history) and the local code, then reports findings with citations. Separates observation from inference from assumption, and says plainly when something is not established. | A decision depends on what is actually true — a part's behavior, an API's version, a library's limits, a protocol's rules. |
+| `financial-researcher` | subagent | `inherit` | Financial analysis for stock and investment work — company and sector fundamentals, valuation, macro and rate context, portfolio and position risk, and scenario and sensitivity modelling, with every figure sourced and dated. Read-only analysis, not licensed investment advice. | A security, portfolio, or market decision needs a sourced financial model. |
 
 ### Architecture — Plan department
 
@@ -210,6 +216,7 @@ listed for a tool inherits the session default.
 | `ai` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `recruiter` | allow | allow | Writes agent files |
 | `researcher` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes research reports only, not source |
+| `financial-researcher` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Read-only on source by design; writes financial research reports and models under `docs/research/`, not source |
 | `architect` | `WORKFLOW.md`, `WORKLOG.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes the architecture blueprint and design docs only, not source |
 | `challenger` | deny | — | Read-only by design; attacks proposals, never edits |
 | `code-reviewer` | deny | — | Read-only by design |
@@ -242,7 +249,7 @@ The design docs are a `docs/` folder tree written before implementation, with
 | `testing/` (required) | `tester` |
 | `operations/` (required) | `toolchain-engineer` |
 | `ui/` (optional) | `ui-designer` |
-| `research/` (optional) | `researcher` |
+| `research/` (optional) | `researcher`, `financial-researcher` |
 | `hardware/` (optional) | `hardware-engineer` |
 | `reference/` (optional) | `architect` |
 | `security/` (optional) | `architect` writes; `security-reviewer` reviews |

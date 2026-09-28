@@ -25,7 +25,7 @@ org (user's agent company)
 ├── Plan department
 │   ├── plan  (primary)  head — strategy, read-only
 │   ├── Research
-│   │   └── researcher
+│   │   └── researcher, financial-researcher
 │   ├── Architecture
 │   │   └── architect, challenger
 │   └── Design
@@ -48,10 +48,11 @@ and AI. `hardware-engineer` is the Hardware pool, and it is analysis-class: it
 reads and reviews hardware and writes `docs/hardware/`, never source.
 
 Each agent file carries its own settings; the dispatch tables in each tool's
-rules file list who to call. The user's own work is embedded systems and Python;
-web apps are delegated to `web-engineer` end to end. Codex has no department-head
-primaries, so the main agent acts as every department head at once — build and
-planning alike.
+rules file list who to call. The user's own work is embedded systems and Python,
+with personal stock and investment analysis also in scope via
+`financial-researcher`; web apps are delegated to `web-engineer` end to end.
+Codex has no department-head primaries, so the main agent acts as every
+department head at once — build and planning alike.
 
 The custom agent files show what is actually installed — list the agent
 directories before hiring so you never duplicate a role or a name. In Codex
