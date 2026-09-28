@@ -258,6 +258,7 @@ the final text itself:
 - `product-designer` — requirements, scope, and flows (`requirements/`).
 - `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.
 - `ui-designer` — the `ui/` folder when one exists.
+- `hardware-engineer` — the `hardware/` folder when one exists.
 - `researcher` — when a fact must be established.
 - `challenger` — attack the finished draft before it is called done.
 
@@ -266,18 +267,20 @@ specialist's findings and writes the `docs/` tree itself.
 
 ### Design-time versus after-implementation ownership
 
-Three required folders have no design-time specialist. The main agent drafts
-their design-time content itself; the named agent owns each folder from
-implementation on, under its standing charter:
+Two required folders have no design-time specialist: `testing/` and
+`operations/`. The main agent drafts their design-time content itself; `tester`
+and `toolchain-engineer` own each folder from implementation on, under its
+standing charter:
 
 | Folder | Design-time author | Owner after implementation |
 | --- | --- | --- |
 | `testing/` | main agent | `tester` |
 | `operations/` | main agent | `toolchain-engineer` |
-| `hardware/` | main agent | `firmware-engineer` |
 
 The design-time text for these folders is strategy-level, and the owner refines
-it immediately after implementation.
+it immediately after implementation. `hardware/` is optional:
+`hardware-engineer` owns it at design time and after, and the main agent
+consults it when the folder exists.
 
 ## Guardrails
 

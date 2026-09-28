@@ -14,10 +14,11 @@ Dispatch the custom agents for the deep sections, then assemble and write the do
 - `product-designer` — requirements, scope, and flows (`requirements/`).
 - `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.
 - `ui-designer` — the `ui/` folder when one exists.
+- `hardware-engineer` — the `hardware/` folder when one exists.
 - `researcher` — when a fact must be established.
 - `challenger` — attack the finished draft before it is called done.
 
-For `testing/`, `operations/`, and `hardware/` you draft the design-time content yourself. Their owners — `tester`, `toolchain-engineer`, `firmware-engineer` — take over from implementation on, under their standing charters.
+For `testing/` and `operations/` you draft the design-time content yourself. Their owners — `tester` and `toolchain-engineer` — take over from implementation on, under their standing charters. `hardware/` is optional: `hardware-engineer` owns it at design time and after.
 
 You assemble and write the docs yourself. Never offload the writing to a subagent.
 

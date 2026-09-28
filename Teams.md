@@ -16,9 +16,11 @@ org (user's agent company)
 │   │   ├── security-reviewer  (subagent) security review of code and designs
 │   │   ├── web-engineer       (subagent) full-stack web, autonomous
 │   │   └── toolchain-engineer (subagent) build systems, toolchain, CI, flashing
-│   └── Test
-│       ├── tester             (subagent) test plan and host unit/integration
-│       └── hil-tester         (subagent) on-target flash, serial, timing
+│   ├── Test
+│   │   ├── tester             (subagent) test plan and host unit/integration
+│   │   └── hil-tester         (subagent) on-target flash, serial, timing
+│   └── Hardware
+│       └── hardware-engineer  (subagent) schematic, PCB, RTL, and datasheet review, read-only
 ├── Plan department
 │   │   plan (primary)  head — strategy: read-only, produces the plan
 │   ├── Research
@@ -36,10 +38,10 @@ org (user's agent company)
 ```
 
 `build` heads the build department and is the default agent. It owns execution
-and leads the Software and Test teams. `plan` heads the Plan department: it is
-read-only, works through strategy with the user, records the plan in docs, and
-hands execution to `build`. The AI department sits apart, headed by its own
-primary, and owns both the agent tools and hiring.
+and leads the Software, Test, and Hardware teams. `plan` heads the Plan
+department: it is read-only, works through strategy with the user, records the
+plan in docs, and hands execution to `build`. The AI department sits apart,
+headed by its own primary, and owns both the agent tools and hiring.
 
 The user's own work is embedded systems and Python; web apps are delegated to
 `web-engineer` end to end, so that agent must verify its own output.
@@ -60,19 +62,20 @@ Pool membership:
 | AI | `harness-engineer`, `recruiter` |
 | Test | `tester`, `hil-tester` |
 | Design | `product-designer`, `ui-designer` |
+| Hardware | `hardware-engineer` |
 
-| Primary | Research | Software | Architecture | AI | Test | Design |
-| --- | --- | --- | --- | --- | --- | --- |
-| `build` | full | full | full | none | full | full |
-| `plan` | full | analysis | full | none | none | analysis |
-| `ai` | full | none | none | full | none | none |
+| Primary | Research | Software | Architecture | AI | Test | Hardware | Design |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `build` | full | full | full | none | full | full | full |
+| `plan` | full | analysis | full | none | none | analysis | analysis |
+| `ai` | full | none | none | full | none | none | none |
 
 Legend:
 
 - **full** — may dispatch any agent in the pool.
-- **analysis** — may dispatch only the pool's non-writing agents:
-  Software = `code-reviewer`, `security-reviewer`; Design = `product-designer`,
-  `ui-designer`.
+- **analysis** — may dispatch only the pool's analysis agents (no source
+  writing): Software = `code-reviewer`, `security-reviewer`; Design =
+  `product-designer`, `ui-designer`; Hardware = `hardware-engineer`.
 - **none** — may not dispatch the pool.
 
 Primaries never dispatch other primaries, and none may dispatch itself. The
@@ -114,11 +117,11 @@ session model there. See `Models.md` for the per-tool mapping.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `build` | primary | `inherit` | The build department head and the default agent. Restates the goal, decomposes it, dispatches each part to the specialist who owns it, collates the results, and verifies. Keeps full tools, so it also does small single-domain work directly. | Anything that needs work done. |
-| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `product-designer`, `ui-designer`, `code-reviewer`, and `security-reviewer`, weighs options, and produces a concrete plan — recorded as `PLAN.md` or under `docs/`. Never implements. | The shape of a change should be decided before any code is written. |
+| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `product-designer`, `ui-designer`, `code-reviewer`, `security-reviewer`, and `hardware-engineer`, weighs options, and produces a concrete plan — recorded as `PLAN.md` or under `docs/`. Never implements. | The shape of a change should be decided before any code is written. |
 
 `plan` leads the Plan department's Research, Architecture, and Design teams;
-`build` leads Software and Test. Neither agent pins a model, so both follow the
-session model. The teams under them are listed below.
+`build` leads Software, Test, and Hardware. Neither agent pins a model, so both
+follow the session model. The teams under them are listed below.
 
 ### Software — build department
 
@@ -138,6 +141,16 @@ session model. The teams under them are listed below.
 | --- | --- | --- | --- | --- |
 | `tester` | subagent | `fast` | Surveys the project, builds the test plan, writes host tests, runs the suite, reports coverage, and runs the configured static analysis when the plan names it as a verifier. | A test plan is needed, host tests must be written or extended, the suite must run and report coverage, or the plan calls for static analysis. |
 | `hil-tester` | subagent | `inherit` | Runs tests on real hardware — flashes targets, captures serial output, drives rigs, and measures on-target timing and power against the requirement. Tracks budgets over time and hands an unexplained regression to `debugger`. | Tests must run on the board rather than on the host, or an on-target budget must be tracked. |
+
+### Hardware — build department
+
+Board and silicon review. `hardware-engineer` reads the hardware — schematic,
+PCB layout, RTL, datasheet, reference design, errata — and reports trade-offs.
+It writes `docs/hardware/` and never implements.
+
+| Agent | Mode | Model | What it does | Use when |
+| --- | --- | --- | --- | --- |
+| `hardware-engineer` | subagent | `vision` | Reads and reviews schematics, PCB layouts, RTL/Verilog, datasheets, reference designs, and errata, and reports trade-offs. Owns `docs/hardware/`. Analysis only — it never implements. | A board, pinout, power design, RTL block, or part choice must be reviewed before hardware is committed, or hardware documentation under `docs/hardware/` must be written or revised. |
 
 ### Research — Plan department
 
@@ -209,6 +222,7 @@ listed for a tool inherits the session default.
 | `harness-engineer` | allow | allow | Changes tool config, skills, commands, and MCP; dispatched by `ai` |
 | `tester` | `docs/testing/**`, `tests/**`, `test/**`, `spec/**`, `__tests__/**` allow; `*` deny | allow | Writes test code in the project's test directories and test documentation under `docs/testing/`; runs the suite and the configured static analysis; never edits production source |
 | `hil-tester` | allow | allow | Flashes targets; confirms board and image first |
+| `hardware-engineer` | `docs/hardware/**` allow; `*` deny | — | Read-only on source by design; owns `docs/hardware/` and reviews hardware, never implements |
 | `product-designer` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes product and functional specs, no source |
 | `ui-designer` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes design docs and the mockup under `docs/` only, not source |
 
@@ -229,7 +243,7 @@ The design docs are a `docs/` folder tree written before implementation, with
 | `operations/` (required) | `toolchain-engineer` |
 | `ui/` (optional) | `ui-designer` |
 | `research/` (optional) | `researcher` |
-| `hardware/` (optional) | `firmware-engineer` |
+| `hardware/` (optional) | `hardware-engineer` |
 | `reference/` (optional) | `architect` |
 | `security/` (optional) | `architect` writes; `security-reviewer` reviews |
 
@@ -237,11 +251,11 @@ An optional folder is created only when its trigger fires, never scaffolded
 empty. Ownership is advisory in Claude Code and Codex, where paths cannot be
 enforced in config; in opencode it is enforceable through permission globs.
 
-Three required folders have no design-time writer in the Plan department:
-`plan` drafts `testing/`, `operations/`, and `hardware/` itself at design time,
-and `tester`, `toolchain-engineer`, and `firmware-engineer` take each over from
-implementation on. Design-time text is strategy-level; the owner refines it
-after implementation.
+Two required folders have no design-time writer in the Plan department:
+`plan` drafts `testing/` and `operations/` itself at design time, and `tester`
+and `toolchain-engineer` take each over from implementation on. Design-time text
+is strategy-level; the owner refines it after implementation. `hardware/` is
+optional, and `hardware-engineer` owns it at design time and after.
 
 The folder tree and the full workflow are defined in the `project-design` skill.
 
@@ -254,7 +268,11 @@ The folder tree and the full workflow are defined in the `project-design` skill.
 4. `ai` adds a row to the owning `AGENTS.md` dispatch table and mirrors the
    hire to the other tools' agent directories.
 5. The user adds the row here, to keep this roster current.
-6. Restart the affected tool — config loads once at startup.
+6. When the hire joins a pool, update the access matrix here,
+   `opencode/opencode.jsonc`'s `permission.task` blocks, and the inline
+   `permission.task` deny list in `opencode/agents/ai.md` together — all three
+   in the same pass, or the grant and its enforcement drift apart.
+7. Restart the affected tool — config loads once at startup.
 
 This roster is the user's document. It is not installed into any tool and no
 agent reads it at runtime; the dispatch tables are what agents read.

@@ -18,6 +18,7 @@ permission:
     "toolchain-engineer": "deny"
     "tester": "deny"
     "hil-tester": "deny"
+    "hardware-engineer": "deny"
     "product-designer": "deny"
     "ui-designer": "deny"
     "build": "deny"

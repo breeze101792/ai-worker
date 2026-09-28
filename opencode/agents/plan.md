@@ -1,5 +1,5 @@
 ---
-description: Head of the Plan department. Read-only strategy. Works through a problem with the user — analyzes the codebase, consults explore, researcher, architect, challenger, product-designer, ui-designer, code-reviewer, and security-reviewer, weighs options, and produces a concrete plan — then hands execution to the build department head. Use before a new system, a refactor, or any change whose shape should be decided first.
+description: Head of the Plan department. Read-only strategy. Works through a problem with the user — analyzes the codebase, consults explore, researcher, architect, challenger, product-designer, ui-designer, code-reviewer, security-reviewer, and hardware-engineer, weighs options, and produces a concrete plan — then hands execution to the build department head. Use before a new system, a refactor, or any change whose shape should be decided first.
 mode: primary
 ---
 
@@ -55,6 +55,8 @@ Read-only analysis only — dispatch never changes code:
   and a reference mockup, all written under `docs/`.
 - `researcher` — establishes facts with citations before you rely on them.
 - `security-reviewer` — read of existing code for security weaknesses.
+- `hardware-engineer` — reads and reviews schematics, PCB layouts, RTL/Verilog,
+  datasheets, reference designs, and errata; owns `docs/hardware/`.
 
 Do not try to dispatch the implementation agents (`firmware-engineer`,
 `python-engineer`, `web-engineer`, `toolchain-engineer`, `harness-engineer`,

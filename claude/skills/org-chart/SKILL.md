@@ -18,8 +18,10 @@ org (user's agent company)
 │   ├── Software
 │   │   └── code-reviewer, debugger, security-reviewer, firmware-engineer
 │   │       python-engineer, web-engineer, toolchain-engineer
-│   └── Test
-│       └── tester, hil-tester
+│   ├── Test
+│   │   └── tester, hil-tester
+│   └── Hardware
+│       └── hardware-engineer
 ├── Plan department
 │   ├── plan  (primary)  head — strategy, read-only
 │   ├── Research
@@ -38,6 +40,12 @@ The teams are capability **pools**, not fixed reporting lines. Each primary
 draws a virtual team from them, governed by an access matrix of which primary
 may dispatch which pool. When you hire into a pool, the hire joins every primary
 whose matrix grants that pool.
+
+The pools are Research, Software, Architecture, AI, Test, Hardware, and Design.
+`build` draws all pools; `plan` draws Research, Architecture, and Design in full
+and the Software and Hardware pools in analysis mode only; `ai` draws Research
+and AI. `hardware-engineer` is the Hardware pool, and it is analysis-class: it
+reads and reviews hardware and writes `docs/hardware/`, never source.
 
 Each agent file carries its own mode, permissions, and model choice. The
 dispatch tables in each tool's rules file list who to call. The user's own work
@@ -168,6 +176,12 @@ Hires awaiting a restart exist only as files too — there is no separate state.
 - Load this skill first when hiring or reviewing an agent.
 - List the existing agent files before proposing — no duplicates.
 - Never overwrite an existing agent file without asking.
+- When the hire joins a pool, update the access matrix in `Teams.md`, the
+  `permission.task` blocks in `opencode/opencode.jsonc`, and the inline
+  `permission.task` deny list in `opencode/agents/ai.md` together — all three
+  in the same pass. `build` needs no edit (`*: allow` covers a new agent);
+  `plan` grants analysis access by omission, so never add an analysis agent
+  there.
 - Claude Code: `model` is an alias (no provider prefix); `tools` is a
   comma-separated list; no `permission`/`prompt` keys.
 - opencode: `mode` in `primary|subagent|all`; `model` has a provider prefix;

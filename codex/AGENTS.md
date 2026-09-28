@@ -7,6 +7,7 @@
 1. **Plain English.** Write Codex config files in concise, accurate, plain English: short declarative sentences, no metaphors, specific words over general ones.
 2. **English responses.** All communication with the user must be in English. Never respond in Chinese or any other language.
 3. **Verify in proportion to the change.** Run only the checks the change can break. After a docs, comment, config, or agent-file edit, confirm the file is well formed and stop — do not run lint, type-check, or tests. After a source edit, run the in-scope checks, then state plainly what you ran and what you skipped.
+4. **Finish the work now.** Do not leave a TODO for later when you can complete it now. You act instantly, so deferring work you can finish immediately only adds risk and delay.
 
 ## Coding rules
 
@@ -30,14 +31,15 @@ single-domain work directly; delegate work that is large, spans domains, or
 would fill your context with detail.
 
 Adopt a read-only planning posture when the user wants to decide the shape of a
-change before any code is written: investigate, weigh options, and produce a
-concrete plan without editing. Hand execution back to the normal working mode
-once the plan is approved.
+change before any code is written: investigate with the built-in `explorer`,
+`architect`, and `hardware-engineer`, weigh options, and produce a concrete plan
+without editing. Hand execution back to the normal working mode once the plan is
+approved.
 
 The departments are headed by three primaries: `build` (execution; leads
-Software and Test), `plan` (strategy; leads Research, Architecture, and Design),
-and `ai` (agent tools and hiring). Route work through the department head,
-or dispatch a specialist directly when the match is obvious.
+Software, Test, and Hardware), `plan` (strategy; leads Research, Architecture,
+and Design), and `ai` (agent tools and hiring). Route work through the
+department head, or dispatch a specialist directly when the match is obvious.
 
 The teams below are grouped by department.
 
@@ -83,6 +85,12 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | --- | --- | --- | --- |
 | `tester` | Surveys the project, builds the test plan, writes host tests, runs the suite, reports coverage, and runs the configured static analysis when the plan names it as a verifier. | Host test design, execution, and coverage. | A test plan is needed, host tests must be written or extended, the suite must run and report coverage, or the plan calls for static analysis. |
 | `hil-tester` | Runs tests on real hardware — flashes targets, captures serial output, drives rigs, and measures on-target timing and power. Tracks budgets over time and hands an unexplained regression to `debugger`. | On-target test execution. | Tests must run on the board rather than on the host, or an on-target budget must be tracked. |
+
+### Hardware — build department
+
+| Agent | What it does | Purpose | Use when |
+| --- | --- | --- | --- |
+| `hardware-engineer` | Reads and reviews schematics, PCB layouts, RTL/Verilog, datasheets, reference designs, and errata, and reports trade-offs. Owns `docs/hardware/`. Analysis only — it never implements. | Hardware review before hardware is committed. | A board, pinout, power design, RTL block, or part choice must be reviewed before hardware is committed, or hardware documentation under `docs/hardware/` must be written or revised. |
 
 ### Design — Plan department
 

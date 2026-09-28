@@ -258,31 +258,33 @@ sections, then writes the final text itself:
 - `product-designer` — requirements, scope, and flows (`requirements/`).
 - `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.
 - `ui-designer` — the `ui/` folder when one exists.
+- `hardware-engineer` — the `hardware/` folder when one exists.
 - `researcher` — when a fact must be established.
 - `challenger` — attack the finished draft before it is called done.
 
 `plan` can dispatch `product-designer`, `architect`, `ui-designer`,
-`researcher`, `challenger`, `code-reviewer`, and `security-reviewer`. It cannot
-dispatch implementers.
+`hardware-engineer`, `researcher`, `challenger`, `code-reviewer`, and
+`security-reviewer`. It cannot dispatch implementers.
 
 `plan` never offloads the writing to a subagent. It collects each specialist's
 findings and writes the docs itself.
 
 ### Design-time versus after-implementation ownership
 
-Three required folders have no design-time writer in the Plan department.
-`plan` drafts their design-time content itself; the named specialist owns each
-folder from implementation on, under its standing charter:
+Two required folders have no design-time writer in the Plan department:
+`testing/` and `operations/`. `plan` drafts their design-time content itself;
+`tester` and `toolchain-engineer` own each folder from implementation on, under
+their standing charters:
 
 | Folder | Design-time author | Owner after implementation |
 | --- | --- | --- |
 | `testing/` | `plan` | `tester` |
 | `operations/` | `plan` | `toolchain-engineer` |
-| `hardware/` | `plan` | `firmware-engineer` |
 
-`plan` cannot dispatch `tester`, `toolchain-engineer`, or `firmware-engineer`.
-The design-time text for these folders is strategy-level, and the owner refines
-it immediately after implementation.
+`plan` cannot dispatch `tester` or `toolchain-engineer`. The design-time text for
+these folders is strategy-level, and the owner refines it immediately after
+implementation. `hardware/` is optional: `hardware-engineer` owns it at design
+time and after, and `plan` dispatches it when the folder exists.
 
 ## Guardrails
 

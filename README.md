@@ -58,17 +58,18 @@ Three departments, each headed by a primary agent:
 
 - **`build`** — build department, and the default agent. Owns execution:
   restate the goal, decompose it, dispatch each part to the right specialist,
-  collate, and verify. Leads Software and Test.
+  collate, and verify. Leads Software, Test, and Hardware.
 - **`plan`** — Plan department. Owns strategy: read-only, consults `explore`,
   `researcher`, `architect`, `challenger`, `product-designer`, `ui-designer`,
-  `code-reviewer`, and `security-reviewer`, and produces a concrete plan.
-  Never implements. Leads Research, Architecture, and Design.
+  `code-reviewer`, `security-reviewer`, and `hardware-engineer`, and produces a
+  concrete plan. Never implements. Leads Research, Architecture, and Design.
 - **`ai`** — AI department. Owns the agent tools themselves and who works there.
 
 | Department | Teams | Agents |
 |------|-------|--------|
 | build | Software | `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
 | build | Test | `tester`, `hil-tester` |
+| build | Hardware | `hardware-engineer` |
 | Plan | Research | `researcher` |
 | Plan | Architecture | `architect`, `challenger` |
 | Plan | Design | `product-designer`, `ui-designer` |

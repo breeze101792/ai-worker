@@ -18,8 +18,10 @@ org (user's agent company)
 │   ├── Software
 │   │   └── code-reviewer, debugger, security-reviewer, firmware-engineer
 │   │       python-engineer, web-engineer, toolchain-engineer
-│   └── Test
-│       └── tester, hil-tester
+│   ├── Test
+│   │   └── tester, hil-tester
+│   └── Hardware
+│       └── hardware-engineer
 ├── Plan department
 │   ├── plan  (primary)  head — strategy, read-only
 │   ├── Research
@@ -38,6 +40,12 @@ The teams are capability **pools**, not fixed reporting lines. Each primary
 draws a virtual team from them, governed by an access matrix of which primary
 may dispatch which pool. When you hire into a pool, the hire joins every primary
 whose matrix grants that pool.
+
+The pools are Research, Software, Architecture, AI, Test, Hardware, and Design.
+`build` draws all pools; `plan` draws Research, Architecture, and Design in full
+and the Software and Hardware pools in analysis mode only; `ai` draws Research
+and AI. `hardware-engineer` is the Hardware pool, and it is analysis-class: it
+reads and reviews hardware and writes `docs/hardware/`, never source.
 
 Each agent file carries its own mode, permissions, and model line. The dispatch
 tables in each tool's rules file list who to call. The user's own work is
@@ -130,7 +138,14 @@ into `options` — avoid it. Rules:
    project hires. Row shape: name, what it does, purpose, use when — kept
    consistent with the hire file's `description`. The recruiter only writes
    hire files; `ai` writes the roster row.
-7. **Report + restart.** Show a summary and tell the user to quit and restart
+7. **Wire the access matrix.** When the hire joins a pool, update the access
+   matrix in `Teams.md`, the `permission.task` blocks in
+   `opencode/opencode.jsonc`, and the inline `permission.task` deny list in
+   `opencode/agents/ai.md` together — all three in the same pass. `build`'s
+   block needs no edit (`*: allow` covers a new agent); `plan`'s block grants
+   analysis access by omission, so never add the analysis agent there. The
+   grant and its enforcement must not drift apart.
+8. **Report + restart.** Show a summary and tell the user to quit and restart
    opencode — config loads once; hires activate only after restart.
 
 ## Discover the existing team

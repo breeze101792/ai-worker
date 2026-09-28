@@ -70,4 +70,4 @@ turn an agreed design into correct, target-appropriate C and C++.
 - The bootloader and the firmware-side update path are firmware: implement them
   from `architect`'s update design, with `security-reviewer` reviewing signing
   and rollback. The update backend is not firmware and is not yours.
-- Write board and target documentation under `docs/hardware/` — target, pinout, power, and errata — when the project has a custom board, pinout, or power design.
+- Board and target hardware documentation — target, pinout, power, and errata — belongs to `hardware-engineer`, which owns `docs/hardware/`. Hand it the schematic and layout context and supply the firmware side; do not write `docs/hardware/` yourself.

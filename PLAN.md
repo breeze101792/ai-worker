@@ -3,11 +3,14 @@
 ## Goal
 
 Close the SDLC-tail gaps in the agent company and remove the internal
-contradictions in the docs system. No new department; no new agent is hired.
-The org already covers requirements → adversarial design → architecture →
-implementation → review → host/on-target verification. This plan fixes what is
-broken, adopts the cheap modern-flow practices, and defers the one genuine
-future hire (safety/compliance) until a certified product exists.
+contradictions in the docs system. No new department. The org already covers
+requirements → adversarial design → architecture → implementation → review →
+host/on-target verification. This plan fixes what is broken, adopts the cheap
+modern-flow practices, and defers the genuine future hires until their trigger
+fires.
+
+The earlier statement "No new agent is hired" is superseded by the
+`hardware-engineer` hire recorded below.
 
 Findings came from an `architect` coverage review, a `researcher` survey of
 modern SDLC practice (ISO/IEC/IEEE 12207, DORA, Zephyr release/safety docs,
@@ -61,24 +64,48 @@ MISRA/ISO 26262/IEC 61508), and a `challenger` attack of the draft.
     firmware-side update path, implementing from `architect`'s design.
     `security-reviewer` reviews signing and rollback.
 
-## Deferred — the one future hire
+## The hardware-engineer hire
 
-No hire now. The single candidate is a **safety/compliance engineer** (MISRA C,
-ISO 26262, IEC 61508, DO-178C). Trigger: the first product Shaun commits to a
-safety-certified standard. Requirements traceability already exists in the
-design tree; the certification evidence pack (tool qualification, structural
-coverage, waiver records) is the genuinely new job. A release-engineering hire
-is a distant second — extend `toolchain-engineer` until a fielded product has
-parallel maintenance branches and a signing/rollout ceremony.
+One agent was added: **`hardware-engineer`** — a new **Hardware** pool under the
+**build** department. It is analysis-class: it reads and reviews schematics, PCB
+layouts, RTL/Verilog, datasheets, reference designs, and errata, and reports
+trade-offs; it never implements. It runs the **`vision`** profile (it must read
+images), and the opencode agent pins
+`ollama/deepseek-v4.1-flash:cloud`; the claude and codex agents carry no `model`
+key. It owns `docs/hardware/`, moved from `firmware-engineer`, which now hands
+board and target documentation to it and supplies the firmware side.
+
+Access: `edit: {"*": deny, "docs/hardware/**": allow}`, no `bash`, and fan-out
+through `explore`/`general` only. The `plan` pool grant is by omission from its
+deny list; `opencode.jsonc` and the inline list in `opencode/agents/ai.md` deny
+it to `ai`.
+
+## Deferred — future hires
+
+No further hire now. Candidates, each with its trigger:
+
+- **safety/compliance engineer** (MISRA C, ISO 26262, IEC 61508, DO-178C).
+  Trigger: the first product Shaun commits to a safety-certified standard.
+  Requirements traceability already exists in the design tree; the certification
+  evidence pack (tool qualification, structural coverage, waiver records) is the
+  genuinely new job.
+- **fpga-engineer**, with verilator and yosys in the toolchain. Trigger: RTL
+  implementation work — `hardware-engineer` reviews RTL but does not write it.
+- **pcb-designer**, with KiCad. Trigger: board layout work, not just review.
+- **ic-designer** (custom silicon). Trigger: a design that a standard ASIC or
+  FPGA flow cannot meet.
+- **release-engineering** is a distant candidate — extend
+  `toolchain-engineer` until a fielded product has parallel maintenance branches
+  and a signing/rollout ceremony.
 
 ## Verification
 
 Every change here is a config, docs, or agent-file edit. Per the rules files
 ("verify in proportion to the change"), the check is well-formedness only:
 
-- `codex/agents/*.toml` parse (17 files, verified with `tomllib`).
+- `codex/agents/*.toml` parse (18 files, verified with `tomllib`).
 - `opencode/agents/*.md` and `claude/agents/*.md` frontmatter is balanced
-  (36 files, verified).
+  (38 files, verified).
 - Restart the affected tool — config loads once at startup.
 - One runtime check: after the `tester` `bash: allow` change, confirm opencode
   starts and `tester` can run a command.
