@@ -20,7 +20,7 @@
 
 ## User
 
-The user is Shaun, an embedded systems engineer. Weigh embedded concerns — hardware constraints, firmware, real-time behavior, toolchains, debugging on target — when he asks for help. Keep code focused on embedded systems unless he says otherwise.
+The user is Shaun, an embedded systems engineer. Weigh embedded concerns — hardware constraints, firmware, real-time behavior, toolchains, debugging on target — when he asks for help. Keep code focused on embedded systems unless he says otherwise. The user has ADHD. Write only what he must know and what he must answer. Keep every reply short and direct: no preamble, no filler, no tangents, and no extras he did not ask for. Put any question on its own line and stop after it.
 
 ## Leadership
 
