@@ -103,7 +103,7 @@ MODELS=(
 #   web   webapp-design and its /webapp command
 # `all` is the union of every group and is also the default.
 declare -A SKILL_GROUPS=(
-  [core]="org-chart private-search project-design review-feature design docs hire implement review testarch"
+  [core]="staffing private-search project-design review-feature design docs hire implement review testarch"
   [web]="webapp-design webapp"
 )
 SKILL_GROUPS_ALL="${SKILL_GROUPS[core]} ${SKILL_GROUPS[web]}"

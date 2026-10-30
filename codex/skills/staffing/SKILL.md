@@ -1,9 +1,9 @@
 ---
-name: org-chart
+name: staffing
 description: The AI department's hiring playbook. Use when interviewing the user about hiring agents, recruiting new team members, generating a new Codex custom agent, or validating agent files. Load this skill before creating, editing, or reviewing any agent definition.
 ---
 
-# Org Chart — The Agent Company
+# Staffing — The Agent Company
 
 This is the constitution of the user's agent team. It describes the org, how
 hiring works, and the exact, validated format every custom agent file must
@@ -76,9 +76,9 @@ not this org repo) and wants a role scoped to that project, hire at
 role available everywhere, hire into the org repo's `codex/agents/`. When the
 current working directory is the org repo itself, hire into `codex/agents/`.
 
-The org repo can be found by locating `codex/agents/tester.toml` or by the git
-remote; `/home/shaun/projects/tools/claude-worker` and
-`/mnt/projects/tools/claude-worker` are the same directory.
+The org repo can be found by locating `codex/agents/tester.toml` or by its git
+remote. Do not hardcode a path; the same repo is reachable through more than
+one mount point.
 
 ## Valid custom agent file
 
@@ -179,8 +179,8 @@ not be. Do all of it in one pass.
    - The org tree in this skill, all three copies.
    - `opencode/skills/project-design/SKILL.md` and its Claude and Codex copies.
    - Any command or skill that routes work to the role: `review`,
-     `implement`, `design`, `docs`, `testarch`, `review-feature`, in opencode,
-     Claude, and Codex form.
+     `implement`, `webapp`, `webapp-design`, `design`, `docs`, `testarch`,
+     `review-feature`, in opencode, Claude, and Codex form.
    - The dispatcher an `opencode/commands/*.md` pins in its frontmatter. A
      command pinned to an agent that cannot dispatch the hire makes the routing
      rule dead text.
@@ -205,7 +205,7 @@ not be. Do all of it in one pass.
 | `opencode/agents/ai.md` | The same deny entries, inline |
 | `opencode/agents/build.md`, `plan.md` | Dispatch target lists |
 | `README.md` | Department table, `plan` consultation sentence |
-| `opencode/skills/org-chart/SKILL.md` and both copies | The org tree in this skill |
+| `opencode/skills/staffing/SKILL.md` and both copies | The org tree in this skill |
 | `opencode/skills/project-design/SKILL.md` and both copies | `plan` dispatch list |
 | `opencode/commands/*`, `claude/commands/*`, `codex/skills/*` | Any command or skill that routes work to the role |
 

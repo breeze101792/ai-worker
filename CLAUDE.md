@@ -66,7 +66,7 @@ hand-adapted copy synced via setup.sh:
   opencode `.md`.
 - `codex/skills/` — Codex skills, format-compatible with opencode
   (`<name>/SKILL.md` with `name`+`description`). It holds the opencode skills
-  (`org-chart`, `private-search`, `project-design`, `review-feature`,
+  (`staffing`, `private-search`, `project-design`, `review-feature`,
   `webapp-design`) and the opencode *commands* converted to skills (`docs`,
   `design`, `hire`, `implement`, `testarch`) — Codex CLI has no custom
   slash-command format, so skills are its equivalent and appear in the `/`
@@ -79,8 +79,8 @@ Edit an agent, command, skill, or `CLAUDE.md`/`AGENTS.md` file in the repo sourc
 then re-run the link and **restart** the affected tool for changes to load —
 config is read once at startup.
 
-Keep the org-chart skill in `claude/skills/org-chart`, `opencode/skills/org-chart`,
-and `codex/skills/org-chart` in sync when hiring, since it defines the hire
+Keep the staffing skill in `claude/skills/staffing`, `opencode/skills/staffing`,
+and `codex/skills/staffing` in sync when hiring, since it defines the hire
 workflow for all three tools.
 
 `SKILL-LIST.md` at the repo root indexes every skill and command in this repo,

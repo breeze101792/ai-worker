@@ -1,13 +1,13 @@
 ---
-name: org-chart
-description: The AI department's hiring playbook. Use when interviewing the user about hiring agents, recruiting new team members, generating a new agent (Claude Code or opencode), or validating agent files. Load this skill before creating, editing, or reviewing any agent definition.
+name: staffing
+description: The AI department's hiring playbook. Use when interviewing the user about hiring agents, recruiting new team members, generating a new opencode agent or subagent, or validating agent files. Load this skill before creating, editing, or reviewing any agent definition.
 ---
 
-# Org Chart — The Agent Company
+# Staffing — The Agent Company
 
 This is the constitution of the user's agent team. It describes the org, how
 hiring works, and the exact, validated format every agent file must follow so
-the target tool (Claude Code or opencode) starts cleanly.
+opencode starts cleanly.
 
 ## Org structure
 
@@ -47,70 +47,40 @@ and the Software and Hardware pools in analysis mode only; `ai` draws Research
 and AI. `hardware-engineer` is the Hardware pool, and it is analysis-class: it
 reads and reviews hardware and writes `docs/hardware/`, never source.
 
-Each agent file carries its own mode, permissions, and model choice. The
-dispatch tables in each tool's rules file list who to call. The user's own work
-is embedded systems and Python, with personal stock and investment analysis
-also in scope via `financial-researcher`; web apps are delegated to
-`web-engineer` end to end.
+Each agent file carries its own mode, permissions, and model line. The dispatch
+tables in each tool's rules file list who to call. The user's own work is
+embedded systems and Python, with personal stock and investment analysis also
+in scope via `financial-researcher`; web apps are delegated to `web-engineer`
+end to end.
 
 The agent files show what is actually installed in this tool — list the agents
 directories (glob) before hiring so you never duplicate a role or a name. The
 `Subagents` table in AGENTS.md is not a second roster; it is the dispatch roster
-the main agent reads to decide who to call. Keep it in sync after every hire.
+the main agent reads to decide who to call. Keep it in sync after every hire
+(see step 6 of the pipeline).
 
 ## Where hires live
 
-| Target tool | Scope | Path |
-|-------------|-------|------|
-| Claude Code | Global team (this org repo) | `claude/agents/<name>.md` |
-| Claude Code | Project team | `<project>/.claude/agents/<name>.md` |
-| opencode | Global team (this org repo) | `opencode/agents/<name>.md` |
-| opencode | Project team | `<project>/.opencode/agent/<name>.md` |
+| Scope | Path |
+|-------|------|
+| Global team (this org repo) | `opencode/agents/<name>.md` |
+| Project team | `<project>/.opencode/agent/<name>.md` |
 
 Decision rule: when the user is working inside a project (a git repo that is
-not this org repo) and wants a role scoped to that project, hire into the
-project's agent directory. When the user says "my team", "global", or wants
-the role available everywhere, hire into the org repo's directory for the
-target tool. When the working directory is the org repo itself, hire into the
-org repo's directory.
+not this org repo) and wants a role scoped to that project, hire at
+`<project>/.opencode/agent/`. When the user says "my team", "global", or wants
+the role available everywhere, hire into the org repo's `opencode/agents/`.
+When the current working directory is the org repo itself, hire into
+`opencode/agents/`.
 
 The org repo can be found by locating `opencode/agents/tester.md` (glob for
-it) or by the git remote; `/home/shaun/projects/tools/claude-worker` and
-`/mnt/projects/tools/claude-worker` are the same directory.
+it) or by its git remote. Do not hardcode a path; the same repo is reachable
+through more than one mount point.
 
-## Valid Claude Code agent file
+## Valid agent file
 
 An agent file `<name>.md` lives in an agents dir. It has YAML frontmatter +
-a body. The body becomes the agent's system prompt.
-
-```markdown
----
-description: What the agent does and when to use it. One to two sentences.
-mode: subagent
-tools: Read, Grep, Glob, Write, Edit, Bash, Agent
----
-
-You are <name>. Write the full role definition here: job, boundaries, workflow,
-guardrails.
-```
-
-Frontmatter fields (Claude Code schema):
-
-- `description` — required. One to two sentences, front-load the trigger
-  keywords. Written to help other agents decide when to use it.
-- `model` — optional. Omit it so the agent uses the model configured for the
-  Claude Code session (the official/default model). Pick the role's profile
-  (`deep`, `fast`, `vision`, `inherit`) to agree on its cost class; every
-  profile resolves to the session model here. Pin an alias only when the role
-  genuinely needs a different model.
-- `mode` — optional. `subagent` (= launched via Agent/task tool) is the safe
-  default. `primary` for a selectable agent.
-- `tools` — optional comma-separated string restricting which tools the agent
-  may use. Omit to grant the default toolset. To restrict a reader, list only
-  `Read, Grep, Glob`. To allow a writer, add `Write, Edit, Bash`.
-- No `permission` or `prompt` keys — the body is the prompt.
-
-## Valid opencode agent file
+a body. The body becomes the agent's prompt.
 
 ```markdown
 ---
@@ -121,16 +91,29 @@ permission:
   edit: deny
 ---
 
-You are <name>. Write the full role definition here.
+You are <name>. Write the full role definition here: job, boundaries, workflow,
+guardrails.
 ```
 
-Frontmatter fields (opencode schema): `name, model, variant, description,
-mode, hidden, color, steps, options, disable, temperature, top_p, permission`.
-`permission` is a flat action or `{tool: action}` map, e.g. `edit: deny` for
-pure readers. Do NOT put a `prompt` key — the body is the prompt. Pick a
-profile for the role (`deep`, `fast`, `vision`, `inherit`) and apply its model;
-an `inherit` role has no `model` line. A pinned model carries a provider prefix
-(`ollama/glm-5.3:cloud`).
+### Frontmatter allowed fields (schema)
+
+`name, model, variant, description, mode, hidden, color, steps, options,
+disable, temperature, top_p, permission`. Any other field is silently routed
+into `options` — avoid it. Rules:
+
+- `description` — required on every agent. One to two sentences, front-load
+  the trigger keywords. Written to help other agents decide when to use it.
+- `mode` — required. One of `primary`, `subagent`, `all`. `primary` = a
+  selectable agent (needs a real model + tools). `subagent` = launched via the
+  task tool; the main agent talks to the user.
+- `model` — pick the profile that matches the role's cost profile, then apply
+  its model. Profiles: `deep` (strongest reasoning, slow ok), `fast` (low
+  latency), `vision` (`fast` plus image input), `inherit` (no model line; follow
+  the session model). A pinned model carries a provider prefix:
+  `provider/model`. Never use `ollama/deepseek-v4-pro:cloud`.
+- `permission` — flat action or `{tool: action}` map. Needed to lock down a
+  hire: e.g. `edit: deny` for pure-readers, or allow for writers.
+- Do NOT put a `prompt` key in frontmatter — the body IS the prompt.
 
 ## Hire workflow (the recruiting pipeline)
 
@@ -189,8 +172,8 @@ not be. Do all of it in one pass.
    - The org tree in this skill, all three copies.
    - `opencode/skills/project-design/SKILL.md` and its Claude and Codex copies.
    - Any command or skill that routes work to the role: `review`,
-     `implement`, `design`, `docs`, `testarch`, `review-feature`, in opencode,
-     Claude, and Codex form.
+     `implement`, `webapp`, `webapp-design`, `design`, `docs`, `testarch`,
+     `review-feature`, in opencode, Claude, and Codex form.
    - The dispatcher an `opencode/commands/*.md` pins in its frontmatter. A
      command pinned to an agent that cannot dispatch the hire makes the routing
      rule dead text.
@@ -215,7 +198,7 @@ not be. Do all of it in one pass.
 | `opencode/agents/ai.md` | The same deny entries, inline |
 | `opencode/agents/build.md`, `plan.md` | Dispatch target lists |
 | `README.md` | Department table, `plan` consultation sentence |
-| `opencode/skills/org-chart/SKILL.md` and both copies | The org tree in this skill |
+| `opencode/skills/staffing/SKILL.md` and both copies | The org tree in this skill |
 | `opencode/skills/project-design/SKILL.md` and both copies | `plan` dispatch list |
 | `opencode/commands/*`, `claude/commands/*`, `codex/skills/*` | Any command or skill that routes work to the role |
 
@@ -224,9 +207,8 @@ not be. Do all of it in one pass.
 The source of truth for who is already hired is the filesystem. Before
 proposing or writing:
 
-- Glob for agent files: `**/.claude/agents/**/*.md`, `claude/agents/*.md`,
-  `**/.opencode/agent/**/*.md`, `**/.opencode/agents/**/*.md`, and the org
-  repo's `opencode/agents/*.md`.
+- Glob for agent files: `**/.opencode/agent/**/*.md`, `**/.opencode/agents/**/*.md`,
+  and the org repo's `opencode/agents/*.md`.
 - Read the `description`, `mode`, and `model` of the members you find (e.g.
   `tester`, `ai`, `recruiter` already exist — never rehire them).
 
@@ -239,20 +221,12 @@ Hires awaiting a restart exist only as files too — there is no separate state.
   left behind is a bug, not a follow-up.
 - List the existing agent files before proposing — no duplicates.
 - Never overwrite an existing agent file without asking.
-- When the hire joins a pool, update the access matrix in `Teams.md`, the
-  `permission.task` blocks in `opencode/opencode.jsonc`, and the inline
-  `permission.task` deny list in `opencode/agents/ai.md` together — all three
-  in the same pass. `build` needs no edit (`*: allow` covers a new agent);
-  `plan` grants analysis access by omission, so never add an analysis agent
-  there.
-- Claude Code: `model` is an alias (no provider prefix); `tools` is a
-  comma-separated list; no `permission`/`prompt` keys.
-- opencode: `mode` in `primary|subagent|all`; `model` has a provider prefix;
-  `description` present; `prompt` never a frontmatter key.
-- Both: filename = agent name (hyphen-separated); YAML parses (no unquoted
-  `#`/`:`, consistent indentation, quotes on values with special chars).
+- Validate: mode in `primary|subagent|all`; model has a provider prefix;
+  `description` present; `prompt` never a frontmatter key; file name =
+  agent name (hyphen-separated); YAML parses (no unquoted `#`/`:`, consistent
+  indentation, quotes on the values that contain special chars).
 - Subagents run with the task tool by the main agent — keep their scope: one
   staff role, do one job per member.
-- Never add personal debate; the user said plain English only.
-- Do not fabricate tools, models, or permissions that don't exist in the
-  config — default to the minimal toolset when in doubt.
+- Never add personal debate; user said plain English only.
+- Do not fabricate tools, permissions, or models that don't exist in the
+  config — default `permission` to omit when in doubt.

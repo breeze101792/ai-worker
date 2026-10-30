@@ -82,7 +82,7 @@ primary may dispatch which pool; opencode enforces it through `permission.task`,
 while Claude Code and Codex treat it as binding on judgment.
 
 See `Teams.md` for the roster, access matrix, and profiles; `Models.md` for the
-model mapping; and the `org-chart` skill for the hiring pipeline.
+model mapping; and the `staffing` skill for the hiring pipeline.
 
 ## How to use each tool
 
@@ -95,7 +95,7 @@ The org is the same everywhere, but each tool exposes it differently.
 - **Subagents** — type `@` and the agent name to invoke one directly, e.g.
   `@researcher find the errata for this part`. Primary agents also dispatch
   subagents automatically via the `task` tool.
-- **Commands** — type `/` for `implement`, `design`, `review`, `docs`, `hire`, `testarch`.
+- **Commands** — type `/` for `implement`, `webapp`, `design`, `review`, `docs`, `hire`, `testarch`.
 - **Watch a subagent** — each dispatch runs in a child session. Press
   **Leader+Down** (`session_child_first`) to enter it, **Right**/**Left** to
   cycle children, **Up** (`session_parent`) to return.
@@ -116,7 +116,7 @@ The org is the same everywhere, but each tool exposes it differently.
   the agent runs as the main thread.
 - **Built-in subagents** — **Explore** (read-only codebase search), **Plan**
   (read-only research during plan mode), and **General-purpose**.
-- **Commands** — type `/` for `implement`, `design`, `review`, `docs`, `hire`, `testarch`.
+- **Commands** — type `/` for `implement`, `webapp`, `design`, `review`, `docs`, `hire`, `testarch`.
 - **Settings variants** — `claude/settings.json` uses Anthropic's own API;
   `claude/settings-ollama.json` adds an `env` block that reroutes Claude Code to
   the local ollama endpoint. `bash setup.sh link claude` installs the ollama
@@ -140,7 +140,8 @@ The org is the same everywhere, but each tool exposes it differently.
 - **Inspect threads** — run `/agent` in the CLI to switch between running agent
   threads. App and IDE show a subagents panel with Active and Done lists.
 - **Commands are skills** — Codex has no custom slash commands, so `implement`,
-  `design`, `review`, `docs`, `hire`, and `testarch` appear as skills in the `/` menu.
+  `design`, `review`, `docs`, `hire`, `testarch`, and `webapp` appear as skills
+  in the `/` menu.
 - **Permissions inherit** — subagents inherit the parent turn's sandbox and
   approval mode. Choose the permission mode under the composer before you
   delegate. Approval requests can surface from a background thread; press `o`
@@ -166,9 +167,17 @@ bash setup.sh link opencode,claude,codex
 # preview without changing anything
 bash setup.sh link codex --dry-run
 
+# install only one skill group, or several
+bash setup.sh link --group core
+bash setup.sh link --group core,web
+
 # pull required ollama models, then link
 bash setup.sh all
 ```
+
+Skills and commands are grouped. `core` holds the shared skills and every
+command except `/webapp`; `web` holds `webapp-design` and `/webapp`. The default
+is `all`. Run `bash setup.sh list-groups` for the members.
 
 `setup.sh link` is safe to re-run. It replaces a stale symlink, and backs up a
 real file to `<path>.bak` rather than overwriting it. Adding agent files needs no

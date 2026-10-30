@@ -288,7 +288,7 @@ This roster is the user's document. It is not installed into any tool and no
 agent reads it at runtime; the dispatch tables are what agents read.
 
 The full pipeline and the valid agent frontmatter are defined in the
-`org-chart` skill.
+`staffing` skill.
 
 ## Cross-tool sync
 
