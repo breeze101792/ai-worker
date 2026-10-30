@@ -43,9 +43,12 @@ It copies only the body and the `description`; `mode`/`model`/`permission`
 stay as each format needs them, and it never creates a mirror file or renames
 one. `build` and `plan` are opencode-only, so they have no mirror by design.
 
-Copying is not always correct. Some mirrors differ on purpose — `recruiter`
-names the target tool, `ai` names `codex/agents`, `ui-designer` words one
-guardrail differently — so run the check and read the diff before you apply.
+The agent bodies are tool-neutral, so all three copies of an agent share one
+body. Only the frontmatter differs per tool: `description` is shared, plus
+`mode`/`model`/`permission` for opencode, `tools` for Claude Code, and `name`
+and `developer_instructions` for Codex. A new divergence means someone edited a
+mirror by hand — run the check and read the diff before you apply, and fix the
+source instead of the mirror.
 
 Codex has no agent format matching the opencode/claude markdown, so `codex/` is a
 hand-adapted copy synced via setup.sh:

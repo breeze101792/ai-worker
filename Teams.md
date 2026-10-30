@@ -7,12 +7,12 @@
 ```
 org (user's agent company)
 ├── build department
-│   │   build (primary)  head — execution: decompose, dispatch, collate
+│   ├── build (primary)  head — execution: decompose, dispatch, collate
 │   ├── Software
 │   │   ├── code-reviewer      (subagent) read-only diff review, non-firmware
-│   │   ├── firmware-reviewer  (subagent) read-only firmware review, C/C++/Rust
 │   │   ├── debugger           (subagent) root-cause diagnosis only, no fix
 │   │   ├── firmware-engineer  (subagent) C, C++, and Rust on embedded targets
+│   │   ├── firmware-reviewer  (subagent) read-only firmware review, C/C++/Rust
 │   │   ├── python-engineer    (subagent) Python apps, tools, automation
 │   │   ├── security-reviewer  (subagent) security review of code and designs
 │   │   ├── web-engineer       (subagent) full-stack web, autonomous
@@ -23,7 +23,7 @@ org (user's agent company)
 │   └── Hardware
 │       └── hardware-engineer  (subagent) schematic, PCB, RTL, and datasheet review, read-only
 ├── Plan department
-│   │   plan (primary)  head — strategy: read-only, produces the plan
+│   ├── plan (primary)  head — strategy: read-only, produces the plan
 │   ├── Research
 │   │   ├── researcher         (subagent) facts with citations, evidence over assertion
 │   │   └── financial-researcher (subagent) sourced financial models for securities, portfolios, markets
@@ -121,7 +121,7 @@ session model there. See `Models.md` for the per-tool mapping.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `build` | primary | `inherit` | The build department head and the default agent. Restates the goal, decomposes it, dispatches each part to the specialist who owns it, collates the results, and verifies. Keeps full tools, so it also does small single-domain work directly. | Anything that needs work done. |
-| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `product-designer`, `ui-designer`, `code-reviewer`, `security-reviewer`, and `hardware-engineer`, weighs options, and produces a concrete plan — recorded as `PLAN.md` or under `docs/`. Never implements. | The shape of a change should be decided before any code is written. |
+| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `product-designer`, `ui-designer`, `code-reviewer`, `firmware-reviewer`, `security-reviewer`, and `hardware-engineer`, weighs options, and produces a concrete plan — recorded as `PLAN.md` or under `docs/`. Never implements. | The shape of a change should be decided before any code is written. |
 
 `plan` leads the Plan department's Research, Architecture, and Design teams;
 `build` leads Software, Test, and Hardware. Neither agent pins a model, so both

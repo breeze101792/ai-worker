@@ -3,7 +3,7 @@ description: Review code changes before they land — staged, unstaged, a commit
 allowed-tools: Read, Grep, Glob, Bash, Agent
 ---
 
-Review the changes described by: $ARGUMENTS — if empty, pick the default scope below. Use the `code-reviewer` subagent (Agent tool) to do the review; this command selects the scope and hands it over.
+Review the changes described by: $ARGUMENTS — if empty, pick the default scope below. Use the `code-reviewer` subagent, or `firmware-reviewer` for a firmware change, via the Agent tool; this command selects the scope and hands it over.
 
 If the change is firmware — C, C++, or Rust on a microcontroller, SoC, or RTOS target — dispatch `firmware-reviewer` instead of `code-reviewer`. Never run both.
 

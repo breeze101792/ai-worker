@@ -15,9 +15,9 @@ What it never touches:
   `build` and `plan` are opencode-only and stay that way.
 - Agents the caller did not name, unless `--all` is given.
 
-Some mirrors diverge on purpose (for example `recruiter` names the target
-tool, `ai` names codex/agents). `check` flags those too, so review the diff
-before you `apply`.
+Agent bodies are tool-neutral, so a body difference means a hand edit to a
+mirror; fix the opencode source and re-apply rather than editing the mirror.
+`check` flags such a difference too, so review the diff before you `apply`.
 
 Assumption: an agent file's frontmatter is flat keys, so the first `---` after
 line 1 closes it. A `---` inside frontmatter is not supported. Files are read
@@ -383,8 +383,8 @@ def cmd_apply(agents: list[str], tools: list[str], use_all: bool, dry_run: bool)
     if not use_all and not agents:
         raise AgentFormatError("name at least one agent, or pass --all")
     if use_all:
-        print("warning: --all rewrites every mirror, including agents that "
-              "diverge on purpose (recruiter, ai, ui-designer).")
+        print("warning: --all rewrites every mirror; a difference means the "
+              "mirror was hand-edited, so check the source before applying.")
     changed = 0
     for agent in selected_agents(agents, use_all):
         body, desc, _ = load_source(agent)

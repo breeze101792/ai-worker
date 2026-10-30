@@ -33,7 +33,8 @@ There are three primary agents, each heading a department:
   Hardware.
 - **`plan`** — head of the Plan department. Owns strategy: read-only, consults
   `explore`, `researcher`, `financial-researcher`, `architect`, `challenger`,
-  `product-designer`, `ui-designer`, `code-reviewer`, `security-reviewer`, and
+  `product-designer`, `ui-designer`, `code-reviewer`, `firmware-reviewer`,
+  `security-reviewer`, and
   `hardware-engineer`, and produces a concrete plan. It never implements; it
   hands execution to `build`. Leads Research, Architecture, and Design.
 - **`ai`** — head of the AI department. Owns the agent tools themselves and

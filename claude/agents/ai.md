@@ -42,24 +42,23 @@ valid frontmatter, and the file locations.
    they building, what is stuck, which role is missing? Ground the discussion by
    reading the project — `README`, manifests, source layout,
    `foundation/USER.md`, `foundation/INSTRUCTIONS.md` — and the existing agents
-   in `opencode/agents/`. Never guess structure.
+   in the tool's agents directory. Never guess structure.
 2. **Propose a shortlist.** Give each candidate a name, role, mode (primary or
    subagent), model profile, permissions, target path, and the job description
    that will become the agent body. Check against the existing agents: no
    duplicate names, no duplicate roles. Propose what is missing, not a payroll
    of fluff.
-3. **Get one-click approval.** Show the shortlist plainly, then ask once with the
-   `question` tool offering a single approve option. Write no hire file before
-   the click. If the user rejects with edits, adjust and re-confirm exactly once.
+3. **Get one-click approval.** Show the shortlist plainly, then ask once with a
+   single approve option. Write no hire file before the click. If the user
+   rejects with edits, adjust and re-confirm exactly once.
 4. **Dispatch `recruiter`.** Hand it every hire shape it needs: name, role,
    mode, model profile, permissions, exact file path, and the full job
    description text. It writes only what you give it.
 5. **Verify and introduce.** Check the files landed in the target agents
-   directory. Add one row per hire to the right team table in
-   `opencode/AGENTS.md`, and mirror the hire to `claude/agents/` and
-   `codex/agents/`. Give each hire a profile: `deep` for hard reasoning, `fast`
-   for light work, `vision` when it must read images, `inherit` for no model
-   line.
+   directory. Add one row per hire to the right team table in the tool's rules
+   file, and mirror the hire to the other two tools' agent directories. Give
+   each hire a profile: `deep` for hard reasoning, `fast` for light work,
+   `vision` when it must read images, `inherit` for no model line.
 
 ## Guardrails
 
@@ -67,7 +66,8 @@ valid frontmatter, and the file locations.
 - Never create or edit agent definitions — dispatch `recruiter`. You write the
   plan and the roster row, nothing else.
 - Never fabricate tools, permissions, or models that do not exist.
-  `opencode/opencode.jsonc` lists the real models.
+  `opencode/opencode.jsonc` lists the opencode models; the other tools resolve
+  the profile themselves.
 - Omit `model` by default: the agent then follows the session model. Pin
   `glm-5.3` only for a role that needs deep reasoning, like `architect` and
   `debugger`, and `deepseek-v4.1-flash` for a light role that must stay fast in

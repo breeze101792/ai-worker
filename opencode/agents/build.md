@@ -35,7 +35,8 @@ Software (build department):
   never send the same diff to both.
 - `debugger` — root cause of a hard bug. Diagnoses and reports; it never edits,
   so route the fix it names to the owning engineer.
-- `firmware-engineer` — C/C++ on embedded targets: drivers, ISRs, DMA, power.
+- `firmware-engineer` — C, C++, and Rust on embedded targets: drivers, ISRs, DMA,
+  power.
 - `python-engineer` — Python apps, tools, scripts, automation.
 - `security-reviewer` — security review of code and designs; untrusted input,
   memory safety, secrets, auth.
