@@ -278,6 +278,19 @@ entry_group_name() {
   printf '%s\n' "${1%.md}"
 }
 
+# Canonicalize the parent directory, then append the base name, so a target
+# that no longer exists still compares equal to its intended path.
+canon_path() {
+  local p="$1" dir base
+  dir="$(dirname "$p")"
+  base="$(basename "$p")"
+  if [[ -d "$dir" ]]; then
+    printf '%s/%s\n' "$(cd "$dir" && pwd -P)" "$base"
+  else
+    printf '%s\n' "$p"
+  fi
+}
+
 # Link every entry of a source directory into a real destination directory,
 # one symlink per entry. Args: <tool_name> <src> <dst> [--dry-run]
 # Honors the global SELECT_ALL / SELECTED skill selection.
@@ -286,7 +299,8 @@ link_entries() {
   local src="$2"
   local dst="$3"
   local dry_run="${4:-}"
-  local entry name target key replace_symlink=false
+  local entry name target key replace_symlink=false src_canon own
+  src_canon="$(canon_path "$src")"
 
   if [[ -L "$dst" ]]; then
     replace_symlink=true
@@ -322,14 +336,24 @@ link_entries() {
       continue
     fi
 
-    if [[ -L "$target" && "$(readlink "$target")" == "$entry" ]]; then
+    if [[ -L "$target" ]] && \
+       [[ "$(canon_path "$(readlink "$target")")" == "$(canon_path "$entry")" ]]; then
       info "Already linked ($tool): $target -> $entry"
       continue
     fi
 
+    # A symlink whose canonical target lies under the source directory is one
+    # of ours, even when it is broken or was created through another path form.
+    own=false
+    if [[ -L "$target" ]]; then
+      case "$(canon_path "$(readlink "$target")")" in
+        "$src_canon"/*) own=true ;;
+      esac
+    fi
+
     # In a dry-run migration the old symlink is still in place, so entries seen
     # through it are not real destination entries to back up.
-    if ! $replace_symlink && [[ -e "$target" || -L "$target" ]]; then
+    if ! $replace_symlink && ! $own && [[ -e "$target" || -L "$target" ]]; then
       warn "Existing entry at $target (not our symlink). Backing up to ${target}.bak"
       if [[ "$dry_run" == "--dry-run" ]]; then
         info "Would back up: $target -> ${target}.bak"
@@ -354,8 +378,8 @@ link_entries() {
   # deleted or renamed upstream. Foreign links and real files are never touched.
   for target in "$dst"/*; do
     [[ -L "$target" ]] || continue
-    case "$(readlink "$target")" in
-      "$src"/*) ;;
+    case "$(canon_path "$(readlink "$target")")" in
+      "$src_canon"/*) ;;
       *) continue ;;
     esac
     name="$(basename "$target")"
