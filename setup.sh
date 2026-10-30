@@ -96,6 +96,32 @@ MODELS=(
   "minimax-m3:cloud"
 )
 
+# Skill groups: name -> space-separated members. A member is a skill or command
+# basename; a command member omits its .md suffix. A command and the skill it
+# loads share a group, so --group drops them together.
+#   core  shared skills and every command except /webapp
+#   web   webapp-design and its /webapp command
+# `all` is the union of every group and is also the default.
+declare -A SKILL_GROUPS=(
+  [core]="org-chart private-search project-design review-feature design docs hire implement review testarch"
+  [web]="webapp-design webapp"
+)
+SKILL_GROUPS_ALL="${SKILL_GROUPS[core]} ${SKILL_GROUPS[web]}"
+
+# Active skill selection. SELECT_ALL keeps the default behaviour: link every
+# entry. Otherwise SELECTED holds the member names to link.
+SELECT_ALL=true
+declare -A SELECTED=()
+
+# Where a group member may live. A command member exists as <name>.md here.
+SKILL_MEMBER_DIRS=(
+  "$SCRIPT_DIR/opencode/skills"
+  "$SCRIPT_DIR/opencode/commands"
+  "$SCRIPT_DIR/claude/skills"
+  "$SCRIPT_DIR/claude/commands"
+  "$SCRIPT_DIR/codex/skills"
+)
+
 usage() {
   cat <<EOF
 claude-worker setup — initialize ollama models and tool settings
@@ -108,9 +134,11 @@ Commands:
                     TOOLS is a comma-separated list to link
                     (default: opencode). Available: claude, opencode, codex
                     Example: link claude
-                    Skills are linked per entry: each skill gets its own
-                    symlink in a real skills directory, so you can keep a
-                    local skill beside the shared ones.
+                    Skills and commands are linked per entry: each gets its
+                    own symlink in a real directory, so you can keep a local
+                    skill beside the shared ones.
+                    Select skill groups with --group or SKILL_GROUP.
+  list-groups       List skill groups with their member counts and members
   sync [ARGS]       Check or propagate opencode agent changes into the Claude
                     Code and Codex mirrors. Defaults to a drift report.
                     ARGS pass straight to scripts/sync-agents.py:
@@ -120,13 +148,20 @@ Commands:
                       sync apply --all              every agent (review first)
                       sync list                     per-agent mirror state
                     --tool claude|codex|both must come after the action word,
-                    e.g. `sync apply <agent> --tool codex`.
+                    e.g. \`sync apply <agent> --tool codex\`.
   all [TOOLS]       Run pull + link (default if no command given)
   help              Show this help message
 
 Options:
   -h, --help        Show this help message
   --dry-run         Show what would be done without executing
+  --group <names>   Link only the named skill groups, comma-separated.
+                    --group=<names> is also accepted. Available groups:
+                      core  shared skills and every command but /webapp
+                      web   webapp-design and its /webapp command
+                      all   every group (the default)
+                    \`all\` cannot be combined with another group.
+                    Ignored by pull, sync, and help.
 
 Environment:
   CLAUDE_SETTINGS   Which Claude Code settings variant to link (default: ollama)
@@ -135,9 +170,15 @@ Environment:
   CODEX_SETTINGS    Which Codex config variant to link (default: ollama)
                     ollama  route Codex to the local ollama gateway
                     base    Codex uses its own default provider
+  SKILL_GROUP       Skill groups to link when --group is absent (default: all)
+                    Comma-separated, e.g. SKILL_GROUP=core,web
 
 Examples:
   $(basename "$0") link
+  $(basename "$0") link --group core
+  $(basename "$0") link --group=web
+  SKILL_GROUP=core,web $(basename "$0") link
+  $(basename "$0") list-groups
   $(basename "$0") link claude
   $(basename "$0") link claude,opencode
   $(basename "$0") all claude,opencode
@@ -163,7 +204,7 @@ resolve_tool() {
       echo "$TOOL_CLAUDE_SRC|$TOOL_CLAUDE_DST|file"
       echo "$TOOL_CLAUDE_CLAUDE_MD_SRC|$TOOL_CLAUDE_CLAUDE_MD_DST|file"
       echo "$TOOL_CLAUDE_AGENTS_DIR_SRC|$TOOL_CLAUDE_AGENTS_DIR_DST|dir"
-      echo "$TOOL_CLAUDE_COMMANDS_DIR_SRC|$TOOL_CLAUDE_COMMANDS_DIR_DST|dir"
+      echo "$TOOL_CLAUDE_COMMANDS_DIR_SRC|$TOOL_CLAUDE_COMMANDS_DIR_DST|entries"
       echo "$TOOL_CLAUDE_SKILLS_DIR_SRC|$TOOL_CLAUDE_SKILLS_DIR_DST|entries"
       ;;
     opencode)
@@ -171,7 +212,7 @@ resolve_tool() {
       echo "$TOOL_OPENCODE_AGENTSMD_SRC|$TOOL_OPENCODE_AGENTSMD_DST|file"
       echo "$TOOL_OPENCODE_AGENTS_SRC|$TOOL_OPENCODE_AGENTS_DST|dir"
       echo "$TOOL_OPENCODE_SKILLS_SRC|$TOOL_OPENCODE_SKILLS_DST|entries"
-      echo "$TOOL_OPENCODE_COMMANDS_SRC|$TOOL_OPENCODE_COMMANDS_DST|dir"
+      echo "$TOOL_OPENCODE_COMMANDS_SRC|$TOOL_OPENCODE_COMMANDS_DST|entries"
       ;;
     codex)
       echo "$TOOL_CODEX_AGENTS_DIR_SRC|$TOOL_CODEX_AGENTS_DIR_DST|dir"
@@ -232,14 +273,20 @@ cmd_pull() {
   $dry_run || info "All models pulled."
 }
 
+# Group member name of a source entry: its basename without a .md suffix.
+entry_group_name() {
+  printf '%s\n' "${1%.md}"
+}
+
 # Link every entry of a source directory into a real destination directory,
 # one symlink per entry. Args: <tool_name> <src> <dst> [--dry-run]
+# Honors the global SELECT_ALL / SELECTED skill selection.
 link_entries() {
   local tool="$1"
   local src="$2"
   local dst="$3"
   local dry_run="${4:-}"
-  local entry name target replace_symlink=false
+  local entry name target key replace_symlink=false
 
   if [[ -L "$dst" ]]; then
     replace_symlink=true
@@ -267,7 +314,13 @@ link_entries() {
   for entry in "$src"/*; do
     [[ -e "$entry" || -L "$entry" ]] || continue
     name="$(basename "$entry")"
+    key="$(entry_group_name "$name")"
     target="$dst/$name"
+
+    if ! $SELECT_ALL && [[ -z "${SELECTED[$key]:-}" ]]; then
+      info "Skipping ($tool, not in selected group): $target"
+      continue
+    fi
 
     if [[ -L "$target" && "$(readlink "$target")" == "$entry" ]]; then
       info "Already linked ($tool): $target -> $entry"
@@ -297,13 +350,25 @@ link_entries() {
     return 0
   fi
 
-  # A link into this source whose skill was deleted or renamed upstream.
+  # Remove our links whose entry is no longer selected, or whose target was
+  # deleted or renamed upstream. Foreign links and real files are never touched.
   for target in "$dst"/*; do
     [[ -L "$target" ]] || continue
     case "$(readlink "$target")" in
       "$src"/*) ;;
       *) continue ;;
     esac
+    name="$(basename "$target")"
+    key="$(entry_group_name "$name")"
+    if ! $SELECT_ALL && [[ -z "${SELECTED[$key]:-}" ]]; then
+      warn "Removing link not in selected group: $target"
+      if [[ "$dry_run" == "--dry-run" ]]; then
+        info "Would remove: $target"
+      else
+        rm "$target"
+      fi
+      continue
+    fi
     [[ -e "$target" ]] && continue
     warn "Removing stale link (target gone): $target"
     if [[ "$dry_run" == "--dry-run" ]]; then
@@ -419,6 +484,109 @@ parse_tools() {
   fi
 }
 
+# True if a member name exists in any skill or command source directory.
+member_exists() {
+  local name="$1" dir entry base
+  for dir in "${SKILL_MEMBER_DIRS[@]}"; do
+    [[ -d "$dir" ]] || continue
+    for entry in "$dir"/*; do
+      [[ -e "$entry" || -L "$entry" ]] || continue
+      base="$(basename "$entry")"
+      if [[ "$base" == "$name" || "$base" == "$name.md" ]]; then
+        return 0
+      fi
+    done
+  done
+  return 1
+}
+
+# Resolve a comma-separated group spec into SELECT_ALL / SELECTED.
+# Errors on an unknown group, an empty name, or a missing member.
+parse_skill_groups() {
+  local spec="$1" part name member rest has_all=false name_count=0
+  local -a names others members
+  rest="$spec"
+  while :; do
+    part="${rest%%,*}"
+    name="${part// /}"
+    if [[ -z "$name" ]]; then
+      err "Empty skill group name in: '$spec'"
+      return 1
+    fi
+    names+=("$name")
+    name_count=$((name_count+1))
+    [[ "$name" == "all" ]] || others+=("$name")
+    [[ "$rest" == *,* ]] || break
+    rest="${rest#*,}"
+  done
+  if [[ $name_count -eq 0 ]]; then
+    err "Empty skill group name."
+    return 1
+  fi
+
+  for name in "${names[@]}"; do
+    [[ "$name" == "all" ]] && has_all=true
+  done
+  if $has_all && [[ -n "${others[*]:-}" ]]; then
+    err "Skill group 'all' cannot be combined with another group: $spec"
+    return 1
+  fi
+  if $has_all; then
+    read -r -a members <<< "$SKILL_GROUPS_ALL"
+    for member in "${members[@]}"; do
+      if ! member_exists "$member"; then
+        err "Skill group 'all' references missing member: $member"
+        return 1
+      fi
+    done
+    SELECT_ALL=true
+    return 0
+  fi
+
+  for name in "${names[@]}"; do
+    if [[ -z "${SKILL_GROUPS[$name]:-}" ]]; then
+      err "Unknown skill group: $name (available: core, web, all)"
+      return 1
+    fi
+    read -r -a members <<< "${SKILL_GROUPS[$name]}"
+    for member in "${members[@]}"; do
+      if ! member_exists "$member"; then
+        err "Skill group '$name' references missing member: $member"
+        return 1
+      fi
+      SELECTED[$member]=1
+    done
+  done
+}
+
+# Select groups from --group, then SKILL_GROUP, then the default (all).
+resolve_skill_groups() {
+  local spec=""
+  SELECT_ALL=false
+  SELECTED=()
+  if $GROUP_FLAG_SET; then
+    spec="$GROUP_SPEC"
+  elif [[ -v SKILL_GROUP ]]; then
+    spec="$SKILL_GROUP"
+  else
+    SELECT_ALL=true
+    return 0
+  fi
+  parse_skill_groups "$spec"
+}
+
+cmd_list_groups() {
+  local group groups_members
+  local -a members
+  for group in core web; do
+    groups_members="${SKILL_GROUPS[$group]}"
+    read -r -a members <<< "$groups_members"
+    printf '%s  %d  %s\n' "$group" "${#members[@]}" "$groups_members"
+  done
+  read -r -a members <<< "$SKILL_GROUPS_ALL"
+  printf '%s  %d  %s\n' all "${#members[@]}" "$SKILL_GROUPS_ALL"
+}
+
 cmd_link() {
   local dry_run="${1:-}"
   local tool_spec="${LINK_TOOLS:-opencode}"
@@ -491,6 +659,8 @@ DRY_RUN=false
 COMMAND=""
 LINK_TOOLS=""
 SYNC_ARGS=()
+GROUP_SPEC=""
+GROUP_FLAG_SET=false
 
 ARGS=("$@")
 i=0
@@ -511,7 +681,28 @@ while [[ $i -lt ${#ARGS[@]} ]]; do
   case "$arg" in
     --dry-run) DRY_RUN=true ;;
     -h|--help) COMMAND="help" ;;
-    pull|link|all|sync|help) COMMAND="$arg" ;;
+    --group)
+      if $GROUP_FLAG_SET; then
+        err "Unexpected extra --group argument"
+        usage; exit 1
+      fi
+      i=$((i+1))
+      if [[ $i -ge ${#ARGS[@]} ]]; then
+        err "--group needs a value"
+        usage; exit 1
+      fi
+      GROUP_SPEC="${ARGS[$i]}"
+      GROUP_FLAG_SET=true
+      ;;
+    --group=*)
+      if $GROUP_FLAG_SET; then
+        err "Unexpected extra --group argument"
+        usage; exit 1
+      fi
+      GROUP_SPEC="${arg#--group=}"
+      GROUP_FLAG_SET=true
+      ;;
+    pull|link|all|list-groups|sync|help) COMMAND="$arg" ;;
     *)
       # First non-command, non-flag arg is the optional tool list for link/all
       if [[ -z "$COMMAND" ]]; then
@@ -535,6 +726,11 @@ done
 
 : "${COMMAND:=all}"
 
+# Group selection only applies to link and all; ignored by pull, sync, help.
+if [[ "$COMMAND" == "link" || "$COMMAND" == "all" ]]; then
+  resolve_skill_groups || exit 1
+fi
+
 DRY_FLAG=""
 $DRY_RUN && DRY_FLAG="--dry-run"
 
@@ -542,6 +738,7 @@ case "$COMMAND" in
   help)  usage ;;
   pull)  cmd_pull "$DRY_FLAG" ;;
   link)  cmd_link "$DRY_FLAG" ;;
+  list-groups) cmd_list_groups ;;
   sync)  cmd_sync "${SYNC_ARGS[@]+"${SYNC_ARGS[@]}"}" ;;
   all)   cmd_all "$DRY_FLAG" ;;
 esac

@@ -25,6 +25,13 @@ Link only one tool with `bash setup.sh link claude`, `bash setup.sh link opencod
 Add `--dry-run` to preview. `setup.sh all` also pulls the required ollama models
 before linking.
 
+Skills and commands are split into groups: `core` holds the shared skills and
+every command except `/webapp`, and `web` holds `webapp-design` and `/webapp`.
+Select groups at link time with `--group core,web` or `--group=web`, or set
+`SKILL_GROUP=web`; the default is `all`. A command and the skill it loads stay in
+the same group, so deselecting one drops both. Run `bash setup.sh list-groups`
+to see the members.
+
 ### Agent mirror sync
 
 `opencode/agents/` is the source of truth; `claude/agents/` and
