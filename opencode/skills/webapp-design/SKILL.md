@@ -76,7 +76,9 @@ project-root/
 ### Conventions
 
 1. **`start.sh` launcher** — per-host virtualenv (`.venv_$(hostname)`), installs
-   dependencies, forwards `PORT`, `HOST`, and `DEBUG`.
+   dependencies, forwards `PORT`, `HOST`, and `DEBUG`, replaces a running
+   instance with `--restart`, and runs the suite with `--test`, both backed by
+   a PID file under `data/run/`.
 2. **JSON API under `/api/`** — every endpoint returns JSON. Mutations require
    auth; reads may be public.
 3. **App factory plus blueprints** — `create_app()` with blueprints organised by
@@ -170,34 +172,155 @@ Then apply these fixed boilerplate rules.
 
 ### `start.sh`
 
-Per-host venv `.venv_$(hostname)`. Installs `backend/requirements.txt`. Exports
-HOST, PORT, and DEBUG with defaults. Execs the app factory. Use this exact
-block, replacing `<PORT>` with the chosen port:
+Per-host venv `.venv_$(hostname)`. Installs `backend/requirements.txt`. Runs
+`backend/app.py` in the foreground, so the server is whatever that file starts.
+
+`backend/app.py` reads `HOST`, `PORT`, and `DEBUG` from the environment and
+starts the server under an `if __name__ == "__main__":` guard. Do not put the
+runner in `start.sh`; it must stay server-neutral.
+
+Every option is a flag. `--restart` replaces a running instance, `--test` runs
+the suite and exits, `--host` and `--port` override the bind address, and
+`--debug` sets `DEBUG=1` and leaves the behaviour to the app. A PID file under
+`data/run/` is how `--restart` finds the old instance. Use this exact block,
+replacing `<PORT>` with the chosen port:
 
 ```bash
 #!/usr/bin/env bash
+#   ./start.sh                     # defaults: 0.0.0.0:<PORT>, debug off
+#   ./start.sh --debug             # run with DEBUG=1
+#   ./start.sh --host 127.0.0.1    # bind loopback only
+#   ./start.sh --port 8080 --debug
+#   ./start.sh --restart           # replace the running instance
+#   ./start.sh --test              # run the test suite and exit
+#   ./start.sh --help
+
 set -euo pipefail
 
 HOSTNAME="$(hostname)"
 VENV=".venv_${HOSTNAME}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PID_FILE="$ROOT/data/run/server.pid"
+STOP_TIMEOUT=10
+
+HOST="${HOST:-0.0.0.0}"
+PORT="${PORT:-<PORT>}"
+DEBUG="${DEBUG:-0}"
+RESTART=false
+TEST=false
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [options]
+
+  --host <addr>   bind address (default 0.0.0.0)
+  --port <port>   listen port (default <PORT>)
+  --debug         enable debug mode (DEBUG=1)
+  --restart       stop the running instance, then start a new one
+  --test          run the test suite and exit
+  -h, --help      show this help
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --host)
+      [[ $# -ge 2 ]] || { echo "--host needs a value" >&2; exit 2; }
+      HOST="$2"; shift 2 ;;
+    --port)
+      [[ $# -ge 2 ]] || { echo "--port needs a value" >&2; exit 2; }
+      PORT="$2"; shift 2 ;;
+    --debug) DEBUG=1; shift ;;
+    --restart) RESTART=true; shift ;;
+    --test) TEST=true; shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
+  esac
+done
+
+setup_env() {
+  if [ ! -d "$VENV" ]; then
+    python3 -m venv "$VENV"
+  fi
+
+  # shellcheck disable=SC1091
+  source "$VENV/bin/activate"
+
+  pip install -q -r backend/requirements.txt
+}
+
+run_tests() {
+  setup_env
+  echo "Running tests"
+  exec python -m pytest tests/
+}
+
+running_pid() {
+  local pid
+  [[ -f "$PID_FILE" ]] || return 1
+  pid="$(cat "$PID_FILE")"
+  [[ -n "$pid" ]] || return 1
+  kill -0 "$pid" 2>/dev/null || return 1
+  case "$(ps -p "$pid" -o comm= 2>/dev/null || true)" in
+    *python*) printf '%s\n' "$pid" ;;
+    *) return 1 ;;
+  esac
+}
+
+stop_server() {
+  local pid children child waited=0
+  if ! pid="$(running_pid)"; then
+    rm -f "$PID_FILE"
+    echo "No server running."
+    return 0
+  fi
+  echo "Stopping server (PID $pid)"
+  children="$(pgrep -P "$pid" 2>/dev/null || true)"
+  kill "$pid" 2>/dev/null || true
+  for child in $children; do
+    kill "$child" 2>/dev/null || true
+  done
+  while [[ "$waited" -lt "$STOP_TIMEOUT" ]]; do
+    if ! kill -0 "$pid" 2>/dev/null; then
+      rm -f "$PID_FILE"
+      echo "Stopped."
+      return 0
+    fi
+    sleep 1
+    waited=$((waited + 1))
+  done
+  echo "Server did not stop after ${STOP_TIMEOUT}s, killing."
+  kill -9 "$pid" 2>/dev/null || true
+  for child in $children; do
+    kill -9 "$child" 2>/dev/null || true
+  done
+  rm -f "$PID_FILE"
+}
+
+start_server() {
+  local pid
+  if pid="$(running_pid)"; then
+    if ! $RESTART; then
+      echo "Already running (PID $pid). Use --restart to replace it."
+      return 1
+    fi
+    stop_server
+  fi
+
+  setup_env
+  export HOST PORT DEBUG
+
+  mkdir -p "$(dirname "$PID_FILE")"
+  printf '%s\n' "$$" > "$PID_FILE"
+  echo "Serving on http://$HOST:$PORT (debug $DEBUG, PID $$)"
+  exec python "$ROOT/backend/app.py"
+}
 
 cd "$ROOT"
-
-if [ ! -d "$VENV" ]; then
-  python3 -m venv "$VENV"
+if $TEST; then
+  run_tests
 fi
-
-# shellcheck disable=SC1091
-source "$VENV/bin/activate"
-
-pip install -q -r backend/requirements.txt
-
-export HOST="${HOST:-0.0.0.0}"
-export PORT="${PORT:-<PORT>}"
-export DEBUG="${DEBUG:-0}"
-
-exec python -c "from backend.app import create_app; app = create_app(); app.run(host='$HOST', port=$PORT, debug=$DEBUG)"
+start_server
 ```
 
 ### `.gitignore`
@@ -266,8 +389,9 @@ Follow the conventions above. Convention 10 applies to every endpoint.
 
 ## Phase 5 — Verify and hand over
 
-1. Run `python -m pytest tests/`. It must pass.
-2. Start `start.sh` on the chosen port.
+1. Run `./start.sh --test`. It must pass.
+2. Start `start.sh`. Use `./start.sh --restart` when an older instance is still
+   running.
 3. Smoke-test the health of each page and endpoint with curl.
 4. Confirm no endpoint returns HTML on an API error.
 5. Stop the server.
