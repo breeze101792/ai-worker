@@ -58,11 +58,13 @@ hand-adapted copy synced via setup.sh:
   agent's body and description; Codex reads only its own `.toml` agents, not
   opencode `.md`.
 - `codex/skills/` — Codex skills, format-compatible with opencode
-  (`<name>/SKILL.md` with `name`+`description`). Includes the two opencode
-  skills plus `docs`/`design`/`hire`/`testarch`, which are the opencode *commands*
-  converted to skills (Codex CLI has no custom slash-command format; skills
-  are its documented equivalent and appear in the `/` menu). Install target is
-  `~/.agents/skills`, Codex's USER skill dir (symlinks followed).
+  (`<name>/SKILL.md` with `name`+`description`). It holds the opencode skills
+  (`org-chart`, `private-search`, `project-design`, `review-feature`,
+  `webapp-design`) and the opencode *commands* converted to skills (`docs`,
+  `design`, `hire`, `implement`, `testarch`) — Codex CLI has no custom
+  slash-command format, so skills are its equivalent and appear in the `/`
+  menu. Install target is `~/.agents/skills`, Codex's USER skill dir (symlinks
+  followed).
 - `codex/AGENTS.md` — adapted from opencode: `task` tool → Codex `spawn_agent`,
   `explore`/`general` → built-in `explorer`; install to `~/.codex/AGENTS.md`.
 
@@ -73,6 +75,11 @@ config is read once at startup.
 Keep the org-chart skill in `claude/skills/org-chart`, `opencode/skills/org-chart`,
 and `codex/skills/org-chart` in sync when hiring, since it defines the hire
 workflow for all three tools.
+
+`SKILL-LIST.md` at the repo root indexes every skill and command in this repo,
+per tool. It is not a skill and is never loaded. Adding, renaming, or removing a
+skill or command must update that index in the same change, or the index is
+stale.
 
 ## Coding rules
 
