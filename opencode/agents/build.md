@@ -30,6 +30,9 @@ Architecture (Plan department):
 
 Software (build department):
 - `code-reviewer` — read-only review of a diff, commit, or branch.
+- `firmware-reviewer` — read-only review of a firmware diff. Use this instead of
+  `code-reviewer` for C, C++, or Rust on a microcontroller, SoC, or RTOS target;
+  never send the same diff to both.
 - `debugger` — root cause of a hard bug. Diagnoses and reports; it never edits,
   so route the fix it names to the owning engineer.
 - `firmware-engineer` — C/C++ on embedded targets: drivers, ISRs, DMA, power.
@@ -73,7 +76,8 @@ Design (Plan department):
    break. A docs, comment, config, or agent-file edit cannot fail a lint,
    type-check, or test — confirm the file is well formed and stop. For a source
    edit, run the in-scope checks, not the whole suite. Send a substantial or
-   risky diff to `code-reviewer` before it lands. Send any change that touches
+   risky firmware diff to `firmware-reviewer` and every other diff to
+   `code-reviewer` before it lands. Send any change that touches
    untrusted input, authentication, secrets, or memory-unsafe code to
    `security-reviewer`. Escalate on-target checks to `hil-tester`. State plainly
    what you ran and what you skipped.

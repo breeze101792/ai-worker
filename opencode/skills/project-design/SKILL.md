@@ -265,7 +265,8 @@ sections, then writes the final text itself:
 
 `plan` can dispatch `product-designer`, `architect`, `ui-designer`,
 `hardware-engineer`, `researcher`, `financial-researcher`, `challenger`,
-`code-reviewer`, and `security-reviewer`. It cannot dispatch implementers.
+`code-reviewer`, `firmware-reviewer`, and `security-reviewer`. It cannot
+dispatch implementers.
 
 `plan` never offloads the writing to a subagent. It collects each specialist's
 findings and writes the docs itself.

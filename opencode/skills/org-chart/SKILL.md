@@ -16,8 +16,8 @@ org (user's agent company)
 ├── build department
 │   ├── build (primary)  head — execution
 │   ├── Software
-│   │   └── code-reviewer, debugger, security-reviewer, firmware-engineer
-│   │       python-engineer, web-engineer, toolchain-engineer
+│   │   └── code-reviewer, firmware-reviewer, debugger, security-reviewer,
+│   │       firmware-engineer, python-engineer, web-engineer, toolchain-engineer
 │   ├── Test
 │   │   └── tester, hil-tester
 │   └── Hardware

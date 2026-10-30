@@ -5,6 +5,8 @@ allowed-tools: Read, Grep, Glob, Bash, Agent
 
 Review the changes described by: $ARGUMENTS — if empty, pick the default scope below. Use the `code-reviewer` subagent (Agent tool) to do the review; this command selects the scope and hands it over.
 
+If the change is firmware — C, C++, or Rust on a microcontroller, SoC, or RTOS target — dispatch `firmware-reviewer` instead of `code-reviewer`. Never run both.
+
 Decide what to review, in this order:
 
 1. **Explicit target.** If `$ARGUMENTS` names a branch, a range (`a..b`), a commit, or several commits, review exactly that.
@@ -14,7 +16,7 @@ Decide what to review, in this order:
 2. **Staged changes.** Otherwise, if `git diff --cached` is non-empty, review the staged changes.
 3. **Unstaged changes.** Otherwise, review the working tree with `git diff`.
 
-Then run the code-reviewer workflow: read the diff, read the surrounding code needed to judge it in context, and report findings ranked **blocker / major / minor**, each with a `file:line` citation and a suggested fix. Call out embedded hazards where relevant. If the change is clean, say so plainly.
+Then run the reviewer workflow: read the diff, read the surrounding code needed to judge it in context, and report findings ranked **blocker / major / minor**, each with a `file:line` citation and a suggested fix. Call out embedded hazards where relevant. If the change is clean, say so plainly.
 
 ## Guardrails
 

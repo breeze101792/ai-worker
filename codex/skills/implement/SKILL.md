@@ -21,7 +21,7 @@ pick the smaller one and say which you picked.
 
 Inspect the target and the project before routing. Do not assume the language.
 
-- **Firmware** — C or C++ for a microcontroller, SoC, or real-time target; drivers, ISRs, DMA, memory-mapped IO, power states. Route to `firmware-engineer`.
+- **Firmware** — C, C++, or Rust for a microcontroller, SoC, or real-time target; drivers, ISRs, DMA, memory-mapped IO, power states. Route to `firmware-engineer`.
 - **Python** — Python applications, CLI tools, scripts, libraries, automation. Route to `python-engineer`.
 - **Web** — HTML/CSS/TypeScript and a backend API, regardless of framework. Route to `web-engineer`.
 
@@ -40,7 +40,7 @@ Hand the chosen engineer the task, the target paths, and any design or constrain
 
 ## 4. Verify
 
-After the engineer reports, check the change against the task and run the project's lint, type-check, and test commands. Send it to `code-reviewer` when the request is large, or when the change touches untrusted input, authentication, secrets, or memory-unsafe code.
+After the engineer reports, check the change against the task and run the project's lint, type-check, and test commands. Send a firmware change to `firmware-reviewer` and everything else to `code-reviewer`, when the request is large, or when the change touches untrusted input, authentication, secrets, or memory-unsafe code.
 
 ## Guardrails
 

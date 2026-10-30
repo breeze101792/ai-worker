@@ -61,14 +61,14 @@ Three departments, each headed by a primary agent:
   collate, and verify. Leads Software, Test, and Hardware.
 - **`plan`** — Plan department. Owns strategy: read-only, consults `explore`,
   `researcher`, `financial-researcher`, `architect`, `challenger`,
-  `product-designer`, `ui-designer`, `code-reviewer`, `security-reviewer`, and
-  `hardware-engineer`, and produces a concrete plan. Never implements. Leads
+  `product-designer`, `ui-designer`, `code-reviewer`, `firmware-reviewer`,
+  `security-reviewer`, and `hardware-engineer`, and produces a concrete plan. Never implements. Leads
   Research, Architecture, and Design.
 - **`ai`** — AI department. Owns the agent tools themselves and who works there.
 
 | Department | Teams | Agents |
 |------|-------|--------|
-| build | Software | `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
+| build | Software | `code-reviewer`, `debugger`, `firmware-engineer`, `firmware-reviewer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
 | build | Test | `tester`, `hil-tester` |
 | build | Hardware | `hardware-engineer` |
 | Plan | Research | `researcher`, `financial-researcher` |

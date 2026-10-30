@@ -12,6 +12,7 @@ permission:
     "code-reviewer": "deny"
     "debugger": "deny"
     "firmware-engineer": "deny"
+    "firmware-reviewer": "deny"
     "python-engineer": "deny"
     "security-reviewer": "deny"
     "web-engineer": "deny"

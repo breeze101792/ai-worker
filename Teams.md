@@ -9,9 +9,10 @@ org (user's agent company)
 ├── build department
 │   │   build (primary)  head — execution: decompose, dispatch, collate
 │   ├── Software
-│   │   ├── code-reviewer      (subagent) read-only diff review
+│   │   ├── code-reviewer      (subagent) read-only diff review, non-firmware
+│   │   ├── firmware-reviewer  (subagent) read-only firmware review, C/C++/Rust
 │   │   ├── debugger           (subagent) root-cause diagnosis only, no fix
-│   │   ├── firmware-engineer  (subagent) C/C++ on embedded targets
+│   │   ├── firmware-engineer  (subagent) C, C++, and Rust on embedded targets
 │   │   ├── python-engineer    (subagent) Python apps, tools, automation
 │   │   ├── security-reviewer  (subagent) security review of code and designs
 │   │   ├── web-engineer       (subagent) full-stack web, autonomous
@@ -60,7 +61,7 @@ Pool membership:
 | Pool | Agents |
 | --- | --- |
 | Research | `researcher`, `financial-researcher` |
-| Software | `code-reviewer`, `debugger`, `firmware-engineer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
+| Software | `code-reviewer`, `debugger`, `firmware-engineer`, `firmware-reviewer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
 | Architecture | `architect`, `challenger` |
 | AI | `harness-engineer`, `recruiter` |
 | Test | `tester`, `hil-tester` |
@@ -77,7 +78,7 @@ Legend:
 
 - **full** — may dispatch any agent in the pool.
 - **analysis** — may dispatch only the pool's analysis agents (no source
-  writing): Software = `code-reviewer`, `security-reviewer`; Design =
+  writing): Software = `code-reviewer`, `firmware-reviewer`, `security-reviewer`; Design =
   `product-designer`, `ui-designer`; Hardware = `hardware-engineer`.
 - **none** — may not dispatch the pool.
 
@@ -132,7 +133,8 @@ follow the session model. The teams under them are listed below.
 | --- | --- | --- | --- | --- |
 | `code-reviewer` | subagent | `fast` | Reviews code changes — diffs, staged changes, commits, and local branches — and reports ranked findings with file:line citations. Read-only. | A change needs review before it lands, or a commit or PR needs a sanity check. |
 | `debugger` | subagent | `deep` | Reproduces hard bugs, traces the code path, and proves the root cause with evidence. Diagnoses only — it names the failing file and line and the suggested fix, but never edits; the owning engineer applies the change. Also diagnoses timing, power, and memory budget regressions that resist explanation. | A bug resists quick fixes, errors or crashes have no obvious cause, a stack trace needs tracing to source, or a budget regression has no obvious cause. |
-| `firmware-engineer` | subagent | `inherit` | Writes bare-metal and RTOS firmware in C and C++ — drivers, ISRs, DMA, memory-mapped IO, power states, and the bootloader/update path. Follows kernel or Zephyr conventions. | Implementing or modifying firmware on microcontrollers, SoCs, and real-time targets. |
+| `firmware-engineer` | subagent | `inherit` | Writes bare-metal and RTOS firmware in C, C++, and Rust — drivers, ISRs, DMA, memory-mapped IO, power states, and the bootloader/update path. Follows kernel, Zephyr, or Rust embedded conventions. | Implementing or modifying firmware on microcontrollers, SoCs, and real-time targets. |
+| `firmware-reviewer` | subagent | `inherit` | Reviews firmware changes in C, C++, and Rust — undefined behaviour, integer and bounds defects, stack and memory budget, ISR and concurrency safety, DMA and cache ownership, and the project's coding-standard subset — with ranked file:line findings. Replaces `code-reviewer` on firmware diffs; read-only. | A firmware diff needs review before it lands, or a change on a microcontroller, SoC, or RTOS target needs checking against the target's real limits. |
 | `python-engineer` | subagent | `inherit` | Writes Python applications, tools, and automation. Follows PEP 8, the project's packaging and test conventions. | Implementing Python code, CLI tools, scripts, or library work. |
 | `security-reviewer` | subagent | `inherit` | Reviews code and designs for security — injection, memory safety, secrets, auth, crypto, unsafe deserialization, and supply chain — and reports ranked findings with file:line citations. Also flags dependency licences and provenance; the licence decision stays the human's. Read-only. | A change touches untrusted input, authentication, secrets, network or serial interfaces, anything memory-unsafe, or the dependency supply chain. |
 | `web-engineer` | subagent | `inherit` | Builds full-stack web apps autonomously — frontend markup, styles, and TypeScript plus the backend API. Implements `ui-designer` specs. | A web app or web feature must be implemented end to end without a human in the loop. |
@@ -219,7 +221,8 @@ listed for a tool inherits the session default.
 | `financial-researcher` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Read-only on source by design; writes financial research reports and models under `docs/research/`, not source |
 | `architect` | `WORKFLOW.md`, `WORKLOG.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes the architecture blueprint and design docs only, not source |
 | `challenger` | deny | — | Read-only by design; attacks proposals, never edits |
-| `code-reviewer` | deny | — | Read-only by design |
+| `code-reviewer` | deny | — | Read-only by design; hands firmware diffs to `firmware-reviewer` |
+| `firmware-reviewer` | deny | — | Read-only by design; replaces `code-reviewer` on firmware diffs |
 | `debugger` | deny | allow | Diagnoses only; proves the root cause, never edits |
 | `firmware-engineer` | allow | allow | Builds for the real target |
 | `python-engineer` | allow | allow | Runs code and tests |
