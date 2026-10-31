@@ -138,7 +138,8 @@ Dispatch the design agents in this order:
 1. `product-designer` — `docs/requirements/`: requirements, scope, functional
    flows, and testable acceptance criteria.
 2. `ui-designer` — `docs/ui/`: every page and view with its empty, loading,
-   error, and edge states, the design tokens, and a reference HTML/CSS mockup.
+   error, and edge states, the design tokens, and a reference HTML/CSS mockup
+   under `docs/ui/mockup/`.
 3. `architect` — `docs/architecture/` (overview, `data-model.md`, `modules/`)
    and `docs/contracts/api.md`. The API doc carries the `{ok, data/error}` shape
    on every endpoint. The architect also fixes module reuse: one fetch wrapper,

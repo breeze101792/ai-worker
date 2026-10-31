@@ -70,6 +70,21 @@ docs/
 Do NOT scaffold optional folders empty. Empty folders invite padding, which this
 skill forbids.
 
+### `ui/` layout
+
+When `docs/ui/` exists, it holds one markdown file per screen and a `mockup/`
+folder with one self-contained HTML page:
+
+```
+docs/ui/
+├── README.md          index: every screen, its states, its spec file
+├── <page>.md          one per screen — layout, elements, tokens, states
+└── mockup/            one HTML page, CSS inline, links every screen
+```
+
+The mockup is one HTML file with its CSS inline, not a set of files. It is
+reference material for the implementer, not source.
+
 ## Module boundary vs contract boundary
 
 `architecture/modules/` holds INTERNAL boundaries. `contracts/` holds EXTERNAL

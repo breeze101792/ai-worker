@@ -187,7 +187,7 @@ why; `ui-designer` defines how it looks.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `product-designer` | subagent | `fast` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria — as handoff-ready specs for `architect`, `ui-designer`, and the engineers. For a fielded device, also pins the maintenance window, update mechanism, and end-of-life/disposal policy. Domain-agnostic: embedded, Python, and web alike. | Starting a new project or feature, before any technical or visual design. |
-| `ui-designer` | subagent | `vision` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/` for `web-engineer` to implement. Design only — it never edits source. | A web interface needs design tokens, layout, and component specs before implementation. |
+| `ui-designer` | subagent | `vision` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/ui/` for `web-engineer` to implement. Design only — it never edits source. | A web interface needs design tokens, layout, and component specs before implementation. |
 
 ### AI department
 
