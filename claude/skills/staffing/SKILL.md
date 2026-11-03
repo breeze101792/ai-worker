@@ -26,8 +26,10 @@ org (user's agent company)
 │   ├── plan  (primary)  head — strategy, read-only
 │   ├── Research
 │   │   └── researcher, financial-researcher
-│   ├── Architecture
-│   │   └── architect, challenger
+│   └── Architecture
+│       └── architect, challenger
+├── Design department
+│   ├── design  (primary)  head — design docs, writes docs/ only
 │   └── Design
 │       └── product-designer, ui-designer
 └── AI department
@@ -42,10 +44,12 @@ may dispatch which pool. When you hire into a pool, the hire joins every primary
 whose matrix grants that pool.
 
 The pools are Research, Software, Architecture, AI, Test, Hardware, and Design.
-`build` draws all pools; `plan` draws Research, Architecture, and Design in full
-and the Software and Hardware pools in analysis mode only; `ai` draws Research
-and AI. `hardware-engineer` is the Hardware pool, and it is analysis-class: it
-reads and reviews hardware and writes `docs/hardware/`, never source.
+`build` draws all pools; `plan` draws Research and Architecture in full and the
+Software and Hardware pools in analysis mode only; `design` draws Design and
+Architecture in full, Research in full, and Software and Hardware in analysis
+mode only; `ai` draws Research and AI. `hardware-engineer` is the Hardware
+pool, and it is analysis-class: it reads and reviews hardware and writes
+`docs/hardware/`, never source.
 
 Each agent file carries its own mode, permissions, and model choice. The
 dispatch tables in each tool's rules file list who to call. The user's own work
@@ -183,8 +187,9 @@ not be. Do all of it in one pass.
 9. **Name the hire in every dispatch list.** A hire no dispatcher names is
    never called. Check each of these:
    - `opencode/agents/build.md` — the dispatch target list, and the review step.
-   - `opencode/agents/plan.md` — the consulted list in the `description` and in
-     the body, when `plan` may dispatch the role.
+   - `opencode/agents/plan.md` and `opencode/agents/design.md` — the consulted
+     list in the `description` and in the body, when that head may dispatch the
+     role.
    - `README.md` — the department table and the `plan` consultation sentence.
    - The org tree in this skill, all three copies.
    - `opencode/skills/project-design/SKILL.md` and its Claude and Codex copies.
@@ -213,10 +218,10 @@ not be. Do all of it in one pass.
 | `Models.md` | The model profile row |
 | `opencode/opencode.jsonc` | `permission.task` deny entries |
 | `opencode/agents/ai.md` | The same deny entries, inline |
-| `opencode/agents/build.md`, `plan.md` | Dispatch target lists |
+| `opencode/agents/build.md`, `plan.md`, `design.md` | Dispatch target lists |
 | `README.md` | Department table, `plan` consultation sentence |
 | `opencode/skills/staffing/SKILL.md` and both copies | The org tree in this skill |
-| `opencode/skills/project-design/SKILL.md` and both copies | `plan` dispatch list |
+| `opencode/skills/project-design/SKILL.md` and both copies | `design` dispatch list |
 | `opencode/commands/*`, `claude/commands/*`, `codex/skills/*` | Any command or skill that routes work to the role |
 
 ## Discover the existing team
@@ -243,8 +248,9 @@ Hires awaiting a restart exist only as files too — there is no separate state.
   `permission.task` blocks in `opencode/opencode.jsonc`, and the inline
   `permission.task` deny list in `opencode/agents/ai.md` together — all three
   in the same pass. `build` needs no edit (`*: allow` covers a new agent);
-  `plan` grants analysis access by omission, so never add an analysis agent
-  there.
+  `design` grants the designers, reviewers, and hardware agents by omission;
+  `plan` grants the reviewers and hardware agents by omission and denies
+  `product-designer` and `ui-designer` explicitly.
 - Claude Code: `model` is an alias (no provider prefix); `tools` is a
   comma-separated list; no `permission`/`prompt` keys.
 - opencode: `mode` in `primary|subagent|all`; `model` has a provider prefix;

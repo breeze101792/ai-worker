@@ -265,10 +265,10 @@ The tree shape never changes. Only the leaves change. `/design` takes a
 
 ## Who writes it
 
-`plan` authors and assembles the docs. `plan` is read-only except `docs/**`,
-`PLAN.md`, `README.md`, `AGENTS.md`, `CLAUDE.md`, `WORKFLOW.md`, and
-`WORKLOG.md`. It dispatches the Plan-department specialists for the deep
-sections, then writes the final text itself:
+`design` authors and assembles the docs. `plan` settles the decision and writes
+nothing; `design` writes `docs/**` only, never source and never a project-root
+file. It dispatches the design specialists for the deep sections, then writes
+the final text itself:
 
 - `product-designer` — requirements, scope, and flows (`requirements/`).
 - `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.
@@ -278,30 +278,32 @@ sections, then writes the final text itself:
 - `financial-researcher` — the `research/` folder for financial research.
 - `challenger` — attack the finished draft before it is called done.
 
-`plan` can dispatch `product-designer`, `architect`, `ui-designer`,
-`hardware-engineer`, `researcher`, `financial-researcher`, `challenger`,
-`code-reviewer`, `firmware-reviewer`, and `security-reviewer`. It cannot
-dispatch implementers.
+`design` can dispatch `product-designer`, `ui-designer`, `architect`,
+`challenger`, `researcher`, `financial-researcher`, `hardware-engineer`,
+`firmware-reviewer`, `code-reviewer`, `security-reviewer`, `explore`, and the
+generic `general` helper. It cannot dispatch `tester`, `toolchain-engineer`,
+`debugger`, any implementer, `harness-engineer`, `recruiter`, `ai`, or another
+primary.
 
-`plan` never offloads the writing to a subagent. It collects each specialist's
+`design` never offloads the writing to a subagent. It collects each specialist's
 findings and writes the docs itself.
 
 ### Design-time versus after-implementation ownership
 
-Two required folders have no design-time writer in the Plan department:
-`testing/` and `operations/`. `plan` drafts their design-time content itself;
-`tester` and `toolchain-engineer` own each folder from implementation on, under
-their standing charters:
+Two required folders have no design-time specialist: `testing/` and
+`operations/`. `design` drafts their design-time content itself; `tester` and
+`toolchain-engineer` own each folder from implementation on, under their
+standing charters:
 
 | Folder | Design-time author | Owner after implementation |
 | --- | --- | --- |
-| `testing/` | `plan` | `tester` |
-| `operations/` | `plan` | `toolchain-engineer` |
+| `testing/` | `design` | `tester` |
+| `operations/` | `design` | `toolchain-engineer` |
 
-`plan` cannot dispatch `tester` or `toolchain-engineer`. The design-time text for
-these folders is strategy-level, and the owner refines it immediately after
+`design` cannot dispatch `tester` or `toolchain-engineer`. The design-time text
+for these folders is strategy-level, and the owner refines it immediately after
 implementation. `hardware/` is optional: `hardware-engineer` owns it at design
-time and after, and `plan` dispatches it when the folder exists.
+time and after, and `design` dispatches it when the folder exists.
 
 ## Guardrails
 

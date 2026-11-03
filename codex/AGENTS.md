@@ -25,21 +25,26 @@ The user is Shaun, an embedded systems engineer. Weigh embedded concerns — har
 ## Leadership
 
 Codex has no department-head primaries, so this main agent acts as every
-department head at once — build and planning alike. Take the request, restate the goal, decompose it, and dispatch each part
-to the custom agent that owns it, then collate the results. Do small,
-single-domain work directly; delegate work that is large, spans domains, or
-would fill your context with detail.
+department head at once — build, design, and planning alike. Take the request,
+restate the goal, decompose it, and dispatch each part to the custom agent that
+owns it, then collate the results. Do small, single-domain work directly;
+delegate work that is large, spans domains, or would fill your context with
+detail.
 
 Adopt a read-only planning posture when the user wants to decide the shape of a
 change before any code is written: investigate with the built-in `explorer`,
 `architect`, and `hardware-engineer`, weigh options, and produce a concrete plan
 without editing. Hand execution back to the normal working mode once the plan is
-approved.
+approved. Design docs are written in normal mode, not plan mode: the decision is
+settled first, then `docs/` is written, then implementation starts.
 
-The departments are headed by three primaries: `build` (execution; leads
-Software, Test, and Hardware), `plan` (strategy; leads Research, Architecture,
-and Design), and `ai` (agent tools and hiring). Route work through the
-department head, or dispatch a specialist directly when the match is obvious.
+The departments are headed by four primaries: `build` (execution; leads
+Software, Test, and Hardware), `plan` (strategy; read-only, writes no files;
+leads Research and Architecture), `design` (the design department; writes
+`docs/**` only; leads Design), and `ai` (agent tools and hiring). `plan`
+settles a decision, `design` writes it up, `build` implements it. Route work
+through the department head, or dispatch a specialist directly when the match
+is obvious.
 
 The teams below are grouped by department.
 
@@ -94,7 +99,7 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | --- | --- | --- | --- |
 | `hardware-engineer` | Reads and reviews schematics, PCB layouts, RTL/Verilog, datasheets, reference designs, and errata, and reports trade-offs. Owns `docs/hardware/`. Analysis only — it never implements. | Hardware review before hardware is committed. | A board, pinout, power design, RTL block, or part choice must be reviewed before hardware is committed, or hardware documentation under `docs/hardware/` must be written or revised. |
 
-### Design — Plan department
+### Design — Design department
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |

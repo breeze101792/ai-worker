@@ -24,19 +24,22 @@ The user is Shaun, an embedded systems engineer. Weigh embedded concerns — har
 
 ## Leadership
 
-There are three primary agents, each heading a department:
+There are four primary agents, each heading a department:
 
 - **`build`** — head of the build department and the default agent. Owns
   execution: restates the goal, decomposes it, dispatches each part to the
   specialist who owns it, collates the results, and verifies. Keeps full tools,
   so it also does small single-domain work directly. Leads Software, Test, and
   Hardware.
-- **`plan`** — head of the Plan department. Owns strategy: read-only, consults
+- **`plan`** — head of the Plan department. Read-only: writes no files. Consults
   `explore`, `researcher`, `financial-researcher`, `architect`, `challenger`,
-  `product-designer`, `ui-designer`, `code-reviewer`, `firmware-reviewer`,
-  `security-reviewer`, and
-  `hardware-engineer`, and produces a concrete plan. It never implements; it
-  hands execution to `build`. Leads Research, Architecture, and Design.
+  `code-reviewer`, `firmware-reviewer`, `security-reviewer`, and
+  `hardware-engineer`, settles a decision, then hands the written design to
+  `design` and execution to `build`. Leads Research and Architecture only.
+- **`design`** — head of the Design department. Writes `docs/**` only. Turns an
+  agreed decision into a build-ready design — product definition, flows,
+  front-end and back-end design, UI specs, and the `docs/ui/` mockup — then hands
+  the `docs/` set to `build`. Leads Design.
 - **`ai`** — head of the AI department. Owns the agent tools themselves and
   hiring.
 
@@ -93,7 +96,7 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | --- | --- | --- | --- |
 | `hardware-engineer` | Reads and reviews schematics, PCB layouts, RTL/Verilog, datasheets, reference designs, and errata, and reports trade-offs. Owns `docs/hardware/`. Analysis only — it never implements. | Hardware review before hardware is committed. | A board, pinout, power design, RTL block, or part choice must be reviewed before hardware is committed, or hardware documentation under `docs/hardware/` must be written or revised. |
 
-### Design — Plan department
+### Design — Design department
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |

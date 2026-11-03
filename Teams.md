@@ -23,16 +23,18 @@ org (user's agent company)
 │   └── Hardware
 │       └── hardware-engineer  (subagent) schematic, PCB, RTL, and datasheet review, read-only
 ├── Plan department
-│   ├── plan (primary)  head — strategy: read-only, produces the plan
+│   ├── plan (primary)  head — strategy: read-only, writes nothing
 │   ├── Research
 │   │   ├── researcher         (subagent) facts with citations, evidence over assertion
 │   │   └── financial-researcher (subagent) sourced financial models for securities, portfolios, markets
-│   ├── Architecture
-│   │   ├── architect          (subagent) system design and architecture review
-│   │   └── challenger         (subagent) adversarial pre-build critique of proposals
-│   └── Design
-│       ├── product-designer   (subagent) product & functional design
-│       └── ui-designer        (subagent) visual design specs & mockups
+│   └── Architecture
+│       ├── architect          (subagent) system design and architecture review
+│       └── challenger         (subagent) adversarial pre-build critique of proposals
+├── Design department
+│   ├── design (primary)  head — design docs & mockups: writes docs/ only
+│   ├── Design
+│   │   ├── product-designer   (subagent) product & functional design
+│   │   └── ui-designer        (subagent) visual design specs & mockups
 └── AI department
     ├── ai                     (primary)  head — tooling and hiring: discusses, decides, dispatches
     ├── harness-engineer       (subagent) implements agent-tool config and MCP
@@ -41,9 +43,12 @@ org (user's agent company)
 
 `build` heads the build department and is the default agent. It owns execution
 and leads the Software, Test, and Hardware teams. `plan` heads the Plan
-department: it is read-only, works through strategy with the user, records the
-plan in docs, and hands execution to `build`. The AI department sits apart,
-headed by its own primary, and owns both the agent tools and hiring.
+department: it is read-only, writes nothing, works through strategy with the
+user, settles the decision, and hands the written design to `design` and
+execution to `build`. `design` heads the Design department: it owns `docs/`,
+turns the agreed decision into a build-ready design, and hands the `docs/` set
+to `build`. The AI department sits apart, headed by its own primary, and owns
+both the agent tools and hiring.
 
 The user's own work is embedded systems and Python, with personal stock and
 investment analysis also in scope via `financial-researcher`; web apps are
@@ -71,7 +76,8 @@ Pool membership:
 | Primary | Research | Software | Architecture | AI | Test | Hardware | Design |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `build` | full | full | full | none | full | full | full |
-| `plan` | full | analysis | full | none | none | analysis | analysis |
+| `plan` | full | analysis | full | none | none | analysis | none |
+| `design` | full | analysis | full | none | none | analysis | full |
 | `ai` | full | none | none | full | none | none | none |
 
 Legend:
@@ -121,11 +127,12 @@ session model there. See `Models.md` for the per-tool mapping.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `build` | primary | `inherit` | The build department head and the default agent. Restates the goal, decomposes it, dispatches each part to the specialist who owns it, collates the results, and verifies. Keeps full tools, so it also does small single-domain work directly. | Anything that needs work done. |
-| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `product-designer`, `ui-designer`, `code-reviewer`, `firmware-reviewer`, `security-reviewer`, and `hardware-engineer`, weighs options, and produces a concrete plan — recorded as `PLAN.md` or under `docs/`. Never implements. | The shape of a change should be decided before any code is written. |
+| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `code-reviewer`, `firmware-reviewer`, `security-reviewer`, and `hardware-engineer`, weighs the options, and settles the decision. Writes no files and never implements; it hands the written design to `design` and execution to `build`. | The shape of a change should be decided before any code is written. |
+| `design` | primary | `inherit` | Head of the Design department. Turns an agreed decision into a build-ready design under `docs/` — product definition, flows, front-end and back-end design, UI specs, and the reference mockup. Writes `docs/**` only, never source. Hands the `docs/` set to `build`. | A decision is settled and the design must be written before implementation. |
 
-`plan` leads the Plan department's Research, Architecture, and Design teams;
-`build` leads Software, Test, and Hardware. Neither agent pins a model, so both
-follow the session model. The teams under them are listed below.
+`plan` leads Research and Architecture; `design` leads Design; `build` leads
+Software, Test, and Hardware. No primary pins a model, so all follow the
+session model. The teams under them are listed below.
 
 ### Software — build department
 
@@ -157,6 +164,15 @@ It writes `docs/hardware/` and never implements.
 | --- | --- | --- | --- | --- |
 | `hardware-engineer` | subagent | `vision` | Reads and reviews schematics, PCB layouts, RTL/Verilog, datasheets, reference designs, and errata, and reports trade-offs. Owns `docs/hardware/`. Analysis only — it never implements. | A board, pinout, power design, RTL block, or part choice must be reviewed before hardware is committed, or hardware documentation under `docs/hardware/` must be written or revised. |
 
+### Design — Design department
+
+`design` owns this team and its output is `docs/`.
+
+| Agent | Mode | Model | What it does | Use when |
+| --- | --- | --- | --- | --- |
+| `product-designer` | subagent | `fast` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria — as handoff-ready specs for `architect`, `ui-designer`, and the engineers. For a fielded device, also pins the maintenance window, update mechanism, and end-of-life/disposal policy. Domain-agnostic: embedded, Python, and web alike. | Starting a new project or feature, before any technical or visual design. |
+| `ui-designer` | subagent | `vision` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/ui/` for `web-engineer` to implement. Design only — it never edits source. | A web interface needs design tokens, layout, and component specs before implementation. |
+
 ### Research — Plan department
 
 Establishes facts before anyone acts on them. Serves every domain, so it sits
@@ -178,16 +194,6 @@ Technical design and adversarial review. `architect` produces the blueprint;
 | --- | --- | --- | --- | --- |
 | `architect` | subagent | `deep` | Principal software architect. Designs and reviews system architecture, hunts duplicate code, designs event/IPC frameworks, and recommends structure that prevents bugs. Also designs the cross-cutting mechanisms — the update strategy (image layout, rollback, signing-key lifecycle) and fault handling (watchdog policy, crash capture, log discipline). Writes to `docs/architecture/`, `docs/contracts/`, and `docs/reference/`. Rejects overengineering. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, designing an event bus or IPC layer, or designing update and fault-handling strategy. |
 | `challenger` | subagent | `inherit` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design; proposes no design of its own. | Before implementation, when changing course is still cheap, and the proposal must be stress-tested. |
-
-### Design — Plan department
-
-Product and visual design. `product-designer` defines what the product does and
-why; `ui-designer` defines how it looks.
-
-| Agent | Mode | Model | What it does | Use when |
-| --- | --- | --- | --- | --- |
-| `product-designer` | subagent | `fast` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria — as handoff-ready specs for `architect`, `ui-designer`, and the engineers. For a fielded device, also pins the maintenance window, update mechanism, and end-of-life/disposal policy. Domain-agnostic: embedded, Python, and web alike. | Starting a new project or feature, before any technical or visual design. |
-| `ui-designer` | subagent | `vision` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/ui/` for `web-engineer` to implement. Design only — it never edits source. | A web interface needs design tokens, layout, and component specs before implementation. |
 
 ### AI department
 
@@ -214,7 +220,8 @@ listed for a tool inherits the session default.
 | Agent | edit | bash | Notable |
 | --- | --- | --- | --- |
 | `build` | allow | allow | Head of the build department; task access per the Virtual teams matrix |
-| `plan` | `PLAN.md`, `WORKFLOW.md`, `WORKLOG.md`, docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Head of the Plan department; read-only, writes docs only; task access per the Virtual teams matrix |
+| `plan` | `*` deny | — | Head of the Plan department; read-only, writes no files; task access per the Virtual teams matrix |
+| `design` | `docs/**` allow; `*` deny | — | Head of the Design department; writes design docs and the mockup under `docs/` only, not source |
 | `ai` | allow | allow | Task access per the Virtual teams matrix; `question: allow` |
 | `recruiter` | allow | allow | Writes agent files |
 | `researcher` | docs/**, README.md, AGENTS.md, CLAUDE.md allow; `*` deny | — | Writes research reports only, not source |
@@ -242,7 +249,7 @@ spawn a copy of themselves.
 ## Documentation system
 
 The design docs are a `docs/` folder tree written before implementation, with
-`plan` owning tree coherence and `docs/README.md`, the single entry point.
+`design` owning tree coherence and `docs/README.md`, the single entry point.
 
 | Folder | Owner |
 | --- | --- |
@@ -261,11 +268,12 @@ An optional folder is created only when its trigger fires, never scaffolded
 empty. Ownership is advisory in Claude Code and Codex, where paths cannot be
 enforced in config; in opencode it is enforceable through permission globs.
 
-Two required folders have no design-time writer in the Plan department:
-`plan` drafts `testing/` and `operations/` itself at design time, and `tester`
-and `toolchain-engineer` take each over from implementation on. Design-time text
-is strategy-level; the owner refines it after implementation. `hardware/` is
-optional, and `hardware-engineer` owns it at design time and after.
+Two required folders have no specialist design-time writer in the Design
+department: `design` drafts `testing/` and `operations/` itself at design time,
+and `tester` and `toolchain-engineer` take each over from implementation on.
+Design-time text is design-level; the owner refines it after implementation.
+`hardware/` is optional, and `hardware-engineer` owns it at design time and
+after.
 
 The folder tree and the full workflow are defined in the `project-design` skill.
 

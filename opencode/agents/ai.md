@@ -23,6 +23,7 @@ permission:
     "product-designer": "deny"
     "ui-designer": "deny"
     "build": "deny"
+    "design": "deny"
     "plan": "deny"
     "ai": "deny"
 ---

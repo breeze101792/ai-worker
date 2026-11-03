@@ -54,16 +54,20 @@ so we never pin another vendor's model in their files.
 ## The org
 
 The agent roster is in `Teams.md` — the single source of truth for who is hired.
-Three departments, each headed by a primary agent:
+Four departments, each headed by a primary agent:
 
 - **`build`** — build department, and the default agent. Owns execution:
   restate the goal, decompose it, dispatch each part to the right specialist,
   collate, and verify. Leads Software, Test, and Hardware.
-- **`plan`** — Plan department. Owns strategy: read-only, consults `explore`,
-  `researcher`, `financial-researcher`, `architect`, `challenger`,
-  `product-designer`, `ui-designer`, `code-reviewer`, `firmware-reviewer`,
-  `security-reviewer`, and `hardware-engineer`, and produces a concrete plan. Never implements. Leads
-  Research, Architecture, and Design.
+- **`plan`** — Plan department. Read-only: writes no files. Consults the
+  read-only agents only — `explore`, `researcher`, `financial-researcher`,
+  `architect`, `challenger`, `code-reviewer`, `firmware-reviewer`,
+  `security-reviewer`, and `hardware-engineer` — settles the decision, and hands
+  the written design to `design` and execution to `build`. Leads Research and
+  Architecture.
+- **`design`** — Design department. Writes `docs/**` only. Turns an agreed
+  decision into a build-ready design and mockup, then hands `docs/` to `build`.
+  Leads Design.
 - **`ai`** — AI department. Owns the agent tools themselves and who works there.
 
 | Department | Teams | Agents |
@@ -73,7 +77,7 @@ Three departments, each headed by a primary agent:
 | build | Hardware | `hardware-engineer` |
 | Plan | Research | `researcher`, `financial-researcher` |
 | Plan | Architecture | `architect`, `challenger` |
-| Plan | Design | `product-designer`, `ui-designer` |
+| Design | Design | `product-designer`, `ui-designer` |
 | AI | — | `ai` (primary), `harness-engineer`, `recruiter` |
 
 The teams are capability **pools**, not fixed reporting lines. Each primary
@@ -90,8 +94,8 @@ The org is the same everywhere, but each tool exposes it differently.
 
 ### opencode
 
-- **Primary agents** — press **Tab** to cycle between `build` (default, build
-  department), `ai` (AI department), and `plan` (Plan department, read-only).
+- **Primary agents** — press **Tab** to cycle between `build` (default),
+  `plan` (read-only), `design` (design docs), and `ai` (AI department).
 - **Subagents** — type `@` and the agent name to invoke one directly, e.g.
   `@researcher find the errata for this part`. Primary agents also dispatch
   subagents automatically via the `task` tool.

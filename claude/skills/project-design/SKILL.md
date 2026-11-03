@@ -265,9 +265,10 @@ The tree shape never changes. Only the leaves change. `/design` takes a
 
 ## Who writes it
 
-Claude Code has no `plan` primary, so the main agent adopts the
-Plan-department posture: read-only planning, no source edits. It authors and
-assembles the docs. It consults the specialists for the deep sections, then
+Claude Code has no `plan` or `design` primary, so the main agent plays both
+stages. Plan mode is the read-only stage: it writes nothing. Outside plan mode
+the main agent plays the design stage: it authors and assembles the docs under
+`docs/`, and its design agents supply the deep sections. It consults them, then
 writes the final text itself:
 
 - `product-designer` — requirements, scope, and flows (`requirements/`).
