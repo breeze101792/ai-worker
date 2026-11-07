@@ -33,7 +33,7 @@ copies of the same content. Edit the source, then re-link and restart the tool.
 - **opencode** is the richest format and the source of truth for agent design.
   Its agents use YAML frontmatter with `mode`, `model`, `permission`, and a
   markdown body that becomes the prompt. It has real primary agents, so the
-  department-head primaries (`build`, `plan`, `ai`) exist only here.
+  department-head primaries (`build`, `plan`, `design`, `ai`) exist only here.
 - **Claude Code** agents are markdown with `description`, `mode`, and a `tools`
   list. It has no department-head primaries, so the main agent acts as the
   department head for every department. Agents carry no `model` key; they use
@@ -63,12 +63,18 @@ Four departments, each headed by a primary agent:
   read-only agents only — `explore`, `researcher`, `financial-researcher`,
   `architect`, `challenger`, `code-reviewer`, `firmware-reviewer`,
   `security-reviewer`, and `hardware-engineer` — settles the decision, and hands
-  the written design to `design` and execution to `build`. Leads Research and
-  Architecture.
+  the design work to `design` when the change crosses a boundary, and execution
+  to `build`. Leads Research and Critique.
 - **`design`** — Design department. Writes `docs/**` only. Turns an agreed
   decision into a build-ready design and mockup, then hands `docs/` to `build`.
   Leads Design.
 - **`ai`** — AI department. Owns the agent tools themselves and who works there.
+
+The design stage is conditional. Design is required when the change crosses a
+boundary something outside it relies on: a wire or network protocol, a public
+API or CLI, a file or data format, a pinout or board interface, or a new
+component. A bug fix, an internal refactor, or a change confined behind an
+unchanged boundary skips the design stage.
 
 | Department | Teams | Agents |
 |------|-------|--------|
@@ -76,8 +82,8 @@ Four departments, each headed by a primary agent:
 | build | Test | `tester`, `hil-tester` |
 | build | Hardware | `hardware-engineer` |
 | Plan | Research | `researcher`, `financial-researcher` |
-| Plan | Architecture | `architect`, `challenger` |
-| Design | Design | `product-designer`, `ui-designer` |
+| Plan | Critique | `challenger` |
+| Design | Design | `product-designer`, `architect`, `ui-designer` |
 | AI | — | `ai` (primary), `harness-engineer`, `recruiter` |
 
 The teams are capability **pools**, not fixed reporting lines. Each primary
@@ -129,7 +135,8 @@ The org is the same everywhere, but each tool exposes it differently.
 
 ### Codex
 
-- **Main agent is the department head.** There are no `build`/`plan` agents;
+- **Main agent is the department head.** There are no `build`/`plan`/`design`
+  agents;
   the main thread leads and delegates. Built-in agents you can also use:
   `default` (general), `worker` (implementation), `explorer` (read-heavy
   codebase search).

@@ -7,7 +7,7 @@ Write the project design docs set. Scope comes from the user's prompt — if emp
 
 Take a domain profile — `embedded`, `web`, `cli`, or `library`. If the profile is not given, infer it from the current project and ask if it is ambiguous.
 
-Codex has no `plan` primary, so adopt the Plan-department posture: read-only planning, no source edits. Load the `project-design` skill and follow it as the checklist. Survey the project first — manifests, source, and existing docs — and never guess structure.
+Codex has no separate design primary, so the main agent plays the design stage: write `docs/` only, never source. Load the `project-design` skill and follow it as the checklist. Survey the project first — manifests, source, and existing docs — and never guess structure.
 
 Dispatch the custom agents for the deep sections, then assemble and write the docs yourself:
 

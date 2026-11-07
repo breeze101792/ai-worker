@@ -48,7 +48,7 @@ bash setup.sh sync list                       # per-agent mirror state
 
 It copies only the body and the `description`; `mode`/`model`/`permission`
 stay as each format needs them, and it never creates a mirror file or renames
-one. `build` and `plan` are opencode-only, so they have no mirror by design.
+one. `build`, `plan`, and `design` are opencode-only, so they have no mirror by design.
 
 The agent bodies are tool-neutral, so all three copies of an agent share one
 body. Only the frontmatter differs per tool: `description` is shared, plus

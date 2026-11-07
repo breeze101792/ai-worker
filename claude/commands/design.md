@@ -7,7 +7,7 @@ Write the project design docs set. Scope: $ARGUMENTS — if empty, use the curre
 
 Take a domain profile — `embedded`, `web`, `cli`, or `library`. If the profile is not given, infer it from the current project and ask if it is ambiguous.
 
-Adopt the Plan-department posture: read-only planning, no source edits. Load the `project-design` skill and follow it as the checklist. Survey the project first — manifests, source, and existing docs — and never guess structure.
+You are the design stage: write `docs/` only, never source. Load the `project-design` skill and follow it as the checklist. Survey the project first — manifests, source, and existing docs — and never guess structure.
 
 Dispatch the specialists for the deep sections, then assemble and write the docs yourself:
 

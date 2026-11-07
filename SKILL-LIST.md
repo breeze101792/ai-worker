@@ -12,7 +12,7 @@ link time; the default is `all`.
 | Skill | Group | What it does | opencode | Claude Code | Codex |
 | --- | --- | --- | --- | --- | --- |
 | `webapp-design` | web | Create a new web-app project end to end: discuss, design, scaffold, build, verify. The path comes from the user. | yes | yes | yes |
-| `project-design` | core | Design docs playbook — the `docs/` tree written before implementation. | yes | yes | yes |
+| `project-design` | core | Design docs playbook — the `docs/` tree written before implementation when a change crosses a boundary. | yes | yes | yes |
 | `review-feature` | core | Review a branch or commit against its own intent: spec, test plan, per-requirement verdict. | yes | yes | yes |
 | `staffing` | core | Hiring playbook — agent file format, validation, and file locations. | yes | yes | yes |
 | `private-search` | core | Web search through the user's private SearXNG instance. | yes | yes | yes |

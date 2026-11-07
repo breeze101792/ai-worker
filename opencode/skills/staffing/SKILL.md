@@ -43,13 +43,13 @@ draws a virtual team from them, governed by an access matrix of which primary
 may dispatch which pool. When you hire into a pool, the hire joins every primary
 whose matrix grants that pool.
 
-The pools are Research, Software, Architecture, AI, Test, Hardware, and Design.
-`build` draws all pools; `plan` draws Research and Architecture in full and the
-Software and Hardware pools in analysis mode only; `design` draws Design and
-Architecture in full, Research in full, and Software and Hardware in analysis
-mode only; `ai` draws Research and AI. `hardware-engineer` is the Hardware
-pool, and it is analysis-class: it reads and reviews hardware and writes
-`docs/hardware/`, never source.
+The pools are Research, Software, Critique, AI, Test, Hardware, and Design.
+`build` draws all pools; `plan` draws Research and Critique in full, Software
+and Hardware in analysis mode only, and only `architect` from Design; `design`
+draws Design and Critique in full, Research in full, and Software and Hardware
+in analysis mode only; `ai` draws Research and AI. `hardware-engineer` is the
+Hardware pool, and it is analysis-class: it reads and reviews hardware and
+writes `docs/hardware/`, never source.
 
 Each agent file carries its own mode, permissions, and model line. The dispatch
 tables in each tool's rules file list who to call. The user's own work is

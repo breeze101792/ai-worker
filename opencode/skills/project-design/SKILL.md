@@ -15,8 +15,8 @@ design docs.
 - A structured `docs/` folder tree at the project root. NOT a single file.
 - ONE entry point: `docs/README.md`. It indexes every doc with its ID and its
   status. Do not create a separate `docs/DESIGN.md`.
-- Write design BEFORE code. The doc set is the gate: implementation starts only
-  after it exists.
+- Write design BEFORE code when the change crosses a boundary. Then the doc set
+  is the gate: implementation starts only after it exists.
 - Write every required folder. Within one, a file whose subject does not apply
   is marked "Not applicable — <reason>" rather than padded.
 - Never invent a requirement the user did not state or imply. Mark assumptions
@@ -308,7 +308,8 @@ time and after, and `design` dispatches it when the folder exists.
 ## Guardrails
 
 - One entry point: `docs/README.md`. Do not create a separate `docs/DESIGN.md`.
-- Write design BEFORE code. The doc set is the gate.
+- Write design BEFORE code when the change crosses a boundary. Then the doc set
+  is the gate.
 - A folder with no real content is not created. Mark a required section "Not
   applicable — <reason>" rather than padding it.
 - Every requirement numbered and testable. No "fast", no "user-friendly".

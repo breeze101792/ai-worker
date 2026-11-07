@@ -1,6 +1,6 @@
 ---
 description: Write the project design docs before any implementation — a structured docs/ folder tree (requirements, architecture, contracts, testing, operations, plus optional folders) instead of a single file. Use when a new project or feature needs its design pinned down, or when the design docs must be created or revised before implementation.
-agent: plan
+agent: design
 ---
 
 Write the project design docs set. Scope: $ARGUMENTS — if empty, use the current project.
@@ -9,7 +9,7 @@ Take a domain profile — `embedded`, `web`, `cli`, or `library`. If the profile
 
 Load the `project-design` skill and follow it as the checklist. Survey the project first — manifests, source, and existing docs — and never guess structure.
 
-Dispatch the Plan-department specialists for the deep sections, then assemble and write the docs yourself:
+Dispatch the design specialists for the deep sections, then assemble and write the docs yourself:
 
 - `product-designer` — requirements, scope, and flows (`requirements/`).
 - `architect` — `architecture/`, `contracts/`, `reference/`, and the data model.

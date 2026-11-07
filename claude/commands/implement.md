@@ -9,13 +9,18 @@ Implement the following by delegating to the domain engineer that fits: $ARGUMEN
 
 Size the request before you route it, and state the size in one line.
 
-- **Small** — a one-file edit, a clear bug fix, a typo, a config change. One engineer, no design stage.
-- **Medium** — a bounded change inside one domain. One engineer, no design stage.
-- **Large** — a new system, a public interface change, or work that spans domains. Do the design stages in step 3.
+- **Small** — a one-file edit, a clear bug fix, a typo, a config change. One
+  engineer, no design stage.
+- **Medium** — a bounded change inside one domain, behind an unchanged boundary.
+  One engineer, no design stage.
+- **Large** — a new system, a boundary change (a wire or network protocol, a
+  public API or CLI, a file or data format, a pinout or board interface, or a
+  new component), or work that spans domains. Do the design stages in step 3.
 
-A bug fix is never a "feature". "Substantial" means a public interface change or
-more than about three files — not "it felt big". When two sizes both seem to fit,
-pick the smaller one and say which you picked.
+A bug fix is never a "feature". Size by the boundary, not the file count: a
+two-file ISR or DMA change that alters a pinout or protocol is Large, and a
+five-file rename behind an unchanged API is not. When two sizes both seem to
+fit, pick the smaller one and say which you picked.
 
 ## 2. Determine the domain
 
