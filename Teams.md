@@ -27,13 +27,13 @@ org (user's agent company)
 │   ├── Research
 │   │   ├── researcher         (subagent) facts with citations, evidence over assertion
 │   │   └── financial-researcher (subagent) sourced financial models for securities, portfolios, markets
-│   └── Architecture
-│       ├── architect          (subagent) system design and architecture review
+│   └── Critique
 │       └── challenger         (subagent) adversarial pre-build critique of proposals
 ├── Design department
 │   ├── design (primary)  head — design docs & mockups: writes docs/ only
 │   ├── Design
 │   │   ├── product-designer   (subagent) product & functional design
+│   │   ├── architect          (subagent) system design and architecture review
 │   │   └── ui-designer        (subagent) visual design specs & mockups
 └── AI department
     ├── ai                     (primary)  head — tooling and hiring: discusses, decides, dispatches
@@ -44,11 +44,17 @@ org (user's agent company)
 `build` heads the build department and is the default agent. It owns execution
 and leads the Software, Test, and Hardware teams. `plan` heads the Plan
 department: it is read-only, writes nothing, works through strategy with the
-user, settles the decision, and hands the written design to `design` and
-execution to `build`. `design` heads the Design department: it owns `docs/`,
-turns the agreed decision into a build-ready design, and hands the `docs/` set
-to `build`. The AI department sits apart, headed by its own primary, and owns
-both the agent tools and hiring.
+user, settles the decision, and hands the design work to `design` when the change
+crosses a boundary, and execution to `build`. `design` heads the Design
+department: it owns `docs/`, turns the agreed decision into a build-ready design,
+and hands the `docs/` set to `build`. The AI department sits apart, headed by its
+own primary, and owns both the agent tools and hiring.
+
+The design stage is conditional. Design is required when the change crosses a
+boundary something outside it relies on: a wire or network protocol, a public API
+or CLI, a file or data format, a pinout or board interface, or a new component. A
+bug fix, an internal refactor, or a change confined behind an unchanged boundary
+skips the design stage.
 
 The user's own work is embedded systems and Python, with personal stock and
 investment analysis also in scope via `financial-researcher`; web apps are
@@ -67,16 +73,16 @@ Pool membership:
 | --- | --- |
 | Research | `researcher`, `financial-researcher` |
 | Software | `code-reviewer`, `debugger`, `firmware-engineer`, `firmware-reviewer`, `python-engineer`, `security-reviewer`, `web-engineer`, `toolchain-engineer` |
-| Architecture | `architect`, `challenger` |
+| Critique | `challenger` |
 | AI | `harness-engineer`, `recruiter` |
 | Test | `tester`, `hil-tester` |
-| Design | `product-designer`, `ui-designer` |
+| Design | `product-designer`, `architect`, `ui-designer` |
 | Hardware | `hardware-engineer` |
 
-| Primary | Research | Software | Architecture | AI | Test | Hardware | Design |
+| Primary | Research | Software | Critique | AI | Test | Hardware | Design |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `build` | full | full | full | none | full | full | full |
-| `plan` | full | analysis | full | none | none | analysis | none |
+| `plan` | full | analysis | full | none | none | analysis | arch |
 | `design` | full | analysis | full | none | none | analysis | full |
 | `ai` | full | none | none | full | none | none | none |
 
@@ -85,7 +91,10 @@ Legend:
 - **full** — may dispatch any agent in the pool.
 - **analysis** — may dispatch only the pool's analysis agents (no source
   writing): Software = `code-reviewer`, `firmware-reviewer`, `security-reviewer`; Design =
-  `product-designer`, `ui-designer`; Hardware = `hardware-engineer`.
+  `product-designer`, `architect`, `ui-designer`; Hardware = `hardware-engineer`.
+- **arch** — may dispatch only `architect` from that pool. `plan` uses it to
+  weigh structure without commissioning the design; the opencode config already
+  matches (`architect` is allowed, `product-designer` and `ui-designer` denied).
 - **none** — may not dispatch the pool.
 
 Primaries never dispatch other primaries, and none may dispatch itself. The
@@ -127,10 +136,10 @@ session model there. See `Models.md` for the per-tool mapping.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `build` | primary | `inherit` | The build department head and the default agent. Restates the goal, decomposes it, dispatches each part to the specialist who owns it, collates the results, and verifies. Keeps full tools, so it also does small single-domain work directly. | Anything that needs work done. |
-| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `code-reviewer`, `firmware-reviewer`, `security-reviewer`, and `hardware-engineer`, weighs the options, and settles the decision. Writes no files and never implements; it hands the written design to `design` and execution to `build`. | The shape of a change should be decided before any code is written. |
-| `design` | primary | `inherit` | Head of the Design department. Turns an agreed decision into a build-ready design under `docs/` — product definition, flows, front-end and back-end design, UI specs, and the reference mockup. Writes `docs/**` only, never source. Hands the `docs/` set to `build`. | A decision is settled and the design must be written before implementation. |
+| `plan` | primary | `inherit` | Head of the Plan department. Read-only strategy: consults `explore`, `researcher`, `architect`, `challenger`, `code-reviewer`, `firmware-reviewer`, `security-reviewer`, and `hardware-engineer`, weighs the options, and settles the decision. Writes no files and never implements; it hands the design work to `design` when the change crosses a boundary, and execution to `build`. | The shape of a change should be decided before any code is written. |
+| `design` | primary | `inherit` | Head of the Design department. Turns an agreed decision into a build-ready design under `docs/` — product definition, software architecture, flows, front-end and back-end design, UI specs, and the reference mockup. Writes `docs/**` only, never source. Hands the `docs/` set to `build`. | A decision is settled and the change crosses a boundary, so the design must be written before implementation. |
 
-`plan` leads Research and Architecture; `design` leads Design; `build` leads
+`plan` leads Research and Critique; `design` leads Design; `build` leads
 Software, Test, and Hardware. No primary pins a model, so all follow the
 session model. The teams under them are listed below.
 
@@ -171,6 +180,7 @@ It writes `docs/hardware/` and never implements.
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
 | `product-designer` | subagent | `fast` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria — as handoff-ready specs for `architect`, `ui-designer`, and the engineers. For a fielded device, also pins the maintenance window, update mechanism, and end-of-life/disposal policy. Domain-agnostic: embedded, Python, and web alike. | Starting a new project or feature, before any technical or visual design. |
+| `architect` | subagent | `deep` | Principal software architect. Designs and reviews system architecture, hunts duplicate code, designs event/IPC frameworks, and recommends structure that prevents bugs. Also designs the cross-cutting mechanisms — the update strategy (image layout, rollback, signing-key lifecycle) and fault handling (watchdog policy, crash capture, log discipline). Writes to `docs/architecture/`, `docs/contracts/`, and `docs/reference/`. Rejects overengineering. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, designing an event bus or IPC layer, or designing update and fault-handling strategy. |
 | `ui-designer` | subagent | `vision` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/ui/` for `web-engineer` to implement. Design only — it never edits source. | A web interface needs design tokens, layout, and component specs before implementation. |
 
 ### Research — Plan department
@@ -185,14 +195,13 @@ builds the financial model from sourced data.
 | `researcher` | subagent | `fast` | Digs original sources (datasheets, errata, vendor SDKs, official docs, upstream history) and the local code, then reports findings with citations. Separates observation from inference from assumption, and says plainly when something is not established. | A decision depends on what is actually true — a part's behavior, an API's version, a library's limits, a protocol's rules. |
 | `financial-researcher` | subagent | `inherit` | Financial analysis for stock and investment work — company and sector fundamentals, valuation, macro and rate context, portfolio and position risk, and scenario and sensitivity modelling, with every figure sourced and dated. Read-only analysis, not licensed investment advice. | A security, portfolio, or market decision needs a sourced financial model. |
 
-### Architecture — Plan department
+### Critique — Plan department
 
-Technical design and adversarial review. `architect` produces the blueprint;
-`challenger` attacks it before anything is built.
+Adversarial review. `challenger` attacks a decision, a design, or a spec before
+anything is built.
 
 | Agent | Mode | Model | What it does | Use when |
 | --- | --- | --- | --- | --- |
-| `architect` | subagent | `deep` | Principal software architect. Designs and reviews system architecture, hunts duplicate code, designs event/IPC frameworks, and recommends structure that prevents bugs. Also designs the cross-cutting mechanisms — the update strategy (image layout, rollback, signing-key lifecycle) and fault handling (watchdog policy, crash capture, log discipline). Writes to `docs/architecture/`, `docs/contracts/`, and `docs/reference/`. Rejects overengineering. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, designing an event bus or IPC layer, or designing update and fault-handling strategy. |
 | `challenger` | subagent | `inherit` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design; proposes no design of its own. | Before implementation, when changing course is still cheap, and the proposal must be stress-tested. |
 
 ### AI department
@@ -248,8 +257,9 @@ spawn a copy of themselves.
 
 ## Documentation system
 
-The design docs are a `docs/` folder tree written before implementation, with
-`design` owning tree coherence and `docs/README.md`, the single entry point.
+The design docs are a `docs/` folder tree written before implementation when the
+change crosses a boundary, with `design` owning tree coherence and
+`docs/README.md`, the single entry point.
 
 | Folder | Owner |
 | --- | --- |

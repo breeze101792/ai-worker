@@ -37,8 +37,8 @@ the built-in `Explore` subagent, `architect`, and `hardware-engineer`, weigh
 options, and produce a concrete plan without editing. Hand execution back to the
 normal working mode once the plan is approved. Plan mode is the read-only
 posture: it writes nothing. Design docs are written in normal mode, not plan
-mode: the decision is settled first, then `docs/` is written, then
-implementation starts.
+mode: the decision is settled first, then `docs/` is written when the change
+crosses a boundary, then implementation starts.
 
 Subagents here dispatch with the **Agent** tool (formerly Task). Write the task
 as the subagent's whole context: it does not see this conversation. Dispatch
@@ -46,11 +46,17 @@ independent parts in parallel, and delegate only independent subtasks.
 
 The departments are headed by four primaries: `build` (execution; leads
 Software, Test, and Hardware), `plan` (strategy; read-only, writes no files;
-leads Research and Architecture), `design` (the design department; writes
+leads Research and Critique), `design` (the design department; writes
 `docs/**` only; leads Design), and `ai` (agent tools and hiring). `plan`
-settles a decision, `design` writes it up, `build` implements it. Route work
-through the department head, or dispatch a specialist directly when the match
-is obvious.
+settles a decision; `design` writes it up only when the change crosses a
+boundary; `build` implements it. Route work through the department head, or
+dispatch a specialist directly when the match is obvious.
+
+The design stage is conditional. Design is required when the change crosses a
+boundary something outside it relies on: a wire or network protocol, a public
+API or CLI, a file or data format, a pinout or board interface, or a new
+component. A bug fix, an internal refactor, or a change confined behind an
+unchanged boundary skips the design stage.
 
 The teams below are grouped by department.
 
@@ -84,11 +90,10 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | `web-engineer` | Builds full-stack web apps autonomously — frontend markup, styles, and TypeScript plus the backend API — implementing `ui-designer` specs. | Delegated web implementation. | A web app or feature must be implemented end to end without a human in the loop. |
 | `toolchain-engineer` | Owns build systems and toolchains — Make, CMake, Zephyr west, cross-compilers, linker scripts, CI, flashing — and the release artifact chain: reproducible outputs, SBOM/provenance, version bump, changelog, and signed tag on request. Fixes build and link failures. | Build and toolchain ownership. | A build breaks, a toolchain must be configured, CI and flashing need work, or a release artifact must be produced. |
 
-### Architecture — Plan department
+### Critique — Plan department
 
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
-| `architect` | Designs and reviews system architecture: hunts duplicate code, designs robust event/IPC frameworks, draws high-level blueprints, and recommends structure that prevents common bugs. Also designs the cross-cutting mechanisms — update strategy (image layout, rollback, signing-key lifecycle) and fault handling (watchdog policy, crash capture, log discipline). Rejects overengineering — every abstraction must trace to a real requirement. | Architecture design and review before implementation. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, designing an event bus or IPC layer, or designing update/fault-handling strategy. |
 | `challenger` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design. | Adversarial critique before implementation. | The shape of a change must be stress-tested while changing course is still cheap. |
 
 ### Test — build department
@@ -109,6 +114,7 @@ The tables below are the dispatch roster the main agent reads, grouped by team.
 | Agent | What it does | Purpose | Use when |
 | --- | --- | --- | --- |
 | `product-designer` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria. For a fielded device, also pins the maintenance window, update mechanism, and end-of-life/disposal policy. Domain-agnostic: embedded, Python, and web alike. | Product and functional definition before any technical or visual design. | Starting a new project or feature and the behavior, scope, or acceptance criteria must be pinned down first. |
+| `architect` | Designs and reviews system architecture: hunts duplicate code, designs robust event/IPC frameworks, draws high-level blueprints, and recommends structure that prevents common bugs. Also designs the cross-cutting mechanisms — update strategy (image layout, rollback, signing-key lifecycle) and fault handling (watchdog policy, crash capture, log discipline). Rejects overengineering — every abstraction must trace to a real requirement. | Architecture design and review before implementation. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, designing an event bus or IPC layer, or designing update/fault-handling strategy. |
 | `ui-designer` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/ui/`. Design only — it edits documentation, not source; `web-engineer` implements the design in code. | Clean UI design before web code. | A web interface needs design tokens, layout, and component specs first. |
 
 ### AI department
