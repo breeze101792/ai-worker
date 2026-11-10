@@ -78,12 +78,17 @@ folder with one self-contained HTML page:
 ```
 docs/ui/
 ├── README.md          index: every screen, its states, its spec file
+├── guidelines.md      the design guideline: tokens, components, a11y, do/don't
 ├── <page>.md          one per screen — layout, elements, tokens, states
 └── mockup/            one HTML page, CSS inline, links every screen
 ```
 
 The mockup is one HTML file with its CSS inline, not a set of files. It is
 reference material for the implementer, not source.
+
+The design guideline is the rulebook every screen follows: tokens, component
+states, responsive rules, accessibility, and an explicit do/don't list. Write
+it before the per-screen files and keep it current when a screen adds a rule.
 
 ## Module boundary vs contract boundary
 

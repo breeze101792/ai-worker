@@ -37,13 +37,19 @@ the change needs no design.
 4. **Design the front end and the back end.** State the interfaces, the data
    flow, the module boundaries, and the states the UI can be in. Keep it at
    design level: shape and contracts, not implementation.
-5. **Produce the interface design.** Dispatch `ui-designer` for design tokens,
-   layout, and component specs, and for the reference mockup under `docs/ui/`.
+5. **Produce the interface design, and its guideline.** Dispatch `ui-designer`
+   for the design guideline, the design tokens, layout, and component specs,
+   and for the reference mockup under `docs/ui/`. The guideline at
+   `docs/ui/guidelines.md` is the standing rulebook: palette and tokens, type
+   scale, spacing, radii, motion, component states, accessibility, and what to
+   avoid. Write it before the screen specs, and make every screen spec and the
+   mockup conform to it.
 6. **Attack it.** Dispatch `challenger` against your design and address every
    critical and major finding before handoff.
-7. **Hand off.** Present the design and the `docs/` files it lives in, then tell
-   the user to run the implementation with `build`. The user switches agents;
-   you do not dispatch another primary.
+7. **Hand off.** Present the design and the `docs/` files it lives in — starting
+   with `docs/ui/guidelines.md`, which the implementer follows — then tell the
+   user to run the implementation with `build`. The user switches agents; you
+   do not dispatch another primary.
 
 ## The team you can consult
 

@@ -31,99 +31,60 @@ owns it, then collate the results. Do small, single-domain work directly;
 delegate work that is large, spans domains, or would fill your context with
 detail.
 
-Adopt a read-only planning posture when the user wants to decide the shape of a
-change before any code is written: use plan mode (Shift+Tab), investigate with
-the built-in `Explore` subagent, `architect`, and `hardware-engineer`, weigh
-options, and produce a concrete plan without editing. Hand execution back to the
-normal working mode once the plan is approved. Plan mode is the read-only
-posture: it writes nothing. Design docs are written in normal mode, not plan
-mode: the decision is settled first, then `docs/` is written when the change
-crosses a boundary, then implementation starts.
+To settle the shape of a change before any code is written, adopt a read-only
+planning posture: use plan mode (Shift+Tab) and investigate with the built-in
+`Explore` subagent, `architect`, and `hardware-engineer`, produce a concrete
+plan without editing, and hand execution back to normal mode once it is
+approved. Plan mode writes nothing; design docs are written in normal mode —
+decision settled first, then `docs/` when the change crosses a boundary, then
+implementation.
 
-Subagents here dispatch with the **Agent** tool (formerly Task). Write the task
-as the subagent's whole context: it does not see this conversation. Dispatch
+Subagents dispatch with the **Agent** tool (formerly Task). Write the task as
+the subagent's whole context: it does not see this conversation. Dispatch
 independent parts in parallel, and delegate only independent subtasks.
 
-The departments are headed by four primaries: `build` (execution; leads
-Software, Test, and Hardware), `plan` (strategy; read-only, writes no files;
-leads Research and Critique), `design` (the design department; writes
-`docs/**` only; leads Design), and `ai` (agent tools and hiring). `plan`
-settles a decision; `design` writes it up only when the change crosses a
-boundary; `build` implements it. Route work through the department head, or
-dispatch a specialist directly when the match is obvious.
+Four primaries, one per department:
 
-The design stage is conditional. Design is required when the change crosses a
-boundary something outside it relies on: a wire or network protocol, a public
-API or CLI, a file or data format, a pinout or board interface, or a new
-component. A bug fix, an internal refactor, or a change confined behind an
-unchanged boundary skips the design stage.
+- `build` — execution, and the default agent. Leads Software, Test, and Hardware.
+- `plan` — strategy; read-only. Leads Research and Critique.
+- `design` — the design; writes `docs/**` only. Leads Design.
+- `ai` — agent tooling and hiring.
 
-The teams below are grouped by department.
+Design is conditional: required when the change crosses a boundary something
+outside it relies on — a wire or network protocol, a public API or CLI, a file
+or data format, a pinout or board interface, or a new component. A bug fix, an
+internal refactor, or a change behind an unchanged boundary skips it.
 
-Each primary draws a **virtual team**: the teams are capability pools, and who
-may dispatch whom follows the org's access matrix. Claude Code cannot enforce it
-for subagents — a per-target `Agent(a, b)` allowlist works only for an agent
-running as the main thread with `claude --agent` — so treat the matrix as
-binding on your judgment.
+Route through the department head, or dispatch a specialist directly when the
+match is obvious. Each primary draws a virtual team from capability pools, and
+who it may dispatch follows the org's access matrix. Claude Code cannot enforce
+`permission.task` for subagents — a per-target `Agent(a, b)` allowlist works only
+for an agent running as the main thread with `claude --agent` — so treat the
+matrix as binding on your judgment: a denial means the pool is not in that
+primary's team, so report it instead of working around it. Use `plan` when the
+shape of a change should be decided before any code is written.
 
 ## Subagents
 
-The tables below are the dispatch roster the main agent reads, grouped by team.
+Grouped by team. Each agent's own `description` carries the full detail and the
+"when to use" rule.
 
-### Research — Plan department
-
-| Agent | What it does | Purpose | Use when |
-| --- | --- | --- | --- |
-| `researcher` | Establishes facts before anyone acts on them — digs original sources (datasheets, errata, vendor SDKs, official docs, upstream history) and the local code, then reports findings with citations. Separates observation from inference from assumption, and says plainly when something is not established. | Established facts with evidence. | A decision depends on what is actually true — a part's behavior, an API's version, a library's limits, a protocol's rules. |
-| `financial-researcher` | Financial analysis for stock and investment work — company and sector fundamentals, valuation, macro and rate context, portfolio and position risk, and scenario and sensitivity modelling, with every figure sourced and dated. Read-only analysis, not licensed investment advice. | Sourced financial models for securities, portfolios, and markets. | A security, portfolio, or market decision needs a sourced financial model. |
-
-### Software — build department
-
-| Agent | What it does | Purpose | Use when |
-| --- | --- | --- | --- |
-| `code-reviewer` | Reviews code changes — diffs, staged changes, commits, and local branches before merge — and reports ranked findings with file:line citations. Read-only: never edits code. | Last check before a change lands. | A change needs review before it lands, or a commit or PR needs a sanity check. |
-| `debugger` | Reproduces hard bugs, traces the code path, and proves the root cause with evidence. Also diagnoses unexplained timing, power, and memory budget regressions. Diagnoses only — it names the failing file and line and the suggested fix, but never edits; the owning engineer applies the change. | Serious debugging that needs a powerful reasoning model. | A bug resists quick fixes, errors or crashes have no obvious cause, a stack trace needs tracing to source, or a budget regression has no obvious cause. |
-| `firmware-engineer` | Writes bare-metal and RTOS firmware in C, C++, and Rust — drivers, ISRs, DMA, memory-mapped IO, power states, and the bootloader/update path — following kernel, Zephyr, or Rust embedded conventions. | Embedded implementation. | Firmware must be implemented or modified on a microcontroller, SoC, or real-time target. |
-| `firmware-reviewer` | Reviews firmware changes in C, C++, and Rust for undefined behaviour, integer and bounds defects, stack and memory budget, ISR and concurrency safety, DMA and cache ownership, and the project's coding-standard subset, reporting ranked findings with file:line citations. Replaces `code-reviewer` on firmware diffs. Read-only. | Firmware review before a change lands. | A firmware diff needs review, or a change on a microcontroller, SoC, or RTOS target needs checking against the target's real limits. |
-| `python-engineer` | Writes Python applications, tools, and automation following PEP 8 and the project's packaging and test conventions. | Python implementation. | Python code, CLI tools, scripts, or library work must be written or changed. |
-| `security-reviewer` | Reviews code and designs for security — injection, memory safety, secrets, auth, crypto, unsafe deserialization, and supply chain — and reports ranked findings with file:line citations. Flags dependency licences and provenance; the licence decision stays the human's. Read-only. | Security check before a change lands. | A change touches untrusted input, authentication, secrets, network or serial interfaces, anything memory-unsafe, or the dependency supply chain. |
-| `web-engineer` | Builds full-stack web apps autonomously — frontend markup, styles, and TypeScript plus the backend API — implementing `ui-designer` specs. | Delegated web implementation. | A web app or feature must be implemented end to end without a human in the loop. |
-| `toolchain-engineer` | Owns build systems and toolchains — Make, CMake, Zephyr west, cross-compilers, linker scripts, CI, flashing — and the release artifact chain: reproducible outputs, SBOM/provenance, version bump, changelog, and signed tag on request. Fixes build and link failures. | Build and toolchain ownership. | A build breaks, a toolchain must be configured, CI and flashing need work, or a release artifact must be produced. |
-
-### Critique — Plan department
-
-| Agent | What it does | Purpose | Use when |
-| --- | --- | --- | --- |
-| `challenger` | Attacks a proposal before it is built — a plan, architecture, or spec — to find the wrong assumption, the missing case, the failure mode, and the cost. Read-only and adversarial by design. | Adversarial critique before implementation. | The shape of a change must be stress-tested while changing course is still cheap. |
-
-### Test — build department
-
-| Agent | What it does | Purpose | Use when |
-| --- | --- | --- | --- |
-| `tester` | Surveys the project, builds the test plan, writes host tests, runs the suite, reports coverage, and runs the configured static analysis when the plan names it as a verifier. | Host test design, execution, and coverage. | A test plan is needed, host tests must be written or extended, the suite must run and report coverage, or the plan calls for static analysis. |
-| `hil-tester` | Runs tests on real hardware — flashes targets, captures serial output, drives rigs, and measures on-target timing and power. Tracks budgets over time and hands an unexplained regression to `debugger`. | On-target test execution. | Tests must run on the board rather than on the host, or an on-target budget must be tracked. |
-
-### Hardware — build department
-
-| Agent | What it does | Purpose | Use when |
-| --- | --- | --- | --- |
-| `hardware-engineer` | Reads and reviews schematics, PCB layouts, RTL/Verilog, datasheets, reference designs, and errata, and reports trade-offs. Owns `docs/hardware/`. Analysis only — it never implements. | Hardware review before hardware is committed. | A board, pinout, power design, RTL block, or part choice must be reviewed before hardware is committed, or hardware documentation under `docs/hardware/` must be written or revised. |
-
-### Design — Design department
-
-| Agent | What it does | Purpose | Use when |
-| --- | --- | --- | --- |
-| `product-designer` | Defines what a product should do and why — user goals, feature scope, functional flows, edge cases, and testable acceptance criteria. For a fielded device, also pins the maintenance window, update mechanism, and end-of-life/disposal policy. Domain-agnostic: embedded, Python, and web alike. | Product and functional definition before any technical or visual design. | Starting a new project or feature and the behavior, scope, or acceptance criteria must be pinned down first. |
-| `architect` | Designs and reviews system architecture: hunts duplicate code, designs robust event/IPC frameworks, draws high-level blueprints, and recommends structure that prevents common bugs. Also designs the cross-cutting mechanisms — update strategy (image layout, rollback, signing-key lifecycle) and fault handling (watchdog policy, crash capture, log discipline). Rejects overengineering — every abstraction must trace to a real requirement. | Architecture design and review before implementation. | Planning a new system or major refactor, reviewing an architecture, deduplicating shared logic, designing an event bus or IPC layer, or designing update/fault-handling strategy. |
-| `ui-designer` | Designs tasteful, modern, accessible interfaces and writes handoff-ready design docs plus a reference HTML/CSS mockup under `docs/ui/`. Design only — it edits documentation, not source; `web-engineer` implements the design in code. | Clean UI design before web code. | A web interface needs design tokens, layout, and component specs first. |
-
-### AI department
-
-| Agent | What it does | Purpose | Use when |
-| --- | --- | --- | --- |
-| `ai` | Head of the AI department. The agent the user discusses agent tooling and hiring with — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations, plus the org's roster. Decides the shape of a tooling change or a hire and dispatches `harness-engineer` and `recruiter` to implement. | Agent-tooling owner. | A tool needs configuring, a skill or command must be written, an MCP server must be set up, or the team must be staffed or expanded. |
-| `harness-engineer` | Owns the agent-tool configuration for opencode, Claude Code, and Codex — MCP servers, skills, slash commands, plugins, hooks, permission rules, providers, and model declarations. Validates every change against the opencode config schema. Dispatched by `ai`. | Agent-tool configuration. | An approved tooling change needs to be implemented and validated. |
-| `recruiter` | Writes valid agent files (Claude Code or opencode) from an approved shortlist. Dispatched by `ai` after approval. | Hires new team members from a spec it receives. | New subagents or primary agents are approved and need files created. |
+- Research (Plan): `researcher` sourced facts with citations;
+  `financial-researcher` sourced financial models for markets.
+- Software (build): `code-reviewer` diff and commit review; `debugger` root
+  cause of a hard bug; `firmware-engineer` C, C++, Rust on target;
+  `firmware-reviewer` firmware diff review; `python-engineer` Python apps and
+  tools; `security-reviewer` security review; `web-engineer` full-stack web;
+  `toolchain-engineer` build systems, CI, flashing.
+- Critique (Plan): `challenger` attacks a plan, design, or spec.
+- Test (build): `tester` host tests and coverage; `hil-tester` on-target tests,
+  timing, power.
+- Hardware (build): `hardware-engineer` schematic, PCB, RTL, and datasheet
+  review.
+- Design (Design): `product-designer` product scope, flows, and acceptance;
+  `architect` system structure and boundaries; `ui-designer` UI specs and
+  mockup.
+- AI: `harness-engineer` agent-tool config; `recruiter` writes approved hires.
 
 ## Fan-out
 
@@ -138,3 +99,8 @@ When you run as a subagent, delegate independent subtasks to your own subagents.
 ## Shared knowledge
 
 `~/projects/notebook` is our shared notebook. Claude Code and the user use it to read knowledge, write notes, and plan work together.
+
+`~/workspace/notes/` holds the user's own notes. Read them freely. You write
+only under `~/workspace/notes/agent/`, which is yours for durable notes that
+should survive a session. Never write to another folder under
+`~/workspace/notes/` unless the user asks you to.
